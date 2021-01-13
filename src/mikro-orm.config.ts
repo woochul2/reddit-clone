@@ -1,6 +1,6 @@
-import { __prod__ } from './constants';
 import { Post } from './entities/Post';
-import { MikroORM } from '@mikro-orm/core';
+
+export const __prod__ = process.env.NODE_ENV === 'production';
 
 export default {
   migrations: {
@@ -13,4 +13,4 @@ export default {
   user: 'postgres',
   password: 'a',
   debug: !__prod__,
-} as Parameters<typeof MikroORM.init>[0];
+};
