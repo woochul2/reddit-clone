@@ -1,0 +1,23 @@
+:root {
+  --black: hsl(0, 0%, 0%);
+  --light-black: hsl(0, 0%, 15%);
+  --gray: hsl(0, 0%, 45%);
+  --light-gray: hsl(0, 0%, 80%);
+  --white: hsl(0, 0%, 100%);
+
+  --dark-blue: hsl(210, 79%, 40%);
+  --blue: hsl(210, 79%, 50%);
+}
+
+:root[data-color-mode='light'] {
+  --body-text-color: var(--light-black);
+
+  --input-border-color: var(--light-gray);
+  --input-background-color: var(--white);
+  --input-text-color: var(--black);
+  --input-label-color: var(--gray);
+
+  --button-background-color: var(--blue);
+  --button-active-background-color: var(--dark-blue);
+  --button-text-color: var(--white);
+}
