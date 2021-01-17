@@ -1,4 +1,4 @@
-import { Container } from './ButtonStyles';
+import { Container } from './button';
 interface Props {
   type?: 'button' | 'submit' | 'reset' | undefined;
   disabled?: boolean;

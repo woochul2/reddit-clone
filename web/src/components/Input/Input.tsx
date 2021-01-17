@@ -6,7 +6,7 @@ import {
   useEffect,
   MutableRefObject,
 } from 'react';
-import { Container } from './InputStyles';
+import { Container } from './input';
 
 interface Props {
   type: string;

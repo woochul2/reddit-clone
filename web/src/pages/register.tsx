@@ -1,13 +1,13 @@
 import React from 'react';
-import { Container, Form, FormTitle, Error } from './register-styles';
-import { useRegisterMutation } from '../../generated/graphql';
-import { convertErrorsToMap } from '../../utils/convertErrorsToMap';
+import { Container, Form, FormTitle, Error } from '../pages-styles/register';
+import { useRegisterMutation } from '../generated/graphql';
+import { convertErrorsToMap } from '../utils/convertErrorsToMap';
 import { useRouter } from 'next/router';
-import { HOME } from '../../constants/paths';
+import { HOME } from '../constants/paths';
 import { Formik } from 'formik';
-import Input from '../../components/Input';
+import Input from '../components/Input';
 import ReactLoading from 'react-loading';
-import Button from '../../components/Button';
+import Button from '../components/Button';
 
 export default function Register() {
   const [, register] = useRegisterMutation();
