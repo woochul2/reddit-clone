@@ -1,4 +1,11 @@
-import { ChangeEvent, useState, useRef, useEffect } from 'react';
+import {
+  ChangeEvent,
+  FocusEvent,
+  useState,
+  useRef,
+  useEffect,
+  MutableRefObject,
+} from 'react';
 import { Container } from './InputStyles';
 
 interface Props {
@@ -6,7 +13,8 @@ interface Props {
   name: string;
   value: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  labelValue: string;
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  label: string;
   autoFocus?: boolean;
   styles?: string;
 }
@@ -16,12 +24,13 @@ export default function Input({
   name,
   value,
   onChange,
-  labelValue,
+  onBlur,
+  label,
   autoFocus,
   styles,
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
-  const textInput = useRef(null);
+  const textInput = useRef() as MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {
     if (autoFocus) {
@@ -46,9 +55,10 @@ export default function Input({
         name={name}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         ref={textInput}
       />
-      <label onClick={() => textInput.current.focus()}>{labelValue}</label>
+      <label onClick={() => textInput.current.focus()}>{label}</label>
     </Container>
   );
 }

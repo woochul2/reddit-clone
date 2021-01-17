@@ -7,9 +7,14 @@ export const Container = styled.div`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  text-align: center;
   width: 30rem;
   margin: 0 auto;
 `;
 
-export const FormTitle = styled.h1``;
+export const FormTitle = styled.h1`
+  text-align: center;
+`;
+
+export const Error = styled.p`
+  color: var(--error-color);
+`;

@@ -7,6 +7,8 @@
 
   --dark-blue: hsl(210, 79%, 40%);
   --blue: hsl(210, 79%, 50%);
+  --light-blue: hsl(210, 79%, 70%);
+  --red: hsl(0, 100%, 50%);
 }
 
 :root[data-color-mode='light'] {
@@ -19,5 +21,8 @@
 
   --button-background-color: var(--blue);
   --button-active-background-color: var(--dark-blue);
+  --button-disabled-background-color: var(--light-blue);
   --button-text-color: var(--white);
+
+  --error-color: var(--red);
 }

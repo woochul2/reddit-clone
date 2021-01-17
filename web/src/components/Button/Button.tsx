@@ -1,10 +1,20 @@
 import { Container } from './ButtonStyles';
-
 interface Props {
+  type?: 'button' | 'submit' | 'reset' | undefined;
+  disabled?: boolean;
   children: React.ReactChild;
   styles?: string;
 }
 
-export default function Button({ children, styles }: Props) {
-  return <Container styles={styles}>{children}</Container>;
+export default function Button({
+  type = 'button',
+  disabled,
+  children,
+  styles,
+}: Props) {
+  return (
+    <Container type={type} disabled={disabled} styles={styles}>
+      {children}
+    </Container>
+  );
 }

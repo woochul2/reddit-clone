@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 
 interface ContainerProps {
-  styles: string;
+  styles?: string;
   isFocused: boolean;
   value: string;
 }
 
 export const Container = styled.div<ContainerProps>`
-  ${({ styles }) => styles}
   position: relative;
   margin: 0.5em 0;
 
@@ -41,4 +40,6 @@ export const Container = styled.div<ContainerProps>`
       isFocused || value ? 'bold' : '400'};
     color: var(--input-label-color);
   }
+
+  ${({ styles }) => styles}
 `;

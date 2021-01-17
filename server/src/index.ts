@@ -10,6 +10,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
+import cors from 'cors';
 
 const main = async () => {
   const orm = await MikroORM.init();
@@ -19,6 +20,12 @@ const main = async () => {
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
 
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    })
+  );
   app.use(
     session({
       name: 'qid',
@@ -42,7 +49,10 @@ const main = async () => {
     context: ({ req, res }): MyContext => <MyContext>{ em: orm.em, req, res },
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: false,
+  });
 
   app.listen(4000, () => {
     console.log('서버가 시작됐습니다.');

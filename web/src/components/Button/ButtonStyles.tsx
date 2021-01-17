@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
 interface ContainerProps {
-  styles: string;
+  styles?: string;
 }
 
 export const Container = styled.button<ContainerProps>`
-  ${({ styles }) => styles}
   cursor: pointer;
+  display: flex;
+  justify-content: center;
   padding: 0.75em 1.5em;
   margin: 0.5em 0;
   border: none;
@@ -21,4 +22,11 @@ export const Container = styled.button<ContainerProps>`
   &:active {
     background-color: var(--button-active-background-color);
   }
+
+  &:disabled {
+    cursor: default;
+    background-color: var(--button-disabled-background-color);
+  }
+
+  ${({ styles }) => styles}
 `;

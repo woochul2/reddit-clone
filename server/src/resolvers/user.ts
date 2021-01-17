@@ -63,7 +63,7 @@ export class UserResolver {
         errors: [
           {
             field: 'username',
-            message: '사용자가 이미 존재합니다.',
+            message: '아이디가 이미 존재합니다.',
           },
         ],
       };
@@ -73,7 +73,7 @@ export class UserResolver {
         errors: [
           {
             field: 'username',
-            message: '이름 길이는 2글자 이상이어야 합니다.',
+            message: '아이디 길이는 3글자 이상이어야 합니다.',
           },
         ],
       };
@@ -83,7 +83,7 @@ export class UserResolver {
         errors: [
           {
             field: 'password',
-            message: '패스워드 길이는 2글자 이상이어야 합니다.',
+            message: '비밀번호 길이는 3글자 이상이어야 합니다.',
           },
         ],
       };
@@ -110,7 +110,7 @@ export class UserResolver {
         errors: [
           {
             field: 'username',
-            message: '사용자가 존재하지 않습니다.',
+            message: '아이디가 존재하지 않습니다.',
           },
         ],
       };
@@ -121,7 +121,7 @@ export class UserResolver {
         errors: [
           {
             field: 'password',
-            message: '패스워드가 일치하지 않습니다.',
+            message: '비밀번호가 일치하지 않습니다.',
           },
         ],
       };
