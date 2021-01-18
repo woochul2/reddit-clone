@@ -18,11 +18,15 @@
   --input-background-color: var(--white);
   --input-text-color: var(--black);
   --input-label-color: var(--gray);
+  --error-color: var(--red);
 
   --button-background-color: var(--blue);
   --button-active-background-color: var(--dark-blue);
   --button-disabled-background-color: var(--light-blue);
   --button-text-color: var(--white);
 
-  --error-color: var(--red);
+  --header-border-color: var(--black);
+  --header-background-color: var(--white);
+  --header-text-color: var(--black);
+  --header-button-focus-border-color: var(--black);
 }

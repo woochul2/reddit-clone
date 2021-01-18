@@ -44,7 +44,7 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  me(@Ctx() { req, em }: MyContext) {
+  currentUser(@Ctx() { req, em }: MyContext) {
     if (!req.session.userId) {
       return null;
     }
