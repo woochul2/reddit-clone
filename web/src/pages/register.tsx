@@ -1,4 +1,5 @@
-import React from 'react';
+import { withUrqlClient } from 'next-urql';
+import { createUrqlClient } from '../utils/createUrqlClient';
 import { Container } from '../pages-styles/register';
 import { useRegisterMutation } from '../generated/graphql';
 import { convertErrorsToMap } from '../utils/convertErrorsToMap';
@@ -7,7 +8,7 @@ import { HOME } from '../constants/paths';
 import { Formik } from 'formik';
 import Form from '../components/Form';
 
-export default function Register() {
+const Register = () => {
   const [, register] = useRegisterMutation();
   const router = useRouter();
 
@@ -30,4 +31,6 @@ export default function Register() {
       </Formik>
     </Container>
   );
-}
+};
+
+export default withUrqlClient(createUrqlClient)(Register);
