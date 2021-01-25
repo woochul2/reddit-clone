@@ -1,22 +1,24 @@
-import { Container, Username, LogoutButton, Link } from './header';
+import NextLink from 'next/link';
+import { LOGIN, REGISTER } from '../../constants';
 import {
   useCurrentUserQuery,
   useLogoutMutation,
 } from '../../generated/graphql';
-import NextLink from 'next/link';
-import { LOGIN, REGISTER } from '../../constants/paths';
+import { Container, Link, LogoutButton, Username } from './header';
+
+const isServer = () => typeof window === 'undefined';
 
 interface Props {
   styles?: string;
 }
 
-const isServer = () => typeof window === 'undefined';
-
 export default function Header({ styles }: Props) {
-  const [{ data, fetching }] = useCurrentUserQuery({
+  const [
+    { data: currentUserData, fetching: fetchingCurrentUser },
+  ] = useCurrentUserQuery({
     pause: isServer(),
   });
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  const [{ fetching: fetchingLogout }, logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     await logout();
@@ -24,20 +26,20 @@ export default function Header({ styles }: Props) {
 
   return (
     <Container styles={styles}>
-      {!fetching && data?.currentUser && (
+      {!fetchingCurrentUser && currentUserData?.currentUser && (
         <>
-          <Username>{data.currentUser.username}</Username>
-          <LogoutButton onClick={handleLogout} disabled={logoutFetching}>
+          <Username>{currentUserData.currentUser.username}</Username>
+          <LogoutButton onClick={handleLogout} disabled={fetchingLogout}>
             로그아웃
           </LogoutButton>
         </>
       )}
-      {!fetching && !data?.currentUser && (
+      {!fetchingCurrentUser && !currentUserData?.currentUser && !isServer() && (
         <>
-          <NextLink href={LOGIN}>
+          <NextLink href={LOGIN} passHref>
             <Link>로그인</Link>
           </NextLink>
-          <NextLink href={REGISTER}>
+          <NextLink href={REGISTER} passHref>
             <Link>회원가입</Link>
           </NextLink>
         </>

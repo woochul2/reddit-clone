@@ -1,0 +1,3 @@
+query UserId($token: String!) {
+  userId(token: $token)
+}

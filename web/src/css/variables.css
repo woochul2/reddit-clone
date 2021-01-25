@@ -20,6 +20,7 @@
   --input-label-color: var(--gray);
   --error-color: var(--red);
 
+  --button-focus-border-color: var(--black);
   --button-background-color: var(--blue);
   --button-active-background-color: var(--dark-blue);
   --button-disabled-background-color: var(--light-blue);

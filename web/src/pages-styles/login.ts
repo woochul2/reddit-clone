@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  padding: 2em 0;
+export const Container = styled.div``;
+
+export const Link = styled.a`
+  align-self: flex-end;
+  text-decoration: none;
+  color: var(--body-text-color);
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;

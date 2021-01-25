@@ -1,23 +1,36 @@
+import argon2 from 'argon2';
 import {
-  Resolver,
-  Ctx,
   Arg,
-  Mutation,
-  InputType,
+  Ctx,
   Field,
+  InputType,
+  Mutation,
   ObjectType,
   Query,
+  Resolver,
 } from 'type-graphql';
-import { MyContext } from '../interfaces';
+import { v4 } from 'uuid';
+import validator from 'validator';
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX, WEB_URL } from '../constants';
 import { User } from '../entities/User';
-import argon2 from 'argon2';
-import { COOKIE_NAME } from '../constants';
+import { MyContext } from '../interfaces';
+import { sendEmail } from '../utils/sendEmail';
 
 @InputType()
-class UsernamePasswordInput {
+class LoginInput {
+  @Field()
+  usernameOrEmail: string;
+  @Field()
+  password: string;
+}
+
+@InputType()
+class RegisterInput {
+  @Field()
+  email: string;
   @Field()
   username: string;
-  @Field(() => String)
+  @Field()
   password: string;
 }
 
@@ -53,13 +66,42 @@ export class UserResolver {
     return user;
   }
 
+  @Query(() => Number, { nullable: true })
+  async userId(@Arg('token') token: string, @Ctx() { redis }: MyContext) {
+    const userId = await redis.get(FORGET_PASSWORD_PREFIX + token);
+    return userId;
+  }
+
   @Mutation(() => UserResponse)
   async register(
-    @Arg('options') options: UsernamePasswordInput,
+    @Arg('options') options: RegisterInput,
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, { username: options.username });
-    if (user) {
+    if (!validator.isEmail(options.email)) {
+      return {
+        errors: [
+          {
+            field: 'email',
+            message: '올바른 이메일 주소를 입력해 주세요.',
+          },
+        ],
+      };
+    }
+    const sameEmailUser = await em.findOne(User, { email: options.email });
+    if (sameEmailUser) {
+      return {
+        errors: [
+          {
+            field: 'email',
+            message: '이메일이 이미 사용 중입니다.',
+          },
+        ],
+      };
+    }
+    const sameUsernameUser = await em.findOne(User, {
+      username: options.username,
+    });
+    if (sameUsernameUser) {
       return {
         errors: [
           {
@@ -92,6 +134,7 @@ export class UserResolver {
 
     const hashedPassword = await argon2.hash(options.password);
     const newUser = em.create(User, {
+      email: options.email,
       username: options.username,
       password: hashedPassword,
     });
@@ -102,20 +145,26 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg('options') options: UsernamePasswordInput,
+    @Arg('options') options: LoginInput,
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, { username: options.username });
+    let user: User | null;
+    if (validator.isEmail(options.usernameOrEmail)) {
+      user = await em.findOne(User, { email: options.usernameOrEmail });
+    } else {
+      user = await em.findOne(User, { username: options.usernameOrEmail });
+    }
     if (!user) {
       return {
         errors: [
           {
-            field: 'username',
-            message: '아이디가 존재하지 않습니다.',
+            field: 'usernameOrEmail',
+            message: '아이디 또는 이메일이 존재하지 않습니다.',
           },
         ],
       };
     }
+
     const valid = await argon2.verify(user.password, options.password);
     if (!valid) {
       return {
@@ -148,5 +197,79 @@ export class UserResolver {
         resolve(true);
       })
     );
+  }
+
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Arg('email') email: string,
+    @Ctx() { em, redis }: MyContext
+  ) {
+    const user = await em.findOne(User, { email });
+    if (!user) {
+      return true;
+    }
+
+    const token = v4();
+    await redis.set(
+      FORGET_PASSWORD_PREFIX + token,
+      user.id,
+      'EX',
+      60 * 60 * 24 // 1일
+    );
+
+    await sendEmail(
+      email,
+      `<a href="${WEB_URL}/change-password/${token}">비밀번호 재설정</a>`
+    );
+    return true;
+  }
+
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg('token') token: string,
+    @Arg('newPassword') newPassword: string,
+    @Ctx() { em, redis }: MyContext
+  ): Promise<UserResponse> {
+    if (newPassword.length <= 2) {
+      return {
+        errors: [
+          {
+            field: 'newPassword',
+            message: '비밀번호 길이는 3글자 이상이어야 합니다.',
+          },
+        ],
+      };
+    }
+
+    const key = FORGET_PASSWORD_PREFIX + token;
+    const userId = await redis.get(key);
+    if (!userId) {
+      return {
+        errors: [
+          {
+            field: 'token',
+            message: '유효 기간이 만료되었습니다.',
+          },
+        ],
+      };
+    }
+
+    const user = await em.findOne(User, { id: parseInt(userId as string) });
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: 'user',
+            message: '사용자가 존재하지 않습니다.',
+          },
+        ],
+      };
+    }
+    user.password = await argon2.hash(newPassword);
+    await em.persistAndFlush(user);
+
+    await redis.del(key);
+
+    return { user };
   }
 }

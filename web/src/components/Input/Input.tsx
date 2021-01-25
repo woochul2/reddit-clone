@@ -1,21 +1,22 @@
 import {
   ChangeEvent,
   FocusEvent,
-  useState,
-  useRef,
-  useEffect,
   MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import { Container } from './input';
 
 interface Props {
   type: string;
   name: string;
-  value: string;
+  value?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
   label: string;
   autoFocus?: boolean;
+  focus?: boolean;
   styles?: string;
 }
 
@@ -27,6 +28,7 @@ export default function Input({
   onBlur,
   label,
   autoFocus,
+  focus,
   styles,
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
@@ -37,6 +39,12 @@ export default function Input({
       textInput.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    if (focus) {
+      textInput.current.focus();
+    }
+  }, [focus]);
 
   return (
     <Container

@@ -1,49 +1,71 @@
-import { Container, Title, Error } from './form';
-import { FormikProps } from 'formik';
-import Input from '../Input';
 import ReactLoading from 'react-loading';
+import { MyFormikProps } from '../../types';
 import Button from '../Button';
+import Input from '../Input';
+import { Container, Error, SubTitle, Title } from './form';
 
 interface Props {
-  formik: FormikProps<{
-    username: string;
-    password: string;
-  }>;
+  formik: MyFormikProps;
   title: string;
+  subTitle?: string;
   buttonLabel: string;
+  children?: React.ReactChild;
   styles?: string;
 }
 
-export default function Form({ formik, title, buttonLabel, styles }: Props) {
-  const {
-    values,
-    errors,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    isSubmitting,
-  } = formik;
+const valuesKeyToType = (key: string) => {
+  if (key === 'newPassword') {
+    return 'password';
+  }
+  return key;
+};
+
+const valuesKeyToLabel = (key: string) => {
+  if (key === 'email') {
+    return '이메일';
+  }
+  if (key === 'usernameOrEmail') {
+    return '아이디 또는 이메일';
+  }
+  if (key === 'username') {
+    return '아이디';
+  }
+  if (key === 'password') {
+    return '비밀번호';
+  }
+  if (key === 'newPassword') {
+    return '새 비밀번호';
+  }
+  return key;
+};
+
+export default function Form({
+  formik,
+  title,
+  subTitle,
+  buttonLabel,
+  children,
+  styles,
+}: Props) {
+  const { values, handleChange, handleSubmit, isSubmitting } = formik;
+  const errors = formik.errors as Record<string, string>;
   return (
     <Container onSubmit={handleSubmit} autoComplete="off" styles={styles}>
       <Title>{title}</Title>
-      <Input
-        type="text"
-        name="username"
-        value={values.username}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        label="아이디"
-      />
-      <Error>{errors.username}</Error>
-      <Input
-        type="password"
-        name="password"
-        value={values.password}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        label="비밀번호"
-      />
-      <Error>{errors.password}</Error>
+      <SubTitle>{subTitle}</SubTitle>
+      {Object.entries(values).map(([key, value], idx) => (
+        <div key={idx}>
+          <Input
+            type={valuesKeyToType(key)}
+            name={key}
+            value={value}
+            onChange={handleChange}
+            label={valuesKeyToLabel(key)}
+            focus={errors[key] !== undefined}
+          />
+          <Error>{errors[key]}</Error>
+        </div>
+      ))}
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? (
           <ReactLoading type={'spokes'} width={'1.125em'} height={'1.125em'} />
@@ -51,6 +73,7 @@ export default function Form({ formik, title, buttonLabel, styles }: Props) {
           <>{buttonLabel}</>
         )}
       </Button>
+      {children}
     </Container>
   );
 }

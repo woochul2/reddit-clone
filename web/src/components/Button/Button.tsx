@@ -1,6 +1,7 @@
 import { Container } from './button';
+
 interface Props {
-  type?: 'button' | 'submit' | 'reset' | undefined;
+  type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   children: React.ReactChild;
   styles?: string;

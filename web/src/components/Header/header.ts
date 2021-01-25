@@ -33,8 +33,9 @@ export const LogoutButton = styled.button`
 `;
 
 export const Link = styled.a`
-  cursor: pointer;
+  text-decoration: none;
   margin: 0 1em;
+  color: var(--body-text-color);
 
   &:hover {
     text-decoration: underline;

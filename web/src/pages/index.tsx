@@ -1,7 +1,7 @@
 import { withUrqlClient } from 'next-urql';
-import { createUrqlClient } from '../utils/createUrqlClient';
-import { Container } from '../pages-styles/index';
 import Header from '../components/Header';
+import { Container } from '../pages-styles/index';
+import { createUrqlClient } from '../utils/createUrqlClient';
 
 const Home = () => {
   return (

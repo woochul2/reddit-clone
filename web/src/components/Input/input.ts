@@ -3,7 +3,7 @@ import styled from 'styled-components';
 interface ContainerProps {
   styles?: string;
   isFocused: boolean;
-  value: string;
+  value?: string;
 }
 
 export const Container = styled.div<ContainerProps>`

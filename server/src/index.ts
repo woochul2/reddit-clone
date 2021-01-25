@@ -1,17 +1,16 @@
-import 'reflect-metadata';
-import { __prod__ } from './mikro-orm.config';
 import { MikroORM } from '@mikro-orm/core';
-import express from 'express';
-import redis from 'redis';
-import connectRedis from 'connect-redis';
-import session from 'express-session';
-import { MyContext } from './interfaces';
 import { ApolloServer } from 'apollo-server-express';
+import connectRedis from 'connect-redis';
+import cors from 'cors';
+import express from 'express';
+import session from 'express-session';
+import Redis from 'ioredis';
 import { buildSchema } from 'type-graphql';
+import { COOKIE_NAME, WEB_URL } from './constants';
+import { MyContext } from './interfaces';
+import { __prod__ } from './mikro-orm.config';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
-import cors from 'cors';
-import { COOKIE_NAME } from './constants';
 
 const main = async () => {
   const orm = await MikroORM.init();
@@ -19,22 +18,31 @@ const main = async () => {
 
   const app = express();
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
+  const redis = new Redis();
+
+  // redis.keys('*', (err, keys) => {
+  //   if (err) {
+  //     console.error(err);
+  //   }
+  //   console.log(keys);
+  // });
 
   app.use(
     cors({
-      origin: 'http://localhost:3000',
+      origin: WEB_URL,
       credentials: true,
     })
   );
   app.use(
     session({
       name: COOKIE_NAME,
-      store: new RedisStore({ client: redisClient }),
+      store: new RedisStore({
+        client: redis,
+        ttl: 60 * 60 * 24 * 7 * 4, // 2주일
+      }),
       secret: 'sfaoiupbsbzxcbklmqer;ioguqwoi;gjsv',
       resave: false,
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365, // 1년
         sameSite: 'lax',
         secure: __prod__,
       },
@@ -47,7 +55,8 @@ const main = async () => {
       resolvers: [PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => <MyContext>{ em: orm.em, req, res },
+    context: ({ req, res }): MyContext =>
+      <MyContext>{ em: orm.em, req, res, redis },
   });
 
   apolloServer.applyMiddleware({
