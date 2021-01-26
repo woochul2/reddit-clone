@@ -1,7 +1,19 @@
+import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
 
 export async function sendEmail(to: string, html: string) {
   try {
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GMAIL_CLIENT_ID,
+      process.env.GMAIL_CLIENT_SECRET,
+      'https://developers.google.com/oauthplayground'
+    );
+
+    oauth2Client.setCredentials({
+      refresh_token: process.env.GMAIL_REFRESH_TOKEN,
+    });
+    const accessToken = await oauth2Client.getAccessToken();
+
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -9,13 +21,7 @@ export async function sendEmail(to: string, html: string) {
       auth: {
         type: 'OAuth2',
         user: 'leewoo0686@gmail.com',
-        clientId:
-          '1004177644200-d9mmhtd8cf54gn2c2ldo1i8r9e4gqc4i.apps.googleusercontent.com',
-        clientSecret: 'FRulD_wiiYBCTalEOgfiBV0D',
-        refreshToken:
-          '1//04GxktCGdYtcQCgYIARAAGAQSNwF-L9IrjIUWNI9s8mK4NLkNA5yCpM1YnMC-ySs7rvNuYG-_p41DoJTe2poIoivFA0ePl226QEo',
-        accessToken:
-          'ya29.a0AfH6SMD_6iwiq-Hw5xhFkji3wyXB3TfnqL1zFa_8o4WF5O1CqYSR1eLBlOsCp0U65Wsub7LkDjZe_s9gSsUZ2jbyesvKz_d920YVd5gF_z3TgbC-AADMd5QEZk2mGMg6fwn7JuogGvhEAPQ1xlayi5M-n3DW17l0vxWUnOCfpnw',
+        accessToken: accessToken.token as string,
       },
     });
 

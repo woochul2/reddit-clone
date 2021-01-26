@@ -11,6 +11,7 @@ import { MyContext } from './interfaces';
 import { __prod__ } from './mikro-orm.config';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
+require('dotenv').config();
 
 const main = async () => {
   const orm = await MikroORM.init();
