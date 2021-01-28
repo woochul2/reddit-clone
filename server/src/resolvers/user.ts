@@ -69,16 +69,16 @@ const validatePassword = (password: string, field: string) => {
 @Resolver()
 export class UserResolver {
   @Query(() => [User])
-  users(@Ctx() { em }: MyContext): Promise<User[]> {
-    return em.find(User, {});
+  users(): Promise<User[]> {
+    return User.find();
   }
 
   @Query(() => User, { nullable: true })
-  currentUser(@Ctx() { req, em }: MyContext) {
+  async currentUser(@Ctx() { req }: MyContext) {
     if (!req.session.userId) {
       return null;
     }
-    const user = em.findOne(User, { id: req.session.userId });
+    const user = await User.findOne(req.session.userId);
     return user;
   }
 
@@ -91,20 +91,20 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: RegisterInput,
-    @Ctx() { em, req }: MyContext
+    @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     if (!validator.isEmail(options.email)) {
       return {
         errors: [setError('email', '올바른 이메일 주소를 입력해 주세요.')],
       };
     }
-    const sameEmailUser = await em.findOne(User, { email: options.email });
+    const sameEmailUser = await User.findOne({ email: options.email });
     if (sameEmailUser) {
       return {
         errors: [setError('email', '이메일이 이미 사용 중입니다.')],
       };
     }
-    const sameUsernameUser = await em.findOne(User, {
+    const sameUsernameUser = await User.findOne({
       username: options.username,
     });
     if (sameUsernameUser) {
@@ -123,12 +123,12 @@ export class UserResolver {
     if (passwordError) return passwordError;
 
     const hashedPassword = await argon2.hash(options.password);
-    const newUser = em.create(User, {
+    const newUser = User.create({
       email: options.email,
       username: options.username,
       password: hashedPassword,
     });
-    await em.persistAndFlush(newUser);
+    await User.save(newUser);
     req.session.userId = newUser.id;
     return { user: newUser };
   }
@@ -136,13 +136,13 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg('options') options: LoginInput,
-    @Ctx() { em, req }: MyContext
+    @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    let user: User | null;
+    let user: User | undefined;
     if (validator.isEmail(options.usernameOrEmail)) {
-      user = await em.findOne(User, { email: options.usernameOrEmail });
+      user = await User.findOne({ email: options.usernameOrEmail });
     } else {
-      user = await em.findOne(User, { username: options.usernameOrEmail });
+      user = await User.findOne({ username: options.usernameOrEmail });
     }
     if (!user) {
       return {
@@ -187,9 +187,9 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async forgotPassword(
     @Arg('email') email: string,
-    @Ctx() { em, redis }: MyContext
+    @Ctx() { redis }: MyContext
   ) {
-    const user = await em.findOne(User, { email });
+    const user = await User.findOne({ email });
     if (!user) {
       return true;
     }
@@ -213,7 +213,7 @@ export class UserResolver {
   async changePassword(
     @Arg('token') token: string,
     @Arg('newPassword') newPassword: string,
-    @Ctx() { em, redis }: MyContext
+    @Ctx() { redis }: MyContext
   ): Promise<UserResponse> {
     const passwordError = validatePassword(newPassword, 'newPassword');
     if (passwordError) return passwordError;
@@ -226,14 +226,15 @@ export class UserResolver {
       };
     }
 
-    const user = await em.findOne(User, { id: parseInt(userId as string) });
+    const userIdNum = parseInt(userId);
+    const user = await User.findOne(userIdNum);
     if (!user) {
       return {
         errors: [setError('user', '사용자가 존재하지 않습니다.')],
       };
     }
     user.password = await argon2.hash(newPassword);
-    await em.persistAndFlush(user);
+    await User.save(user);
 
     await redis.del(key);
 
