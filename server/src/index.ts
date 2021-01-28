@@ -21,13 +21,6 @@ const main = async () => {
   const RedisStore = connectRedis(session);
   const redis = new Redis();
 
-  // redis.keys('*', (err, keys) => {
-  //   if (err) {
-  //     console.error(err);
-  //   }
-  //   console.log(keys);
-  // });
-
   app.use(
     cors({
       origin: WEB_URL,

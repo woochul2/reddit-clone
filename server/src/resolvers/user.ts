@@ -50,6 +50,22 @@ class UserResponse {
   user?: User;
 }
 
+const setError = (field: string, message: string) => {
+  return {
+    field,
+    message,
+  };
+};
+
+const validatePassword = (password: string, field: string) => {
+  if (password.length <= 2) {
+    return {
+      errors: [setError(field, '비밀번호 길이는 3글자 이상이어야 합니다.')],
+    };
+  }
+  return null;
+};
+
 @Resolver()
 export class UserResolver {
   @Query(() => [User])
@@ -79,23 +95,13 @@ export class UserResolver {
   ): Promise<UserResponse> {
     if (!validator.isEmail(options.email)) {
       return {
-        errors: [
-          {
-            field: 'email',
-            message: '올바른 이메일 주소를 입력해 주세요.',
-          },
-        ],
+        errors: [setError('email', '올바른 이메일 주소를 입력해 주세요.')],
       };
     }
     const sameEmailUser = await em.findOne(User, { email: options.email });
     if (sameEmailUser) {
       return {
-        errors: [
-          {
-            field: 'email',
-            message: '이메일이 이미 사용 중입니다.',
-          },
-        ],
+        errors: [setError('email', '이메일이 이미 사용 중입니다.')],
       };
     }
     const sameUsernameUser = await em.findOne(User, {
@@ -103,34 +109,18 @@ export class UserResolver {
     });
     if (sameUsernameUser) {
       return {
-        errors: [
-          {
-            field: 'username',
-            message: '아이디가 이미 존재합니다.',
-          },
-        ],
+        errors: [setError('username', '아이디가 이미 존재합니다.')],
       };
     }
     if (options.username.length <= 2) {
       return {
         errors: [
-          {
-            field: 'username',
-            message: '아이디 길이는 3글자 이상이어야 합니다.',
-          },
+          setError('username', '아이디 길이는 3글자 이상이어야 합니다.'),
         ],
       };
     }
-    if (options.password.length <= 2) {
-      return {
-        errors: [
-          {
-            field: 'password',
-            message: '비밀번호 길이는 3글자 이상이어야 합니다.',
-          },
-        ],
-      };
-    }
+    const passwordError = validatePassword(options.password, 'password');
+    if (passwordError) return passwordError;
 
     const hashedPassword = await argon2.hash(options.password);
     const newUser = em.create(User, {
@@ -157,10 +147,10 @@ export class UserResolver {
     if (!user) {
       return {
         errors: [
-          {
-            field: 'usernameOrEmail',
-            message: '아이디 또는 이메일이 존재하지 않습니다.',
-          },
+          setError(
+            'usernameOrEmail',
+            '아이디 또는 이메일이 존재하지 않습니다.'
+          ),
         ],
       };
     }
@@ -168,12 +158,7 @@ export class UserResolver {
     const valid = await argon2.verify(user.password, options.password);
     if (!valid) {
       return {
-        errors: [
-          {
-            field: 'password',
-            message: '비밀번호가 일치하지 않습니다.',
-          },
-        ],
+        errors: [setError('password', '비밀번호가 일치하지 않습니다.')],
       };
     }
 
@@ -230,39 +215,21 @@ export class UserResolver {
     @Arg('newPassword') newPassword: string,
     @Ctx() { em, redis }: MyContext
   ): Promise<UserResponse> {
-    if (newPassword.length <= 2) {
-      return {
-        errors: [
-          {
-            field: 'newPassword',
-            message: '비밀번호 길이는 3글자 이상이어야 합니다.',
-          },
-        ],
-      };
-    }
+    const passwordError = validatePassword(newPassword, 'newPassword');
+    if (passwordError) return passwordError;
 
     const key = FORGET_PASSWORD_PREFIX + token;
     const userId = await redis.get(key);
     if (!userId) {
       return {
-        errors: [
-          {
-            field: 'token',
-            message: '유효 기간이 만료되었습니다.',
-          },
-        ],
+        errors: [setError('token', '유효 기간이 만료되었습니다.')],
       };
     }
 
     const user = await em.findOne(User, { id: parseInt(userId as string) });
     if (!user) {
       return {
-        errors: [
-          {
-            field: 'user',
-            message: '사용자가 존재하지 않습니다.',
-          },
-        ],
+        errors: [setError('user', '사용자가 존재하지 않습니다.')],
       };
     }
     user.password = await argon2.hash(newPassword);
