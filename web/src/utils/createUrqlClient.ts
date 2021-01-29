@@ -1,10 +1,13 @@
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { dedupExchange, fetchExchange } from 'urql';
 import {
+  CreatePostMutation,
   CurrentUserDocument,
   CurrentUserQuery,
   LoginMutation,
   LogoutMutation,
+  PostsDocument,
+  PostsQuery,
   RegisterMutation,
 } from '../generated/graphql';
 import { myUpdateQuery } from './myUpdateQuery';
@@ -60,6 +63,21 @@ export const createUrqlClient = (ssrExchange: any) => ({
                 }
                 return {
                   currentUser: null,
+                };
+              }
+            );
+          },
+          createPost: (_result, _args, cache, _info) => {
+            myUpdateQuery<CreatePostMutation, PostsQuery>(
+              cache,
+              _result,
+              { query: PostsDocument },
+              (result, query) => {
+                if (!result.createPost) {
+                  return query;
+                }
+                return {
+                  posts: [...query.posts, result.createPost],
                 };
               }
             );
