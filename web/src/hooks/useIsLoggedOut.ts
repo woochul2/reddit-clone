@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { HOME } from '../constants';
 import { useCurrentUserQuery } from '../generated/graphql';
 
-export function useIsLoggedIn() {
+export function useIsLoggedOut() {
   const [
     { data: currentUserData, fetching: fetchingCurrentUser },
   ] = useCurrentUserQuery();
@@ -11,12 +11,12 @@ export function useIsLoggedIn() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!fetchingCurrentUser && !currentUser) {
+    if (!fetchingCurrentUser && currentUser) {
       router.push(HOME);
     }
   }, [currentUserData]);
 
-  const isLoggedIn = !fetchingCurrentUser && currentUser;
+  const isLoggedOut = !fetchingCurrentUser && !currentUser;
 
-  return isLoggedIn;
+  return isLoggedOut;
 }

@@ -2,12 +2,15 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Mutation,
   Query,
   Resolver,
+  Root,
   UseMiddleware,
 } from 'type-graphql';
+import { getConnection } from 'typeorm';
 import { Post } from '../entities/Post';
 import { MyContext } from '../interfaces';
 import { isLoggedIn } from '../middleware/isLoggedIn';
@@ -20,11 +23,25 @@ class PostInput {
   text: string;
 }
 
-@Resolver()
+@Resolver(() => Post)
 export class PostResolver {
+  @FieldResolver(() => String)
+  textSnippet(@Root() post: Post) {
+    if (post.text.length > 50) {
+      return post.text.slice(0, 50) + ' ...';
+    }
+    return post.text;
+  }
+
   @Query(() => [Post])
   posts(): Promise<Post[]> {
-    return Post.find();
+    const posts = getConnection()
+      .getRepository(Post)
+      .createQueryBuilder('post')
+      .orderBy('post.createdAt', 'DESC')
+      .getMany();
+
+    return posts;
   }
 
   @Query(() => Post, { nullable: true })

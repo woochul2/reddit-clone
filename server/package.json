@@ -5,7 +5,8 @@
   "scripts": {
     "watch": "tsc -w",
     "dev": "nodemon dist/index.js",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "migration:create": "typeorm migration:create -n"
   },
   "dependencies": {
     "apollo-server-express": "^2.19.1",

@@ -5,6 +5,8 @@ interface ContainerProps {
 }
 
 export const Container = styled.header<ContainerProps>`
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: flex-end;
   align-items: center;

@@ -42,6 +42,8 @@ export type Post = {
   text: Scalars['String'];
   voteCounts: Scalars['Float'];
   creatorId: Scalars['Float'];
+  creator: User;
+  textSnippet: Scalars['String'];
 };
 
 export type User = {
@@ -135,6 +137,11 @@ export type ErrorFragmentFragment = (
   & Pick<FieldError, 'field' | 'message'>
 );
 
+export type PostFragmentFragment = (
+  { __typename?: 'Post' }
+  & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'textSnippet' | 'voteCounts' | 'creatorId'>
+);
+
 export type UserFragmentFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'email' | 'username'>
@@ -174,7 +181,7 @@ export type CreatePostMutation = (
   { __typename?: 'Mutation' }
   & { createPost: (
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'voteCounts' | 'creatorId'>
+    & PostFragmentFragment
   ) }
 );
 
@@ -240,7 +247,7 @@ export type PostsQuery = (
   { __typename?: 'Query' }
   & { posts: Array<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'voteCounts' | 'creatorId'>
+    & PostFragmentFragment
   )> }
 );
 
@@ -254,6 +261,18 @@ export type UserIdQuery = (
   & Pick<Query, 'userId'>
 );
 
+export const PostFragmentFragmentDoc = gql`
+    fragment PostFragment on Post {
+  id
+  createdAt
+  updatedAt
+  title
+  text
+  textSnippet
+  voteCounts
+  creatorId
+}
+    `;
 export const ErrorFragmentFragmentDoc = gql`
     fragment ErrorFragment on FieldError {
   field
@@ -292,16 +311,10 @@ export function useChangePasswordMutation() {
 export const CreatePostDocument = gql`
     mutation CreatePost($input: PostInput!) {
   createPost(input: $input) {
-    id
-    createdAt
-    updatedAt
-    title
-    text
-    voteCounts
-    creatorId
+    ...PostFragment
   }
 }
-    `;
+    ${PostFragmentFragmentDoc}`;
 
 export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
@@ -360,16 +373,10 @@ export function useCurrentUserQuery(options: Omit<Urql.UseQueryArgs<CurrentUserQ
 export const PostsDocument = gql`
     query Posts {
   posts {
-    id
-    createdAt
-    updatedAt
-    title
-    text
-    voteCounts
-    creatorId
+    ...PostFragment
   }
 }
-    `;
+    ${PostFragmentFragmentDoc}`;
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });

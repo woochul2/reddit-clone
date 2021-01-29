@@ -3,6 +3,7 @@
   --light-black: hsl(0, 0%, 15%);
   --gray: hsl(0, 0%, 45%);
   --light-gray: hsl(0, 0%, 80%);
+  --dark-white: hsl(0, 0%, 95%);
   --white: hsl(0, 0%, 100%);
 
   --dark-blue: hsl(210, 79%, 40%);
@@ -35,4 +36,9 @@
   --header-text-color: var(--black);
   --header-button-focus-border-color: var(--black);
   --header-svg-hover-color: var(--gray);
+
+  --layout-background-color: var(--dark-white);
+
+  --post-border-color: var(--gray);
+  --post-background-color: var(--white);
 }

@@ -77,7 +77,7 @@ export const createUrqlClient = (ssrExchange: any) => ({
                   return query;
                 }
                 return {
-                  posts: [...query.posts, result.createPost],
+                  posts: [result.createPost, ...query.posts],
                 };
               }
             );
