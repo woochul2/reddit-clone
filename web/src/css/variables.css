@@ -16,9 +16,13 @@
 
   --input-border-color: var(--light-gray);
   --input-background-color: var(--white);
-  --input-text-color: var(--black);
+  --input-text-color: var(--light-black);
   --input-label-color: var(--gray);
   --error-color: var(--red);
+
+  --textarea-border-color: var(--light-gray);
+  --textarea-text-color: var(--light-black);
+  --textarea-placeholder-color: var(--gray);
 
   --button-focus-border-color: var(--black);
   --button-background-color: var(--blue);
@@ -30,4 +34,5 @@
   --header-background-color: var(--white);
   --header-text-color: var(--black);
   --header-button-focus-border-color: var(--black);
+  --header-svg-hover-color: var(--gray);
 }

@@ -7,6 +7,7 @@ interface ContainerProps {
 export const Container = styled.header<ContainerProps>`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   padding: 1em;
   border-bottom: 0.07em solid var(--header-border-color);
   background-color: var(--header-background-color);
@@ -35,9 +36,18 @@ export const LogoutButton = styled.button`
 export const Link = styled.a`
   text-decoration: none;
   margin: 0 1em;
-  color: var(--body-text-color);
+  color: var(--header-text-color);
+
+  svg {
+    height: 1.25em;
+    width: 1.25em;
+  }
 
   &:hover {
     text-decoration: underline;
+
+    svg {
+      color: var(--header-svg-hover-color);
+    }
   }
 `;

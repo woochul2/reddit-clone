@@ -1,15 +1,15 @@
 import { Formik } from 'formik';
 import { NextPage } from 'next';
 import { withUrqlClient } from 'next-urql';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import AuthForm from '../../components/AuthForm';
 import Confirmation from '../../components/Confirmation';
-import Form from '../../components/Form';
 import {
   useChangePasswordMutation,
   useUserIdQuery,
 } from '../../generated/graphql';
-import { Container, ExpirationError } from '../../pages-styles/change-password';
-import { MyFormikProps } from '../../types';
+import { Container, ExpirationError } from '../../page-styles/change-password';
+import { AuthFormikProps } from '../../types';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { errorsToMap } from '../../utils/errorsToMap';
 
@@ -44,8 +44,8 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
                   <Confirmation text="비밀번호를 성공적으로 변경했습니다." />
                 </>
               ) : (
-                <Form
-                  formik={formik as MyFormikProps}
+                <AuthForm
+                  formik={formik as AuthFormikProps}
                   title="비밀번호 재설정"
                   buttonLabel="확인"
                 />

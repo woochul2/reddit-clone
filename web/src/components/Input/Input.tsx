@@ -1,4 +1,4 @@
-import {
+import React, {
   ChangeEvent,
   FocusEvent,
   MutableRefObject,
@@ -9,6 +9,7 @@ import {
 import { Container } from './input';
 
 interface Props {
+  variant?: 'default' | 'labeled';
   type: string;
   name: string;
   value?: string;
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export default function Input({
+  variant = 'default',
   type,
   name,
   value,
@@ -48,6 +50,7 @@ export default function Input({
 
   return (
     <Container
+      variant={variant}
       onFocus={() => {
         setIsFocused(true);
       }}

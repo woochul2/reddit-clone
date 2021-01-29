@@ -90,42 +90,42 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async register(
-    @Arg('options') options: RegisterInput,
+    @Arg('input') input: RegisterInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    if (!validator.isEmail(options.email)) {
+    if (!validator.isEmail(input.email)) {
       return {
         errors: [setError('email', '올바른 이메일 주소를 입력해 주세요.')],
       };
     }
-    const sameEmailUser = await User.findOne({ email: options.email });
+    const sameEmailUser = await User.findOne({ email: input.email });
     if (sameEmailUser) {
       return {
         errors: [setError('email', '이메일이 이미 사용 중입니다.')],
       };
     }
     const sameUsernameUser = await User.findOne({
-      username: options.username,
+      username: input.username,
     });
     if (sameUsernameUser) {
       return {
         errors: [setError('username', '아이디가 이미 존재합니다.')],
       };
     }
-    if (options.username.length <= 2) {
+    if (input.username.length <= 2) {
       return {
         errors: [
           setError('username', '아이디 길이는 3글자 이상이어야 합니다.'),
         ],
       };
     }
-    const passwordError = validatePassword(options.password, 'password');
+    const passwordError = validatePassword(input.password, 'password');
     if (passwordError) return passwordError;
 
-    const hashedPassword = await argon2.hash(options.password);
+    const hashedPassword = await argon2.hash(input.password);
     const newUser = User.create({
-      email: options.email,
-      username: options.username,
+      email: input.email,
+      username: input.username,
       password: hashedPassword,
     });
     await User.save(newUser);
@@ -135,14 +135,14 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg('options') options: LoginInput,
+    @Arg('input') input: LoginInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     let user: User | undefined;
-    if (validator.isEmail(options.usernameOrEmail)) {
-      user = await User.findOne({ email: options.usernameOrEmail });
+    if (validator.isEmail(input.usernameOrEmail)) {
+      user = await User.findOne({ email: input.usernameOrEmail });
     } else {
-      user = await User.findOne({ username: options.usernameOrEmail });
+      user = await User.findOne({ username: input.usernameOrEmail });
     }
     if (!user) {
       return {
@@ -155,7 +155,7 @@ export class UserResolver {
       };
     }
 
-    const valid = await argon2.verify(user.password, options.password);
+    const valid = await argon2.verify(user.password, input.password);
     if (!valid) {
       return {
         errors: [setError('password', '비밀번호가 일치하지 않습니다.')],
@@ -226,8 +226,7 @@ export class UserResolver {
       };
     }
 
-    const userIdNum = parseInt(userId);
-    const user = await User.findOne(userIdNum);
+    const user = await User.findOne(parseInt(userId));
     if (!user) {
       return {
         errors: [setError('user', '사용자가 존재하지 않습니다.')],

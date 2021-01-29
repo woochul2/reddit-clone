@@ -1,12 +1,22 @@
 import { withUrqlClient } from 'next-urql';
+import React from 'react';
 import Header from '../components/Header';
-import { Container } from '../pages-styles/index';
+import { usePostsQuery } from '../generated/graphql';
+import { Container } from '../page-styles/index';
 import { createUrqlClient } from '../utils/createUrqlClient';
 
 const Home = () => {
+  const [{ data: postsData }] = usePostsQuery();
   return (
     <Container>
       <Header />
+      {postsData &&
+        postsData.posts.map((post) => (
+          <div key={post.id}>
+            <h3>{post.title}</h3>
+            <div>{post.text}</div>
+          </div>
+        ))}
     </Container>
   );
 };

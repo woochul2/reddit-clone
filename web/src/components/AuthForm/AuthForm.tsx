@@ -1,11 +1,12 @@
+import React from 'react';
 import ReactLoading from 'react-loading';
-import { MyFormikProps } from '../../types';
+import { AuthFormikProps } from '../../types';
 import Button from '../Button';
 import Input from '../Input';
-import { Container, Error, SubTitle, Title } from './form';
+import { Container, Error, SubTitle, Title } from './auth-form';
 
 interface Props {
-  formik: MyFormikProps;
+  formik: AuthFormikProps;
   title: string;
   subTitle?: string;
   buttonLabel: string;
@@ -39,7 +40,7 @@ const valuesKeyToLabel = (key: string) => {
   return key;
 };
 
-export default function Form({
+export default function AuthForm({
   formik,
   title,
   subTitle,
@@ -56,6 +57,7 @@ export default function Form({
       {Object.entries(values).map(([key, value], idx) => (
         <div key={idx}>
           <Input
+            variant="labeled"
             type={valuesKeyToType(key)}
             name={key}
             value={value}

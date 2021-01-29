@@ -39,6 +39,9 @@ export type Post = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   title: Scalars['String'];
+  text: Scalars['String'];
+  voteCounts: Scalars['Float'];
+  creatorId: Scalars['Float'];
 };
 
 export type User = {
@@ -64,7 +67,7 @@ export type Mutation = {
 
 
 export type MutationCreatePostArgs = {
-  title: Scalars['String'];
+  input: PostInput;
 };
 
 
@@ -80,12 +83,12 @@ export type MutationDeletePostArgs = {
 
 
 export type MutationRegisterArgs = {
-  options: RegisterInput;
+  input: RegisterInput;
 };
 
 
 export type MutationLoginArgs = {
-  options: LoginInput;
+  input: LoginInput;
 };
 
 
@@ -97,6 +100,11 @@ export type MutationForgotPasswordArgs = {
 export type MutationChangePasswordArgs = {
   newPassword: Scalars['String'];
   token: Scalars['String'];
+};
+
+export type PostInput = {
+  title: Scalars['String'];
+  text: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -157,6 +165,19 @@ export type ChangePasswordMutation = (
   ) }
 );
 
+export type CreatePostMutationVariables = Exact<{
+  input: PostInput;
+}>;
+
+
+export type CreatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { createPost: (
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'voteCounts' | 'creatorId'>
+  ) }
+);
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -168,8 +189,7 @@ export type ForgotPasswordMutation = (
 );
 
 export type LoginMutationVariables = Exact<{
-  usernameOrEmail: Scalars['String'];
-  password: Scalars['String'];
+  input: LoginInput;
 }>;
 
 
@@ -190,9 +210,7 @@ export type LogoutMutation = (
 );
 
 export type RegisterMutationVariables = Exact<{
-  email: Scalars['String'];
-  username: Scalars['String'];
-  password: Scalars['String'];
+  input: RegisterInput;
 }>;
 
 
@@ -212,6 +230,17 @@ export type CurrentUserQuery = (
   & { currentUser?: Maybe<(
     { __typename?: 'User' }
     & UserFragmentFragment
+  )> }
+);
+
+export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PostsQuery = (
+  { __typename?: 'Query' }
+  & { posts: Array<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'voteCounts' | 'creatorId'>
   )> }
 );
 
@@ -260,6 +289,23 @@ export const ChangePasswordDocument = gql`
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
 };
+export const CreatePostDocument = gql`
+    mutation CreatePost($input: PostInput!) {
+  createPost(input: $input) {
+    id
+    createdAt
+    updatedAt
+    title
+    text
+    voteCounts
+    creatorId
+  }
+}
+    `;
+
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
+};
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
   forgotPassword(email: $email)
@@ -270,8 +316,8 @@ export function useForgotPasswordMutation() {
   return Urql.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument);
 };
 export const LoginDocument = gql`
-    mutation Login($usernameOrEmail: String!, $password: String!) {
-  login(options: {usernameOrEmail: $usernameOrEmail, password: $password}) {
+    mutation Login($input: LoginInput!) {
+  login(input: $input) {
     ...UserResponseFragment
   }
 }
@@ -290,8 +336,8 @@ export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
-    mutation Register($email: String!, $username: String!, $password: String!) {
-  register(options: {email: $email, username: $username, password: $password}) {
+    mutation Register($input: RegisterInput!) {
+  register(input: $input) {
     ...UserResponseFragment
   }
 }
@@ -310,6 +356,23 @@ export const CurrentUserDocument = gql`
 
 export function useCurrentUserQuery(options: Omit<Urql.UseQueryArgs<CurrentUserQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CurrentUserQuery>({ query: CurrentUserDocument, ...options });
+};
+export const PostsDocument = gql`
+    query Posts {
+  posts {
+    id
+    createdAt
+    updatedAt
+    title
+    text
+    voteCounts
+    creatorId
+  }
+}
+    `;
+
+export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
 };
 export const UserIdDocument = gql`
     query UserId($token: String!) {

@@ -1,6 +1,6 @@
 import { FormikProps } from 'formik';
 
-export type MyFormikProps = FormikProps<{
+export type AuthFormikProps = FormikProps<{
   email?: string;
   username?: string;
   usernameOrEmail?: string;

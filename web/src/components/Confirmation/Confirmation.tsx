@@ -1,3 +1,4 @@
+import React from 'react';
 import { HOME } from '../../constants';
 import ButtonLink from '../ButtonLink';
 import { Container } from './confirmation';

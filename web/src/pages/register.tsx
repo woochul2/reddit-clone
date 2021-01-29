@@ -1,11 +1,12 @@
 import { Formik } from 'formik';
 import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
-import Form from '../components/Form';
+import React from 'react';
+import AuthForm from '../components/AuthForm';
 import { HOME } from '../constants';
 import { useRegisterMutation } from '../generated/graphql';
-import { Container } from '../pages-styles/register';
-import { MyFormikProps } from '../types';
+import { Container } from '../page-styles/register';
+import { AuthFormikProps } from '../types';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import { errorsToMap } from '../utils/errorsToMap';
 
@@ -18,7 +19,7 @@ const Register = () => {
       <Formik
         initialValues={{ email: '', username: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await register(values);
+          const response = await register({ input: values });
           if (response.data?.register.errors) {
             setErrors(errorsToMap(response.data.register.errors));
             return;
@@ -29,8 +30,8 @@ const Register = () => {
         }}
       >
         {(formik) => (
-          <Form
-            formik={formik as MyFormikProps}
+          <AuthForm
+            formik={formik as AuthFormikProps}
             title="회원가입"
             buttonLabel="가입"
           />

@@ -1,5 +1,7 @@
 import NextLink from 'next/link';
-import { LOGIN, REGISTER } from '../../constants';
+import React from 'react';
+import { IoCreateOutline } from 'react-icons/io5';
+import { CREATE_POST, LOGIN, REGISTER } from '../../constants';
 import {
   useCurrentUserQuery,
   useLogoutMutation,
@@ -28,6 +30,11 @@ export default function Header({ styles }: Props) {
     <Container styles={styles}>
       {!fetchingCurrentUser && currentUserData?.currentUser && (
         <>
+          <NextLink href={CREATE_POST} passHref>
+            <Link>
+              <IoCreateOutline />
+            </Link>
+          </NextLink>
           <Username>{currentUserData.currentUser.username}</Username>
           <LogoutButton onClick={handleLogout} disabled={fetchingLogout}>
             로그아웃
