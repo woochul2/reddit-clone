@@ -16,17 +16,17 @@ import { UserResolver } from './resolvers/user';
 require('dotenv').config();
 
 const main = async () => {
-  const orm = await createConnection({
+  await createConnection({
     type: 'postgres',
     database: 'reddit_clone',
     username: 'postgres',
     password: 'a',
-    logging: true,
+    logging: false,
     synchronize: true,
     entities: [Post, User],
     migrations: [__dirname + '/migrations/*.js'],
   });
-  orm.runMigrations();
+  // orm.runMigrations();
 
   const app = express();
   const RedisStore = connectRedis(session);

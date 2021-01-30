@@ -7,7 +7,7 @@ import Input from '../components/Input';
 import Layout from '../components/Layout';
 import Textarea from '../components/TextArea';
 import { HOME } from '../constants';
-import { useCreatePostMutation } from '../generated/graphql';
+import { useCreatePostMutation, usePostsQuery } from '../generated/graphql';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
 import { Form } from '../page-styles/create-post';
 import { createUrqlClient } from '../utils/createUrqlClient';
@@ -16,6 +16,7 @@ const CreatePost = () => {
   const isLoggedIn = useIsLoggedIn();
   const [, createPost] = useCreatePostMutation();
   const router = useRouter();
+  const [] = usePostsQuery();
 
   return (
     <Layout>
@@ -25,9 +26,11 @@ const CreatePost = () => {
             initialValues={{ title: '', text: '' }}
             onSubmit={async (values) => {
               const { error } = await createPost({ input: values });
-              if (!error) {
-                router.push(HOME);
+              if (error) {
+                console.error(error);
+                return;
               }
+              router.push(HOME);
             }}
           >
             {({ values, handleChange, handleSubmit }) => (

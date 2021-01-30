@@ -12,6 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
 };
 
 export type Query = {
@@ -36,8 +38,8 @@ export type QueryUserIdArgs = {
 export type Post = {
   __typename?: 'Post';
   id: Scalars['Float'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
   title: Scalars['String'];
   text: Scalars['String'];
   voteCounts: Scalars['Float'];
@@ -46,11 +48,12 @@ export type Post = {
   textSnippet: Scalars['String'];
 };
 
+
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
   email: Scalars['String'];
   username: Scalars['String'];
 };
@@ -132,29 +135,33 @@ export type LoginInput = {
   password: Scalars['String'];
 };
 
-export type ErrorFragmentFragment = (
+export type ErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
 );
 
-export type PostFragmentFragment = (
+export type PostFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'textSnippet' | 'voteCounts' | 'creatorId'>
+  & { creator: (
+    { __typename?: 'User' }
+    & UserFragment
+  ) }
 );
 
-export type UserFragmentFragment = (
+export type UserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'email' | 'username'>
 );
 
-export type UserResponseFragmentFragment = (
+export type UserResponseFragment = (
   { __typename?: 'UserResponse' }
   & { errors?: Maybe<Array<(
     { __typename?: 'FieldError' }
-    & ErrorFragmentFragment
+    & ErrorFragment
   )>>, user?: Maybe<(
     { __typename?: 'User' }
-    & UserFragmentFragment
+    & UserFragment
   )> }
 );
 
@@ -168,7 +175,7 @@ export type ChangePasswordMutation = (
   { __typename?: 'Mutation' }
   & { changePassword: (
     { __typename?: 'UserResponse' }
-    & UserResponseFragmentFragment
+    & UserResponseFragment
   ) }
 );
 
@@ -181,7 +188,7 @@ export type CreatePostMutation = (
   { __typename?: 'Mutation' }
   & { createPost: (
     { __typename?: 'Post' }
-    & PostFragmentFragment
+    & PostFragment
   ) }
 );
 
@@ -204,7 +211,7 @@ export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login: (
     { __typename?: 'UserResponse' }
-    & UserResponseFragmentFragment
+    & UserResponseFragment
   ) }
 );
 
@@ -225,7 +232,7 @@ export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
     { __typename?: 'UserResponse' }
-    & UserResponseFragmentFragment
+    & UserResponseFragment
   ) }
 );
 
@@ -236,7 +243,7 @@ export type CurrentUserQuery = (
   { __typename?: 'Query' }
   & { currentUser?: Maybe<(
     { __typename?: 'User' }
-    & UserFragmentFragment
+    & UserFragment
   )> }
 );
 
@@ -247,7 +254,7 @@ export type PostsQuery = (
   { __typename?: 'Query' }
   & { posts: Array<(
     { __typename?: 'Post' }
-    & PostFragmentFragment
+    & PostFragment
   )> }
 );
 
@@ -261,8 +268,15 @@ export type UserIdQuery = (
   & Pick<Query, 'userId'>
 );
 
-export const PostFragmentFragmentDoc = gql`
-    fragment PostFragment on Post {
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  email
+  username
+}
+    `;
+export const PostFragmentDoc = gql`
+    fragment Post on Post {
   id
   createdAt
   updatedAt
@@ -271,39 +285,35 @@ export const PostFragmentFragmentDoc = gql`
   textSnippet
   voteCounts
   creatorId
+  creator {
+    ...User
+  }
 }
-    `;
-export const ErrorFragmentFragmentDoc = gql`
-    fragment ErrorFragment on FieldError {
+    ${UserFragmentDoc}`;
+export const ErrorFragmentDoc = gql`
+    fragment Error on FieldError {
   field
   message
 }
     `;
-export const UserFragmentFragmentDoc = gql`
-    fragment UserFragment on User {
-  id
-  email
-  username
-}
-    `;
-export const UserResponseFragmentFragmentDoc = gql`
-    fragment UserResponseFragment on UserResponse {
+export const UserResponseFragmentDoc = gql`
+    fragment UserResponse on UserResponse {
   errors {
-    ...ErrorFragment
+    ...Error
   }
   user {
-    ...UserFragment
+    ...User
   }
 }
-    ${ErrorFragmentFragmentDoc}
-${UserFragmentFragmentDoc}`;
+    ${ErrorFragmentDoc}
+${UserFragmentDoc}`;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
-    ...UserResponseFragment
+    ...UserResponse
   }
 }
-    ${UserResponseFragmentFragmentDoc}`;
+    ${UserResponseFragmentDoc}`;
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
@@ -311,10 +321,10 @@ export function useChangePasswordMutation() {
 export const CreatePostDocument = gql`
     mutation CreatePost($input: PostInput!) {
   createPost(input: $input) {
-    ...PostFragment
+    ...Post
   }
 }
-    ${PostFragmentFragmentDoc}`;
+    ${PostFragmentDoc}`;
 
 export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
@@ -331,10 +341,10 @@ export function useForgotPasswordMutation() {
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
-    ...UserResponseFragment
+    ...UserResponse
   }
 }
-    ${UserResponseFragmentFragmentDoc}`;
+    ${UserResponseFragmentDoc}`;
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
@@ -351,10 +361,10 @@ export function useLogoutMutation() {
 export const RegisterDocument = gql`
     mutation Register($input: RegisterInput!) {
   register(input: $input) {
-    ...UserResponseFragment
+    ...UserResponse
   }
 }
-    ${UserResponseFragmentFragmentDoc}`;
+    ${UserResponseFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
@@ -362,10 +372,10 @@ export function useRegisterMutation() {
 export const CurrentUserDocument = gql`
     query CurrentUser {
   currentUser {
-    ...UserFragment
+    ...User
   }
 }
-    ${UserFragmentFragmentDoc}`;
+    ${UserFragmentDoc}`;
 
 export function useCurrentUserQuery(options: Omit<Urql.UseQueryArgs<CurrentUserQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CurrentUserQuery>({ query: CurrentUserDocument, ...options });
@@ -373,10 +383,10 @@ export function useCurrentUserQuery(options: Omit<Urql.UseQueryArgs<CurrentUserQ
 export const PostsDocument = gql`
     query Posts {
   posts {
-    ...PostFragment
+    ...Post
   }
 }
-    ${PostFragmentFragmentDoc}`;
+    ${PostFragmentDoc}`;
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });

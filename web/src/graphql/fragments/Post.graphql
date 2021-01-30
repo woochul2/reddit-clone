@@ -1,4 +1,4 @@
-fragment PostFragment on Post {
+fragment Post on Post {
   id
   createdAt
   updatedAt
@@ -7,4 +7,7 @@ fragment PostFragment on Post {
   textSnippet
   voteCounts
   creatorId
+  creator {
+    ...User
+  }
 }

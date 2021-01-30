@@ -12,6 +12,7 @@ import {
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
 import { Post } from '../entities/Post';
+import { User } from '../entities/User';
 import { MyContext } from '../interfaces';
 import { isLoggedIn } from '../middleware/isLoggedIn';
 
@@ -38,6 +39,7 @@ export class PostResolver {
     const posts = getConnection()
       .getRepository(Post)
       .createQueryBuilder('post')
+      .leftJoinAndSelect('post.creator', 'user')
       .orderBy('post.createdAt', 'DESC')
       .getMany();
 
@@ -54,10 +56,18 @@ export class PostResolver {
   async createPost(
     @Arg('input') input: PostInput,
     @Ctx() { req }: MyContext
-  ): Promise<Post> {
+  ): Promise<Post | null> {
+    const creator = await User.findOne(req.session.userId);
+    if (!creator) {
+      return null;
+    }
+
     return await Post.create({
       ...input,
+      createdAt: Date(),
+      updatedAt: Date(),
       creatorId: req.session.userId,
+      creator: creator,
     }).save();
   }
 
@@ -71,7 +81,7 @@ export class PostResolver {
       return null;
     }
     if (typeof title !== 'undefined') {
-      await Post.update({ id }, { title });
+      await Post.update({ id }, { title, updatedAt: Date() });
     }
     return post;
   }

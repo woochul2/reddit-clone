@@ -20,3 +20,14 @@ export const PostTitle = styled.h2`
 export const PostSnippet = styled.h3`
   font-weight: normal;
 `;
+
+export const PostInfo = styled.div`
+  display: flex;
+  margin: 0.5rem 0.125rem 0;
+`;
+
+export const PostCreator = styled.p``;
+
+export const PostCreatedTime = styled.p`
+  margin: 0 0.75rem;
+`;
