@@ -3,6 +3,7 @@ import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
+import Layout from '../components/Layout';
 import { HOME } from '../constants';
 import { useRegisterMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
@@ -17,7 +18,7 @@ const Register = () => {
   const router = useRouter();
 
   return (
-    <>
+    <Layout searchBox="off">
       {isLoggedOut && (
         <Container>
           <Formik
@@ -43,7 +44,7 @@ const Register = () => {
           </Formik>
         </Container>
       )}
-    </>
+    </Layout>
   );
 };
 

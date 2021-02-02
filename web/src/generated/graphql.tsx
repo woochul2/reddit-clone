@@ -151,7 +151,7 @@ export type PostFragment = (
 
 export type UserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'email' | 'username'>
+  & Pick<User, 'id' | 'createdAt' | 'updatedAt' | 'email' | 'username'>
 );
 
 export type UserResponseFragment = (
@@ -271,6 +271,8 @@ export type UserIdQuery = (
 export const UserFragmentDoc = gql`
     fragment User on User {
   id
+  createdAt
+  updatedAt
   email
   username
 }

@@ -9,7 +9,7 @@ export const Container = styled.button<ContainerProps>`
   display: flex;
   justify-content: center;
   padding: 0.75em 1.5em;
-  margin: 0.5em 0;
+  margin: 0 0 1em;
   outline: 0;
   border: none;
   border-radius: 0.25em;
@@ -17,7 +17,7 @@ export const Container = styled.button<ContainerProps>`
   color: var(--button-text-color);
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.1em var(--button-focus-border-color);
+    box-shadow: 0 0 0 0.125em var(--button-focused-border-color);
   }
 
   &:active {

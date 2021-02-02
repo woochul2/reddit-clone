@@ -119,6 +119,11 @@ export class UserResolver {
         ],
       };
     }
+    if (input.username.length > 12) {
+      return {
+        errors: [setError('username', '아이디 길이는 12글자 이하여야 합니다.')],
+      };
+    }
     const passwordError = validatePassword(input.password, 'password');
     if (passwordError) return passwordError;
 

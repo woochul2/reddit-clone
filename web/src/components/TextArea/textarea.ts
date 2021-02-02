@@ -6,18 +6,22 @@ interface ContainerProps {
 
 export const Container = styled.textarea<ContainerProps>`
   resize: vertical;
-  padding: 0.5em;
+  word-break: break-all;
+  line-height: 1.4;
+  padding: 0.75em 0.875em;
   outline: 0;
-  border: 0.07em solid var(--input-border-color);
+  border: 0.065em solid var(--input-border-color);
   border-radius: 0.125em;
-  color: var(--textarea-text-color);
+  color: var(--input-text-color);
 
   &:focus {
-    box-shadow: 0 0 0 0.07em var(--textarea-border-color);
+    border-color: var(--input-focused-border-color);
+    line-height: 1.4;
+    box-shadow: 0 0 0 0.065em var(--input-focused-border-color);
   }
 
   &::placeholder {
-    color: var(--textarea-placeholder-color);
+    color: var(--input-label-color);
   }
 
   ${({ styles }) => styles}

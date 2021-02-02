@@ -14,7 +14,7 @@ export const Container = styled.a<ContainerProps>`
   color: var(--button-text-color);
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.1em var(--button-focus-border-color);
+    box-shadow: 0 0 0 0.1em var(--button-focused-border-color);
   }
 
   &:active {

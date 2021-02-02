@@ -18,6 +18,7 @@ interface Props {
   label: string;
   autoFocus?: boolean;
   focus?: boolean;
+  autoComplete?: 'on' | 'off';
   styles?: string;
 }
 
@@ -31,6 +32,7 @@ export default function Input({
   label,
   autoFocus,
   focus,
+  autoComplete = 'on',
   styles,
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
@@ -67,9 +69,13 @@ export default function Input({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        placeholder={variant === 'default' ? label : ''}
         ref={textInput}
+        autoComplete={autoComplete}
       />
-      <label onClick={() => textInput.current.focus()}>{label}</label>
+      <label onClick={() => textInput.current.focus()}>
+        {variant === 'labeled' && label}
+      </label>
     </Container>
   );
 }

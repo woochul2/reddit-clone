@@ -4,6 +4,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
+import Layout from '../components/Layout';
 import { FORGOT_PASSWORD, HOME } from '../constants';
 import { useLoginMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
@@ -18,7 +19,7 @@ const Login = () => {
   const router = useRouter();
 
   return (
-    <>
+    <Layout searchBox="off">
       {isLoggedOut && (
         <Container>
           <Formik
@@ -35,22 +36,20 @@ const Login = () => {
             }}
           >
             {(formik) => (
-              <>
-                <AuthForm
-                  formik={formik as AuthFormikProps}
-                  title="로그인"
-                  buttonLabel="로그인"
-                >
-                  <NextLink href={FORGOT_PASSWORD} passHref>
-                    <Link>비밀번호를 잊으셨습니까?</Link>
-                  </NextLink>
-                </AuthForm>
-              </>
+              <AuthForm
+                formik={formik as AuthFormikProps}
+                title="로그인"
+                buttonLabel="로그인"
+              >
+                <NextLink href={FORGOT_PASSWORD} passHref>
+                  <Link>비밀번호를 잊으셨습니까?</Link>
+                </NextLink>
+              </AuthForm>
             )}
           </Formik>
         </Container>
       )}
-    </>
+    </Layout>
   );
 };
 

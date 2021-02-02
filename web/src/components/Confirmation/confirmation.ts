@@ -11,7 +11,7 @@ export const Container = styled.div<ContainerProps>`
 
   .confirmation__text {
     font-size: 1.5em;
-    margin: 2em 0 0.75em;
+    margin: 1.5rem 0 1rem;
   }
 
   ${({ styles }) => styles}

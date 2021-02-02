@@ -5,15 +5,6 @@ import Button from '../Button';
 import Input from '../Input';
 import { Container, Error, SubTitle, Title } from './auth-form';
 
-interface Props {
-  formik: AuthFormikProps;
-  title: string;
-  subTitle?: string;
-  buttonLabel: string;
-  children?: React.ReactChild;
-  styles?: string;
-}
-
 const valuesKeyToType = (key: string) => {
   if (key === 'newPassword') {
     return 'password';
@@ -40,6 +31,15 @@ const valuesKeyToLabel = (key: string) => {
   return key;
 };
 
+interface Props {
+  formik: AuthFormikProps;
+  title: string;
+  subTitle?: string;
+  buttonLabel: string;
+  children?: React.ReactChild;
+  styles?: string;
+}
+
 export default function AuthForm({
   formik,
   title,
@@ -51,9 +51,9 @@ export default function AuthForm({
   const { values, handleChange, handleSubmit, isSubmitting } = formik;
   const errors = formik.errors as Record<string, string>;
   return (
-    <Container onSubmit={handleSubmit} autoComplete="off" styles={styles}>
+    <Container onSubmit={handleSubmit} styles={styles}>
       <Title>{title}</Title>
-      <SubTitle>{subTitle}</SubTitle>
+      {subTitle && <SubTitle>{subTitle}</SubTitle>}
       {Object.entries(values).map(([key, value], idx) => (
         <div key={idx}>
           <Input
