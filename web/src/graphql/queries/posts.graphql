@@ -1,5 +1,8 @@
-query Posts {
-  posts {
+query Posts($variant: String!) {
+  posts(variant: $variant) {
     ...Post
+    creator {
+      ...User
+    }
   }
 }

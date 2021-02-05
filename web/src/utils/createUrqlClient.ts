@@ -1,16 +1,29 @@
-import { cacheExchange } from '@urql/exchange-graphcache';
+import { Cache, cacheExchange, QueryInput } from '@urql/exchange-graphcache';
 import { dedupExchange, fetchExchange } from 'urql';
 import {
-  CreatePostMutation,
   CurrentUserDocument,
   CurrentUserQuery,
   LoginMutation,
   LogoutMutation,
-  PostsDocument,
-  PostsQuery,
   RegisterMutation,
 } from '../generated/graphql';
-import { myUpdateQuery } from './myUpdateQuery';
+
+function myUpdateQuery<Result, Query>(
+  cache: Cache,
+  _result: any,
+  query: QueryInput,
+  func: (result: Result, data: Query) => Query
+) {
+  return cache.updateQuery(query, (data) => func(_result, data as any) as any);
+}
+
+function invalidateAllPosts(cache: Cache) {
+  const allFields = cache.inspectFields('Query');
+  const postsQueries = allFields.filter((field) => field.fieldName === 'posts');
+  postsQueries.forEach((postsQuery) => {
+    cache.invalidate('Query', 'posts', postsQuery.arguments || {});
+  });
+}
 
 export const createUrqlClient = (ssrExchange: any) => ({
   url: 'http://localhost:4000/graphql',
@@ -20,6 +33,9 @@ export const createUrqlClient = (ssrExchange: any) => ({
   exchanges: [
     dedupExchange,
     cacheExchange({
+      keys: {
+        Vote: () => null,
+      },
       updates: {
         Mutation: {
           login: (_result, _args, cache, _info) => {
@@ -27,24 +43,25 @@ export const createUrqlClient = (ssrExchange: any) => ({
               cache,
               _result,
               { query: CurrentUserDocument },
-              (result, query) => {
+              (result, data) => {
                 if (result.login.errors) {
-                  return query;
+                  return data;
                 }
                 return {
                   currentUser: result.login.user,
                 };
               }
             );
+            invalidateAllPosts(cache);
           },
           register: (_result, _args, cache, _info) => {
             myUpdateQuery<RegisterMutation, CurrentUserQuery>(
               cache,
               _result,
               { query: CurrentUserDocument },
-              (result, query) => {
+              (result, data) => {
                 if (result.register.errors) {
-                  return query;
+                  return data;
                 }
                 return {
                   currentUser: result.register.user,
@@ -57,30 +74,19 @@ export const createUrqlClient = (ssrExchange: any) => ({
               cache,
               _result,
               { query: CurrentUserDocument },
-              (result, query) => {
+              (result, data) => {
                 if (!result.logout) {
-                  return query;
+                  return data;
                 }
                 return {
                   currentUser: null,
                 };
               }
             );
+            invalidateAllPosts(cache);
           },
           createPost: (_result, _args, cache, _info) => {
-            myUpdateQuery<CreatePostMutation, PostsQuery>(
-              cache,
-              _result,
-              { query: PostsDocument },
-              (result, query) => {
-                if (!result.createPost) {
-                  return query;
-                }
-                return {
-                  posts: [result.createPost, ...query.posts],
-                };
-              }
-            );
+            invalidateAllPosts(cache);
           },
         },
       },

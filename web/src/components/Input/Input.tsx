@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
 import { Container } from './input';
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
   autoFocus?: boolean;
   focus?: boolean;
   autoComplete?: 'on' | 'off';
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export default function Input({

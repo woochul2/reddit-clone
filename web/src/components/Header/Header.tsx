@@ -1,5 +1,6 @@
 import NextLink from 'next/link';
 import React, { useState } from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
 import { CREATE_POST, HOME, LOGIN, REGISTER } from '../../constants';
 import {
   useCurrentUserQuery,
@@ -9,10 +10,12 @@ import Close from '../../icons/Close';
 import PencilFilled from '../../icons/PencilFilled';
 import PencilOutlined from '../../icons/PencilOutlined';
 import SearchOutlined from '../../icons/SearchOutlined';
+import { isServer } from '../../utils/isServer';
 import Input from '../Input';
 import Tooltip from '../Tooltip';
 import {
   Container,
+  IconLink,
   Inside,
   Link,
   Logo,
@@ -22,11 +25,9 @@ import {
   Username,
 } from './header';
 
-const isServer = () => typeof window === 'undefined';
-
 interface Props {
   searchBox?: 'on' | 'off';
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export default function Header({ searchBox, styles }: Props) {
@@ -38,7 +39,6 @@ export default function Header({ searchBox, styles }: Props) {
   const [{ fetching: fetchingLogout }, logout] = useLogoutMutation();
   const [searchValue, setSearchValue] = useState('');
   const [isSearchIconClicked, setIsSearchIconClicked] = useState(false);
-  const [isMouseOnPencil, setIsMouseOnPencil] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -77,15 +77,11 @@ export default function Header({ searchBox, styles }: Props) {
         {!fetchingCurrentUser && currentUserData?.currentUser && (
           <>
             <NextLink href={CREATE_POST} passHref>
-              <Link
-                onFocus={() => setIsMouseOnPencil(true)}
-                onBlur={() => setIsMouseOnPencil(false)}
-                onMouseOver={() => setIsMouseOnPencil(true)}
-                onMouseLeave={() => setIsMouseOnPencil(false)}
-              >
-                {isMouseOnPencil ? <PencilFilled /> : <PencilOutlined />}
-                <Tooltip show={isMouseOnPencil}>글 작성</Tooltip>
-              </Link>
+              <IconLink>
+                <PencilOutlined className="original" />
+                <PencilFilled className="hovered" />
+                <Tooltip className="tooltip">글 작성</Tooltip>
+              </IconLink>
             </NextLink>
             <Username>{currentUserData.currentUser.username}</Username>
             <LogoutButton onClick={handleLogout} disabled={fetchingLogout}>

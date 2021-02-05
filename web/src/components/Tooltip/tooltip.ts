@@ -1,26 +1,10 @@
-import styled from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 interface ContainerProps {
-  show: boolean;
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
-const setVisiblity = (show: boolean) => {
-  if (show) {
-    return `
-      visibility: visible;
-      transition: visibility 0s linear 0.5s;
-    `;
-  }
-
-  return `
-    visibility: hidden;
-    transition: visibility 0s;
-  `;
-};
-
 export const Container = styled.div<ContainerProps>`
-  ${({ show }) => setVisiblity(show)};
   position: absolute;
   top: 2rem;
   left: 50%;

@@ -1,18 +1,22 @@
-import styled from 'styled-components';
+import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
 
 interface ContainerProps {
   variant: string;
   isFocused: boolean;
   value?: string;
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 const setInputProperties = (variant: string) => {
   if (variant === 'default') {
-    return `padding: 0.75em 0.875em;`;
+    return css`
+      padding: 0.75em 0.875em;
+    `;
   }
   if (variant === 'labeled') {
-    return `padding: 1.5em 0.625em 0.75em;`;
+    return css`
+      padding: 1.5em 0.625em 0.75em;
+    `;
   }
 };
 
@@ -23,14 +27,14 @@ const setLabelProperties = (
 ) => {
   if (variant === 'labeled') {
     if (isFocused || value) {
-      return `
+      return css`
         top: 25%;
         left: 0.84em;
         font-size: 0.75em;
         font-weight: bold;
       `;
     } else {
-      return `
+      return css`
         top: 50%;
         left: 0.625em;
         font-size: 1em;

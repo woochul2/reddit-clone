@@ -6,8 +6,6 @@ fragment Post on Post {
   text
   textSnippet
   voteCounts
+  voteStatus
   creatorId
-  creator {
-    ...User
-  }
 }

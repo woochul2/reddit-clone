@@ -1,11 +1,12 @@
 import React from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
 import { Container } from './button';
 
 interface Props {
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   children: React.ReactChild;
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export default function Button({

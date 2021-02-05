@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
 
 interface ContainerProps {
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export const Container = styled.header<ContainerProps>`
@@ -62,7 +62,7 @@ export const SearchBox = styled.div<{ value?: string }>`
   }
 `;
 
-export const searchInputStyles = `
+export const searchInputStyles = css`
   margin: 0;
 
   input {
@@ -97,12 +97,55 @@ export const Link = styled.a`
   border-radius: 0.125em;
   color: var(--body-text-color);
 
-  svg {
-    display: block;
-  }
-
   &:hover {
     text-decoration: underline;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
+  }
+`;
+
+export const IconLink = styled.a`
+  position: relative;
+  width: 1.25rem;
+  height: 1.25rem;
+  outline: 0;
+  border-radius: 0.125em;
+  color: var(--body-text-color);
+
+  svg {
+    display: block;
+    position: absolute;
+  }
+
+  .original {
+    visibility: visible;
+  }
+
+  .hovered {
+    visibility: hidden;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    transition: visibility 0s;
+  }
+
+  &:hover,
+  &:focus-visible {
+    .original {
+      visibility: hidden;
+    }
+
+    .hovered {
+      visibility: visible;
+    }
+
+    .tooltip {
+      visibility: visible;
+      transition: visibility 0s linear 0.5s;
+    }
   }
 
   &:focus-visible {

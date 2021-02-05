@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 interface ContainerProps {
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export const Container = styled.form<ContainerProps>`

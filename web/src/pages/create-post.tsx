@@ -7,7 +7,7 @@ import Input from '../components/Input';
 import Layout from '../components/Layout';
 import Textarea from '../components/TextArea';
 import { HOME } from '../constants';
-import { useCreatePostMutation, usePostsQuery } from '../generated/graphql';
+import { useCreatePostMutation } from '../generated/graphql';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
 import { Form, inputStyles, Title } from '../page-styles/create-post';
 import { createUrqlClient } from '../utils/createUrqlClient';
@@ -16,7 +16,6 @@ const CreatePost = () => {
   const isLoggedIn = useIsLoggedIn();
   const [, createPost] = useCreatePostMutation();
   const router = useRouter();
-  const [] = usePostsQuery();
 
   return (
     <Layout variant="colored">

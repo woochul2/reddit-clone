@@ -10,9 +10,11 @@ import { createConnection } from 'typeorm';
 import { COOKIE_NAME, WEB_URL, __prod__ } from './constants';
 import { Post } from './entities/Post';
 import { User } from './entities/User';
+import { Vote } from './entities/Vote';
 import { MyContext } from './interfaces';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
+import { VoteResolver } from './resolvers/vote';
 require('dotenv').config();
 
 const main = async () => {
@@ -21,9 +23,9 @@ const main = async () => {
     database: 'reddit_clone',
     username: 'postgres',
     password: 'a',
-    logging: false,
+    logging: true,
     synchronize: true,
-    entities: [Post, User],
+    entities: [Post, User, Vote],
     migrations: [__dirname + '/migrations/*.js'],
   });
   // orm.runMigrations();
@@ -57,7 +59,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [PostResolver, UserResolver],
+      resolvers: [PostResolver, UserResolver, VoteResolver],
       validate: false,
     }),
     context: ({ req, res }): MyContext => <MyContext>{ req, res, redis },

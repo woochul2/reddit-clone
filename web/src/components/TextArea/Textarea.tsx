@@ -1,4 +1,5 @@
 import React, { ChangeEvent } from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
 import { Container } from './textarea';
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
   value: string;
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder: string;
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export default function Textarea({

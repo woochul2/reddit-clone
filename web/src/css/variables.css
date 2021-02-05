@@ -14,6 +14,7 @@
   --mint-200: hsl(170, 19%, 88%);
   --mint-100: hsl(170, 30%, 96%);
   --mint-50: hsl(170, 17%, 98%);
+  --orange: hsl(35, 100%, 50%);
 }
 
 :root[data-color-mode='light'] {
@@ -46,5 +47,5 @@
   --post-second-text-color: var(--gray-400);
   --post-background-color: var(--white);
   --post-left-panel-background-color: var(--mint-50);
-  --post-clicked-icon-color: var(--blue-500);
+  --post-clicked-icon-color: var(--orange);
 }

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div``;
 
@@ -13,6 +13,6 @@ export const Title = styled.h1`
   margin: 0 auto 1.25rem;
 `;
 
-export const inputStyles = `
+export const inputStyles = css`
   margin: 0 0 0.625rem;
 `;

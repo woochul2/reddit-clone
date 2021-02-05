@@ -1,15 +1,16 @@
 import React from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
 import { Container } from './tooltip';
 
 interface Props {
-  show: boolean;
+  className?: string;
   children: React.ReactChild;
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
-export default function Tooltip({ show, children, styles }: Props) {
+export default function Tooltip({ className, children, styles }: Props) {
   return (
-    <Container show={show} styles={styles}>
+    <Container className={className} styles={styles}>
       {children}
     </Container>
   );

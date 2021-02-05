@@ -1,4 +1,5 @@
 import React from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
 import Header from '../Header';
 import { Container } from './layout';
 
@@ -6,7 +7,7 @@ interface Props {
   variant?: 'default' | 'colored';
   searchBox?: 'on' | 'off';
   children?: JSX.Element | JSX.Element[] | false | null;
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export default function Layout({

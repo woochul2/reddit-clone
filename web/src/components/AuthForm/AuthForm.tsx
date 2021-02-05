@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactLoading from 'react-loading';
+import { FlattenSimpleInterpolation } from 'styled-components';
 import { AuthFormikProps } from '../../types';
 import Button from '../Button';
 import Input from '../Input';
@@ -37,7 +38,7 @@ interface Props {
   subTitle?: string;
   buttonLabel: string;
   children?: React.ReactChild;
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export default function AuthForm({

@@ -4,6 +4,7 @@ import {
   Field,
   FieldResolver,
   InputType,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -12,7 +13,6 @@ import {
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
 import { Post } from '../entities/Post';
-import { User } from '../entities/User';
 import { MyContext } from '../interfaces';
 import { isLoggedIn } from '../middleware/isLoggedIn';
 
@@ -35,39 +35,44 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
-  posts(): Promise<Post[]> {
-    const posts = getConnection()
-      .getRepository(Post)
-      .createQueryBuilder('post')
-      .leftJoinAndSelect('post.creator', 'user')
-      .orderBy('post.createdAt', 'DESC')
-      .getMany();
-
-    return posts;
+  async posts(
+    @Arg('variant') _variant: string,
+    @Ctx() { req }: MyContext
+  ): Promise<Post[]> {
+    const { userId } = req.session;
+    return await getConnection().query(
+      `
+      SELECT "post".*,
+      to_json("myUser") creator,
+      ${
+        userId
+          ? `(SELECT "vote"."value" AS "voteStatus" FROM "vote" "vote" WHERE "vote"."userId" = $1 and "vote"."postId" = "post"."id")`
+          : '$1 AS "voteStatus"'
+      }
+      FROM "post"
+      INNER JOIN "user" "myUser" ON "myUser"."id"="post"."creatorId"
+      ORDER BY "post"."createdAt" DESC
+      `,
+      [userId]
+    );
   }
 
   @Query(() => Post, { nullable: true })
-  post(@Arg('id') id: number): Promise<Post | undefined> {
-    return Post.findOne(id);
+  async post(@Arg('id', () => Int) id: number): Promise<Post | undefined> {
+    return await Post.findOne(id);
   }
 
-  @Mutation(() => Post)
+  @Mutation(() => Post, { nullable: true })
   @UseMiddleware(isLoggedIn)
   async createPost(
     @Arg('input') input: PostInput,
     @Ctx() { req }: MyContext
   ): Promise<Post | null> {
-    const creator = await User.findOne(req.session.userId);
-    if (!creator) {
-      return null;
-    }
-
     return await Post.create({
       ...input,
       createdAt: Date(),
       updatedAt: Date(),
       creatorId: req.session.userId,
-      creator: creator,
     }).save();
   }
 

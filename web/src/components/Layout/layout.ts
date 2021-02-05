@@ -1,8 +1,8 @@
-import styled from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 interface ContainerProps {
   variant?: 'default' | 'colored';
-  styles?: string;
+  styles?: FlattenSimpleInterpolation;
 }
 
 export const Container = styled.div<ContainerProps>`

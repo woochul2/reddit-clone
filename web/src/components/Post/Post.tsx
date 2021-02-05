@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
-import { Post as PostGraphql } from '../../generated/graphql';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
+import { LOGIN } from '../../constants';
+import {
+  Post as PostGraphql,
+  User,
+  useVoteMutation,
+} from '../../generated/graphql';
 import ArrowUpFilled from '../../icons/ArrowUpFilled';
 import ArrowUpOutlined from '../../icons/ArrowUpOutlined';
 import {
@@ -54,7 +61,7 @@ const getMonth = (month: string) => {
   return month;
 };
 
-const getLocalDate = (date: string) => {
+const getLocalDate = (date: number) => {
   const localDate = new Date(date).toString();
   const [, month, day, year, time] = localDate.split(' ');
   const [hour, minute] = time.split(':');
@@ -62,7 +69,7 @@ const getLocalDate = (date: string) => {
   return [year, getMonth(month), cutZero(day), hour, minute];
 };
 
-const isSameDate = (date: string) => {
+const isSameDate = (date: number) => {
   const localDate = new Date(date).toString();
   const now = new Date().toString();
   return now.slice(0, 15) === localDate.slice(0, 15);
@@ -70,30 +77,39 @@ const isSameDate = (date: string) => {
 
 interface Props {
   post: PostGraphql;
-  styles?: string;
+  currentUser?: User | null;
+  styles?: FlattenSimpleInterpolation;
 }
 
-export default function Post({ post, styles }: Props) {
-  const [year, month, day, hour, minute] = getLocalDate(post.createdAt);
-  const [isMouseOnArrowUp, setIsMouseOnArrowUp] = useState(false);
-  const [isMouseOnArrowDown, setIsMouseOnArrowDown] = useState(false);
+export default function Post({ post, currentUser, styles }: Props) {
+  const postCreatedAtNum = parseInt(post.createdAt);
+  const [year, month, day, hour, minute] = getLocalDate(postCreatedAtNum);
+  const [, vote] = useVoteMutation();
+  const router = useRouter();
+
+  const handleVote = async (value: number) => {
+    if (!currentUser) {
+      router.push(LOGIN);
+      return;
+    }
+    await vote({ postId: post.id, value });
+  };
 
   return (
     <Container styles={styles}>
       <LeftPanel>
-        <Icon
-          onMouseEnter={() => setIsMouseOnArrowUp(true)}
-          onMouseLeave={() => setIsMouseOnArrowUp(false)}
-        >
-          {isMouseOnArrowUp ? <ArrowUpFilled /> : <ArrowUpOutlined />}
+        <Icon onClick={() => handleVote(1)} hasClicked={post.voteStatus === 1}>
+          <ArrowUpOutlined className="original" />
+          <ArrowUpFilled className="hovered" />
         </Icon>
-        <VoteCounts>0</VoteCounts>
+        <VoteCounts voteStatus={post.voteStatus}>{post.voteCounts}</VoteCounts>
         <Icon
           className="flip"
-          onMouseEnter={() => setIsMouseOnArrowDown(true)}
-          onMouseLeave={() => setIsMouseOnArrowDown(false)}
+          onClick={() => handleVote(-1)}
+          hasClicked={post.voteStatus === -1}
         >
-          {isMouseOnArrowDown ? <ArrowUpFilled /> : <ArrowUpOutlined />}
+          <ArrowUpOutlined className="original" />
+          <ArrowUpFilled className="hovered" />
         </Icon>
       </LeftPanel>
       <Content>
@@ -106,7 +122,7 @@ export default function Post({ post, styles }: Props) {
           <Comment>댓글 0개</Comment>
           <CreatedTime>
             {year}년 {month}월 {day}일
-            {isSameDate(post.createdAt) && (
+            {isSameDate(postCreatedAtNum) && (
               <>
                 {' '}
                 {hour}:{minute}
