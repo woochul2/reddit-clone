@@ -8,14 +8,11 @@ import { isServer } from '../utils/isServer';
 
 const Home = () => {
   const [{ data: postsData, fetching: fetchingPosts }] = usePostsQuery({
-    pause: isServer(),
     variables: { variant: 'all' },
   });
   const [
     { data: currentUserData, fetching: fetchingCurrentUser },
-  ] = useCurrentUserQuery({
-    pause: isServer(),
-  });
+  ] = useCurrentUserQuery();
 
   return (
     <Layout variant="colored">

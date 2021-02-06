@@ -40,6 +40,11 @@ export class PostResolver {
     @Ctx() { req }: MyContext
   ): Promise<Post[]> {
     const { userId } = req.session;
+    let queryParams = [];
+    if (userId) {
+      queryParams.push(userId);
+    }
+
     return await getConnection().query(
       `
       SELECT "post".*,
@@ -47,13 +52,13 @@ export class PostResolver {
       ${
         userId
           ? `(SELECT "vote"."value" AS "voteStatus" FROM "vote" "vote" WHERE "vote"."userId" = $1 and "vote"."postId" = "post"."id")`
-          : '$1 AS "voteStatus"'
+          : 'null AS "voteStatus"'
       }
       FROM "post"
       INNER JOIN "user" "myUser" ON "myUser"."id"="post"."creatorId"
       ORDER BY "post"."createdAt" DESC
       `,
-      [userId]
+      queryParams
     );
   }
 

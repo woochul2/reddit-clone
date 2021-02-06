@@ -33,9 +33,7 @@ interface Props {
 export default function Header({ searchBox, styles }: Props) {
   const [
     { data: currentUserData, fetching: fetchingCurrentUser },
-  ] = useCurrentUserQuery({
-    pause: isServer(),
-  });
+  ] = useCurrentUserQuery();
   const [{ fetching: fetchingLogout }, logout] = useLogoutMutation();
   const [searchValue, setSearchValue] = useState('');
   const [isSearchIconClicked, setIsSearchIconClicked] = useState(false);

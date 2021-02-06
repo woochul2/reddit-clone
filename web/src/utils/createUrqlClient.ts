@@ -1,5 +1,5 @@
 import { Cache, cacheExchange, QueryInput } from '@urql/exchange-graphcache';
-import { dedupExchange, fetchExchange } from 'urql';
+import { dedupExchange, fetchExchange, ssrExchange } from 'urql';
 import {
   CurrentUserDocument,
   CurrentUserQuery,
@@ -7,6 +7,7 @@ import {
   LogoutMutation,
   RegisterMutation,
 } from '../generated/graphql';
+import { isServer } from './isServer';
 
 function myUpdateQuery<Result, Query>(
   cache: Cache,
@@ -25,7 +26,11 @@ function invalidateAllPosts(cache: Cache) {
   });
 }
 
-export const createUrqlClient = (ssrExchange: any) => ({
+const ssr = ssrExchange({
+  isClient: !isServer(),
+});
+
+export const createUrqlClient = () => ({
   url: 'http://localhost:4000/graphql',
   fetchOptions: {
     credentials: 'include' as const,
@@ -91,7 +96,7 @@ export const createUrqlClient = (ssrExchange: any) => ({
         },
       },
     }),
-    ssrExchange,
+    ssr,
     fetchExchange,
   ],
 });
