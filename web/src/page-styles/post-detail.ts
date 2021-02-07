@@ -111,8 +111,25 @@ export const Title = styled.h1`
 
 export const CreationInfo = styled.div`
   display: flex;
+  align-items: flex-start;
   gap: 1rem;
   font-size: 0.875rem;
+`;
+
+export const DeleteButton = styled.button`
+  cursor: pointer;
+  padding: 0;
+  outline: 0;
+  border: 0;
+  background: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+  }
 `;
 
 export const CommentPanel = styled.div`

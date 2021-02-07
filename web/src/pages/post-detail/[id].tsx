@@ -9,7 +9,11 @@ import TextArea from '../../components/TextArea';
 import Tooltip from '../../components/Tooltip';
 import VoteIcon from '../../components/VoteIcon';
 import { HOME } from '../../constants';
-import { usePostQuery } from '../../generated/graphql';
+import {
+  useCurrentUserQuery,
+  useDeletePostMutation,
+  usePostQuery,
+} from '../../generated/graphql';
 import Close from '../../icons/Close';
 import {
   buttonStyles,
@@ -18,6 +22,7 @@ import {
   Container,
   ContentPanel,
   CreationInfo,
+  DeleteButton,
   LeftPanel,
   MainPanel,
   RightPanel,
@@ -47,14 +52,10 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
   });
   const [topPanelOffset, setTopPanelOffest] = useState('0px');
   const [comment, setComment] = useState('');
-
-  const getTopPanelOffet = () => {
-    const header = document.querySelector('header');
-    if (header) {
-      const headerRect = header.getBoundingClientRect();
-      setTopPanelOffest(`${headerRect.height}px`);
-    }
-  };
+  const [
+    { data: currentUserData, fetching: fetchingCurrentUser },
+  ] = useCurrentUserQuery();
+  const [, deletePost] = useDeletePostMutation();
 
   useEffect(() => {
     if (!fetchingPost && post?.createdAt) {
@@ -62,18 +63,20 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
       setDate({ year, month, day, hour, minute });
     }
 
-    getTopPanelOffet();
+    const header = document.querySelector('header');
+    if (header) {
+      const headerRect = header.getBoundingClientRect();
+      setTopPanelOffest(`${headerRect.height}px`);
+    }
   }, [post]);
 
-  // useEffect(() => {
-  //   window.addEventListener('resize', getTopPanelOffet);
-  //   return () => {
-  //     window.removeEventListener('resize', getTopPanelOffet);
-  //   };
-  // }, []);
+  const handleClickBackground = async () => {
+    await router.push(HOME);
+  };
 
-  const handleClickBackground = () => {
-    router.push(HOME);
+  const handleDelete = async (id: number) => {
+    await deletePost({ id });
+    await router.push(HOME);
   };
 
   return (
@@ -98,7 +101,7 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                   voteStatus={post.voteStatus}
                 />
                 <SmallTitle>{post.title}</SmallTitle>
-                <CloseIcon onClick={() => router.push(HOME)}>
+                <CloseIcon onClick={async () => await router.push(HOME)}>
                   <Close className="close-icon" />
                   <Tooltip className="tooltip">닫기</Tooltip>
                 </CloseIcon>
@@ -128,6 +131,12 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                         </>
                       )}
                     </p>
+                    {!fetchingCurrentUser &&
+                      currentUserData?.currentUser?.id === post.creatorId && (
+                        <DeleteButton onClick={() => handleDelete(post.id)}>
+                          삭제
+                        </DeleteButton>
+                      )}
                   </CreationInfo>
                   <p>{post.text}</p>
                 </ContentPanel>

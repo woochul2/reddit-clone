@@ -3,6 +3,7 @@ import { dedupExchange, fetchExchange, ssrExchange } from 'urql';
 import {
   CurrentUserDocument,
   CurrentUserQuery,
+  DeletePostMutationVariables,
   LoginMutation,
   LogoutMutation,
   RegisterMutation,
@@ -92,6 +93,12 @@ export const createUrqlClient = () => ({
           },
           createPost: (_result, _args, cache, _info) => {
             invalidateAllPosts(cache);
+          },
+          deletePost: (_result, args, cache, _info) => {
+            cache.invalidate({
+              __typename: 'Post',
+              id: (args as DeletePostMutationVariables).id,
+            });
           },
         },
       },
