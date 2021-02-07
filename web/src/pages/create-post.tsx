@@ -28,7 +28,7 @@ const CreatePost = () => {
               console.error(error);
               return;
             }
-            router.push(HOME);
+            await router.push(HOME);
           }}
         >
           {({ values, handleChange, handleSubmit }) => (

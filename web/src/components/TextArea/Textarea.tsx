@@ -7,7 +7,7 @@ interface Props {
   rows: number;
   value: string;
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-  placeholder: string;
+  placeholder?: string;
   styles?: FlattenSimpleInterpolation;
 }
 

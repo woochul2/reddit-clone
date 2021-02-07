@@ -31,7 +31,7 @@ const Login = () => {
                 return;
               }
               if (response.data?.login.user) {
-                router.push(HOME);
+                await router.push(HOME);
               }
             }}
           >

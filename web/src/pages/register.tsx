@@ -30,7 +30,7 @@ const Register = () => {
                 return;
               }
               if (response.data?.register.user) {
-                router.push(HOME);
+                await router.push(HOME);
               }
             }}
           >

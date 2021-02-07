@@ -1,4 +1,4 @@
-import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
@@ -28,67 +28,7 @@ export const LeftPanel = styled.div`
   background-color: var(--post-left-panel-background-color);
 `;
 
-export const Icon = styled.button<{ hasClicked?: boolean }>`
-  cursor: pointer;
-  position: relative;
-  width: 1.5rem;
-  height: 1.5rem;
-  margin: 0 0.25rem;
-  outline: 0;
-  border: 0;
-  border-radius: 0.125em;
-  background: 0;
-  color: ${({ hasClicked }) =>
-    hasClicked ? 'var(--post-clicked-icon-color)' : 'var(--body-text-color)'};
-
-  svg {
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: block;
-  }
-
-  .original {
-    visibility: visible;
-  }
-
-  .hovered {
-    visibility: hidden;
-  }
-
-  ${({ hasClicked }) =>
-    hasClicked &&
-    css`
-      .original {
-        visibility: hidden;
-      }
-
-      .hovered {
-        visibility: visible;
-      }
-    `}
-
-  &:hover,
-  &:focus-visible {
-    .original {
-      visibility: hidden;
-    }
-
-    .hovered {
-      visibility: visible;
-    }
-  }
-
-  &.flip {
-    transform: rotate(180deg);
-  }
-
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
-  }
-`;
-
-export const VoteCounts = styled.p<{ voteStatus?: number | null }>`
+export const VoteCounts = styled.p`
   font-size: 0.875rem;
 `;
 
@@ -103,10 +43,14 @@ export const Content = styled.div`
   background-color: var(--post-background-color);
 `;
 
-export const Title = styled.h2`
+export const Title = styled.a`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: var(--body-text-color);
 `;
 
 export const Snippet = styled.h3`

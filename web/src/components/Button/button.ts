@@ -8,16 +8,16 @@ export const Container = styled.button<ContainerProps>`
   cursor: pointer;
   display: flex;
   justify-content: center;
-  padding: 0.75em 1.5em;
-  margin: 0 0 1em;
+  padding: 0.75rem 1.5rem;
+  margin: 0 0 1rem;
   outline: 0;
   border: none;
-  border-radius: 0.25em;
+  border-radius: 0.25rem;
   background-color: var(--button-background-color);
   color: var(--button-text-color);
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125em var(--button-focused-border-color);
+    box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
   }
 
   &:active {

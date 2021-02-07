@@ -11,9 +11,11 @@ export function useIsLoggedOut() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!fetchingCurrentUser && currentUser) {
-      router.push(HOME);
-    }
+    (async function () {
+      if (!fetchingCurrentUser && currentUser) {
+        await router.push(HOME);
+      }
+    })();
   }, [currentUserData]);
 
   const isLoggedOut = !fetchingCurrentUser && !currentUser;

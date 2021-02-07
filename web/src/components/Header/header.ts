@@ -5,7 +5,7 @@ interface ContainerProps {
 }
 
 export const Container = styled.header<ContainerProps>`
-  z-index: 1;
+  z-index: 2;
   position: sticky;
   top: 0;
   padding: 0.375rem 0;

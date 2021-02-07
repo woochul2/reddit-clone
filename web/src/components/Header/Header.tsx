@@ -10,7 +10,6 @@ import Close from '../../icons/Close';
 import PencilFilled from '../../icons/PencilFilled';
 import PencilOutlined from '../../icons/PencilOutlined';
 import SearchOutlined from '../../icons/SearchOutlined';
-import { isServer } from '../../utils/isServer';
 import Input from '../Input';
 import Tooltip from '../Tooltip';
 import {
@@ -27,10 +26,11 @@ import {
 
 interface Props {
   searchBox?: 'on' | 'off';
+  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   styles?: FlattenSimpleInterpolation;
 }
 
-export default function Header({ searchBox, styles }: Props) {
+export default function Header({ searchBox, onClick, styles }: Props) {
   const [
     { data: currentUserData, fetching: fetchingCurrentUser },
   ] = useCurrentUserQuery();
@@ -43,7 +43,7 @@ export default function Header({ searchBox, styles }: Props) {
   };
 
   return (
-    <Container styles={styles}>
+    <Container styles={styles} onClick={onClick}>
       <Inside>
         <NextLink href={HOME} passHref>
           <Logo>
@@ -87,7 +87,7 @@ export default function Header({ searchBox, styles }: Props) {
             </LogoutButton>
           </>
         )}
-        {!fetchingCurrentUser && !currentUserData?.currentUser && !isServer() && (
+        {!fetchingCurrentUser && !currentUserData?.currentUser && (
           <>
             <NextLink href={LOGIN} passHref>
               <Link>로그인</Link>

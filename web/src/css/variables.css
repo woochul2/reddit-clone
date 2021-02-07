@@ -21,6 +21,7 @@
   --body-text-color: var(--gray-800);
   --body-background-color: var(--white);
   --layout-background-color: var(--mint-200);
+  --modal-background-color: var(--gray-400);
   --link-focused-border-color: var(--black);
   --tooltip-background-color: var(--black);
   --tooltip-text-color: var(--white);
@@ -45,7 +46,11 @@
   --post-border-color: var(--gray-200);
   --post-focused-border-color: var(--gray-400);
   --post-second-text-color: var(--gray-400);
+  --post-top-panel-background-color: var(--gray-800);
+  --post-top-panel-hover-background-color: var(--gray-400);
+  --post-top-panel-text-color: var(--mint-50);
   --post-background-color: var(--white);
   --post-left-panel-background-color: var(--mint-50);
   --post-clicked-icon-color: var(--orange);
+  --post-icon-hover-background-color: var(--gray-100);
 }

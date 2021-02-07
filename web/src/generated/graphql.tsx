@@ -281,6 +281,23 @@ export type CurrentUserQuery = (
   )> }
 );
 
+export type PostQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type PostQuery = (
+  { __typename?: 'Query' }
+  & { post?: Maybe<(
+    { __typename?: 'Post' }
+    & { creator: (
+      { __typename?: 'User' }
+      & UserFragment
+    ) }
+    & PostFragment
+  )> }
+);
+
 export type PostsQueryVariables = Exact<{
   variant: Scalars['String'];
 }>;
@@ -430,6 +447,21 @@ export const CurrentUserDocument = gql`
 
 export function useCurrentUserQuery(options: Omit<Urql.UseQueryArgs<CurrentUserQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<CurrentUserQuery>({ query: CurrentUserDocument, ...options });
+};
+export const PostDocument = gql`
+    query Post($id: Int!) {
+  post(id: $id) {
+    ...Post
+    creator {
+      ...User
+    }
+  }
+}
+    ${PostFragmentDoc}
+${UserFragmentDoc}`;
+
+export function usePostQuery(options: Omit<Urql.UseQueryArgs<PostQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PostQuery>({ query: PostDocument, ...options });
 };
 export const PostsDocument = gql`
     query Posts($variant: String!) {

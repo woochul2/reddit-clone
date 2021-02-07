@@ -7,7 +7,7 @@ interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
 }
 
-const setInputProperties = (variant: string) => {
+function setInputProperties(variant: string) {
   if (variant === 'default') {
     return css`
       padding: 0.75em 0.875em;
@@ -18,13 +18,13 @@ const setInputProperties = (variant: string) => {
       padding: 1.5em 0.625em 0.75em;
     `;
   }
-};
+}
 
-const setLabelProperties = (
+function setLabelProperties(
   variant: string,
   isFocused: boolean,
   value?: string
-) => {
+) {
   if (variant === 'labeled') {
     if (isFocused || value) {
       return css`
@@ -42,7 +42,7 @@ const setLabelProperties = (
       `;
     }
   }
-};
+}
 
 export const Container = styled.div<ContainerProps>`
   position: relative;

@@ -63,8 +63,34 @@ export class PostResolver {
   }
 
   @Query(() => Post, { nullable: true })
-  async post(@Arg('id', () => Int) id: number): Promise<Post | undefined> {
-    return await Post.findOne(id);
+  async post(
+    @Arg('id', () => Int) id: number,
+    @Ctx() { req }: MyContext
+  ): Promise<Post | null> {
+    let queryParams = [id];
+    const { userId } = req.session;
+    if (userId) {
+      queryParams.push(userId);
+    }
+
+    const post = await getConnection().query(
+      `
+      SELECT "post".*,
+      to_json("myUser") creator,
+      ${
+        userId
+          ? `(SELECT "vote"."value" AS "voteStatus" FROM "vote" "vote" WHERE "vote"."userId" = $2 and "vote"."postId" = "post"."id")`
+          : 'null AS "voteStatus"'
+      }
+      FROM "post"
+      INNER JOIN "user" "myUser" ON "myUser"."id"="post"."creatorId"
+      WHERE "post"."id" IN ($1)
+      ORDER BY "post"."createdAt" DESC
+    `,
+      queryParams
+    );
+
+    return post[0];
   }
 
   @Mutation(() => Post, { nullable: true })

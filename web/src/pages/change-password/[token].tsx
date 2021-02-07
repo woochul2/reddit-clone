@@ -15,6 +15,7 @@ import { createUrqlClient } from '../../utils/createUrqlClient';
 import { errorsToMap } from '../../utils/errorsToMap';
 
 const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
+  console.log(token);
   const [{ data: userIdData, fetching: fetchingUserId }] = useUserIdQuery({
     variables: { token },
   });
