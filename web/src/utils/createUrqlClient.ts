@@ -21,9 +21,11 @@ function myUpdateQuery<Result, Query>(
 
 function invalidateAllPosts(cache: Cache) {
   const allFields = cache.inspectFields('Query');
-  const postsQueries = allFields.filter((field) => field.fieldName === 'posts');
+  const postsQueries = allFields.filter(
+    (field) => field.fieldName === 'posts' || field.fieldName === 'post'
+  );
   postsQueries.forEach((postsQuery) => {
-    cache.invalidate('Query', 'posts', postsQuery.arguments || {});
+    cache.invalidate('Query', postsQuery.fieldName, postsQuery.arguments || {});
   });
 }
 

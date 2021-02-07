@@ -13,6 +13,8 @@ import {
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
 import { Post } from '../entities/Post';
+import { User } from '../entities/User';
+import { Vote } from '../entities/Vote';
 import { MyContext } from '../interfaces';
 import { isLoggedIn } from '../middleware/isLoggedIn';
 
@@ -34,63 +36,48 @@ export class PostResolver {
     return post.text;
   }
 
-  @Query(() => [Post])
-  async posts(
-    @Arg('variant') _variant: string,
-    @Ctx() { req }: MyContext
-  ): Promise<Post[]> {
+  @FieldResolver(() => User)
+  async creator(@Root() post: Post) {
+    return await User.findOne(post.creatorId);
+  }
+
+  @FieldResolver(() => User)
+  async voteStatus(@Root() post: Post, @Ctx() { req }: MyContext) {
     const { userId } = req.session;
-    let queryParams = [];
-    if (userId) {
-      queryParams.push(userId);
+    if (!userId) {
+      return null;
     }
 
-    return await getConnection().query(
-      `
-      SELECT "post".*,
-      to_json("myUser") creator,
-      ${
-        userId
-          ? `(SELECT "vote"."value" AS "voteStatus" FROM "vote" "vote" WHERE "vote"."userId" = $1 and "vote"."postId" = "post"."id")`
-          : 'null AS "voteStatus"'
-      }
-      FROM "post"
-      INNER JOIN "user" "myUser" ON "myUser"."id"="post"."creatorId"
-      ORDER BY "post"."createdAt" DESC
-      `,
-      queryParams
-    );
+    const voting = await Vote.findOne({ userId, postId: post.id });
+    if (!voting) {
+      return null;
+    }
+
+    return voting.value;
+  }
+
+  @Query(() => [Post])
+  async posts(@Arg('variant') _variant: string): Promise<Post[]> {
+    return await getConnection()
+      .getRepository(Post)
+      .createQueryBuilder('post')
+      .orderBy('post.createdAt', 'DESC')
+      .getMany();
   }
 
   @Query(() => Post, { nullable: true })
-  async post(
-    @Arg('id', () => Int) id: number,
-    @Ctx() { req }: MyContext
-  ): Promise<Post | null> {
-    let queryParams = [id];
-    const { userId } = req.session;
-    if (userId) {
-      queryParams.push(userId);
+  async post(@Arg('id', () => Int) id: number): Promise<Post | null> {
+    const post = await getConnection()
+      .getRepository(Post)
+      .createQueryBuilder('post')
+      .where('post.id = :id', { id })
+      .getOne();
+
+    if (!post) {
+      return null;
     }
 
-    const post = await getConnection().query(
-      `
-      SELECT "post".*,
-      to_json("myUser") creator,
-      ${
-        userId
-          ? `(SELECT "vote"."value" AS "voteStatus" FROM "vote" "vote" WHERE "vote"."userId" = $2 and "vote"."postId" = "post"."id")`
-          : 'null AS "voteStatus"'
-      }
-      FROM "post"
-      INNER JOIN "user" "myUser" ON "myUser"."id"="post"."creatorId"
-      WHERE "post"."id" IN ($1)
-      ORDER BY "post"."createdAt" DESC
-    `,
-      queryParams
-    );
-
-    return post[0];
+    return post;
   }
 
   @Mutation(() => Post, { nullable: true })

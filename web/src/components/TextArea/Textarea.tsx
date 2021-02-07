@@ -20,7 +20,6 @@ export default function Textarea({
   styles,
 }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(1, event.target.scrollHeight);
     onChange(event);
   };
 
