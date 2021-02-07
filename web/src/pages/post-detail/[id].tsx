@@ -144,7 +144,7 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                   <p>댓글 0개</p>
                   <TextArea
                     name="comment"
-                    rows={4}
+                    minRows={4}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     styles={textAreaStyles}

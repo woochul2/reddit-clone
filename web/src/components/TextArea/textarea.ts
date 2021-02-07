@@ -1,11 +1,12 @@
+import TextareaAutosize from 'react-textarea-autosize';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
 }
 
-export const Container = styled.textarea<ContainerProps>`
-  resize: vertical;
+export const Container = styled(TextareaAutosize)<ContainerProps>`
+  resize: none;
   word-break: break-all;
   line-height: 1.4;
   padding: 0.75em 0.875em;
@@ -16,7 +17,6 @@ export const Container = styled.textarea<ContainerProps>`
 
   &:focus {
     border-color: var(--input-focused-border-color);
-    line-height: 1.4;
     box-shadow: 0 0 0 0.065em var(--input-focused-border-color);
   }
 

@@ -4,7 +4,7 @@ import { Container } from './textarea';
 
 interface Props {
   name: string;
-  rows: number;
+  minRows: number;
   value: string;
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
@@ -13,18 +13,23 @@ interface Props {
 
 export default function Textarea({
   name,
-  rows,
+  minRows,
   value,
   onChange,
   placeholder,
   styles,
 }: Props) {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(1, event.target.scrollHeight);
+    onChange(event);
+  };
+
   return (
     <Container
       name={name}
-      rows={rows}
+      minRows={minRows}
       value={value}
-      onChange={onChange}
+      onChange={(event) => handleChange(event)}
       placeholder={placeholder}
       styles={styles}
     />

@@ -3,13 +3,12 @@ import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Button from '../components/Button';
-import Input from '../components/Input';
 import Layout from '../components/Layout';
 import Textarea from '../components/TextArea';
 import { HOME } from '../constants';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
-import { Form, inputStyles, Title } from '../page-styles/create-post';
+import { Form, textAreaStyles, Title } from '../page-styles/create-post';
 import { createUrqlClient } from '../utils/createUrqlClient';
 
 const CreatePost = () => {
@@ -34,23 +33,21 @@ const CreatePost = () => {
           {({ values, handleChange, handleSubmit }) => (
             <Form onSubmit={handleSubmit} autoComplete="off">
               <Title>글 작성</Title>
-              <Input
-                variant="default"
-                type="title"
+              <Textarea
                 name="title"
+                minRows={1}
                 value={values.title}
                 onChange={handleChange}
-                label="제목"
-                styles={inputStyles}
-                autoComplete="off"
+                placeholder="제목"
+                styles={textAreaStyles}
               />
               <Textarea
                 name="text"
-                rows={10}
+                minRows={10}
                 value={values.text}
                 onChange={handleChange}
                 placeholder="내용"
-                styles={inputStyles}
+                styles={textAreaStyles}
               />
               <Button
                 type="submit"

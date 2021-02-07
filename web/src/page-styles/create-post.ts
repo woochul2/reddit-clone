@@ -13,6 +13,6 @@ export const Title = styled.h1`
   margin: 0 auto 1.25rem;
 `;
 
-export const inputStyles = css`
+export const textAreaStyles = css`
   margin: 0 0 0.625rem;
 `;
