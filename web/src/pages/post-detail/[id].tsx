@@ -2,40 +2,49 @@ import { NextPage } from 'next';
 import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { css } from 'styled-components';
 import Button from '../../components/Button';
 import Confirmation from '../../components/Confirmation';
 import Layout from '../../components/Layout';
 import TextArea from '../../components/TextArea';
 import Tooltip from '../../components/Tooltip';
 import VoteIcon from '../../components/VoteIcon';
-import { HOME } from '../../constants';
+import { HOME, LOGIN } from '../../constants';
 import {
   useCurrentUserQuery,
+  useDeleteCommentMutation,
   useDeletePostMutation,
   usePostQuery,
+  useUpdateCommentMutation,
+  useWriteCommentMutation,
 } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import {
   buttonStyles,
   CloseIcon,
-  CommentPanel,
+  CommentCount,
+  CommentError,
+  CommentForm,
+  Comments,
+  commentTextAreaStyles,
   Container,
   ContentPanel,
+  ContentText,
   CreationInfo,
   DeleteButton,
   LeftPanel,
   MainPanel,
   RightPanel,
   SmallTitle,
-  textAreaStyles,
   Title,
   TopPanel,
   TopPanelInside,
+  UpdatedCommentForm,
   VoteCounts,
 } from '../../page-styles/post-detail';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { getLocalDate } from '../../utils/getLocalDate';
-import { isSameDate } from '../../utils/isSameDate';
+import { isServer } from '../../utils/isServer';
 
 const PostDetail: NextPage<{ id: string }> = ({ id }) => {
   const [{ data: postData, fetching: fetchingPost }] = usePostQuery({
@@ -43,30 +52,24 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
   });
   const post = postData?.post;
   const router = useRouter();
-  const [date, setDate] = useState({
-    year: '',
-    month: '',
-    day: '',
-    hour: '',
-    minute: '',
-  });
-  const [topPanelOffset, setTopPanelOffest] = useState('0px');
-  const [comment, setComment] = useState('');
+  const [topPanelOffset, setTopPanelOffest] = useState(0);
+  const [commentText, setCommentText] = useState('');
   const [
     { data: currentUserData, fetching: fetchingCurrentUser },
   ] = useCurrentUserQuery();
   const [, deletePost] = useDeletePostMutation();
+  const [hasCommentError, setHasCommentError] = useState(false);
+  const [, writeComment] = useWriteCommentMutation();
+  const [, deleteComment] = useDeleteCommentMutation();
+  const [updatedCommentId, setUpdatedCommentID] = useState(-1);
+  const [updatedCommentText, setUpdatedCommentText] = useState('');
+  const [, updateComment] = useUpdateCommentMutation();
 
   useEffect(() => {
-    if (!fetchingPost && post?.createdAt) {
-      const [year, month, day, hour, minute] = getLocalDate(post?.createdAt);
-      setDate({ year, month, day, hour, minute });
-    }
-
     const header = document.querySelector('header');
     if (header) {
       const headerRect = header.getBoundingClientRect();
-      setTopPanelOffest(`${headerRect.height}px`);
+      setTopPanelOffest(headerRect.height);
     }
   }, [post]);
 
@@ -74,17 +77,63 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
     await router.push(HOME);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDeletePost = async (id: number) => {
     await deletePost({ id });
     await router.push(HOME);
   };
 
+  const getMinHeight = () => {
+    if (!isServer()) {
+      return `${window.innerHeight - topPanelOffset}px`;
+    }
+    return '0px';
+  };
+
+  const handleSubmitComment = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    if (!currentUserData?.currentUser) {
+      await router.push(LOGIN);
+      return;
+    }
+
+    if (!commentText) {
+      setHasCommentError(true);
+      return;
+    }
+
+    if (!post) {
+      return;
+    }
+    await writeComment({ input: { postId: post.id, text: commentText } });
+    setCommentText('');
+    setUpdatedCommentID(-1);
+  };
+
+  const handleCommentChange = () => {
+    setHasCommentError(false);
+  };
+
+  const handleUpdateComment = async (
+    event: React.FormEvent<HTMLFormElement>,
+    commentId: number
+  ) => {
+    event.preventDefault();
+    await updateComment({ id: commentId, text: updatedCommentText });
+    setUpdatedCommentID(-1);
+  };
+
   return (
     <>
-      {!fetchingPost && post && (
+      {!fetchingPost && !fetchingCurrentUser && post && (
         <Layout variant="modal" onClickBackground={handleClickBackground}>
-          <Container onClick={(event) => event.stopPropagation()}>
-            <TopPanel offset={topPanelOffset}>
+          <Container
+            onClick={(event) => event.stopPropagation()}
+            minHeight={getMinHeight()}
+          >
+            <TopPanel offset={`${topPanelOffset}px`}>
               <TopPanelInside>
                 <VoteIcon
                   color="var(--top-panel-text-color)"
@@ -121,36 +170,105 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                 <ContentPanel>
                   <Title>{post.title}</Title>
                   <CreationInfo>
-                    <p>{post.creator.username}</p>
-                    <p>
-                      {date.year}년 {date.month}월 {date.day}일
-                      {isSameDate(post.createdAt) && (
-                        <>
-                          {' '}
-                          {date.hour}:{date.minute}
-                        </>
-                      )}
-                    </p>
-                    {!fetchingCurrentUser &&
-                      currentUserData?.currentUser?.id === post.creatorId && (
-                        <DeleteButton onClick={() => handleDelete(post.id)}>
-                          삭제
-                        </DeleteButton>
-                      )}
+                    <span>{post.creator.username}</span>
+                    <span className="creation-info__date">
+                      {getLocalDate(post.createdAt)}
+                    </span>
+                    {currentUserData?.currentUser?.id === post.creatorId && (
+                      <DeleteButton onClick={() => handleDeletePost(post.id)}>
+                        삭제
+                      </DeleteButton>
+                    )}
                   </CreationInfo>
-                  <p>{post.text}</p>
+                  <ContentText>{post.text}</ContentText>
                 </ContentPanel>
-                <CommentPanel>
-                  <p>댓글 0개</p>
+                <CommentForm
+                  onSubmit={handleSubmitComment}
+                  onChange={handleCommentChange}
+                >
+                  <CommentCount>댓글 {post.comments.length}개</CommentCount>
                   <TextArea
-                    name="comment"
+                    name="commentText"
                     minRows={4}
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    styles={textAreaStyles}
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    styles={commentTextAreaStyles}
                   />
-                  <Button styles={buttonStyles}>작성</Button>
-                </CommentPanel>
+                  {hasCommentError && (
+                    <CommentError>댓글이 비어있습니다.</CommentError>
+                  )}
+                  <Button styles={buttonStyles} type="submit">
+                    작성
+                  </Button>
+                </CommentForm>
+                <Comments>
+                  {post.comments &&
+                    post.comments.map((comment) => (
+                      <div className="comment" key={comment.id}>
+                        <p className="comment__username">
+                          {comment.creator.username}{' '}
+                          <span className="comment__middot">&middot;</span>
+                          <span className="comment__created-date">
+                            {' '}
+                            {getLocalDate(comment.createdAt)}
+                          </span>
+                          {currentUserData?.currentUser?.id ===
+                            comment.creatorId && (
+                            <>
+                              {updatedCommentId !== comment.id ? (
+                                <button
+                                  className="comment__button"
+                                  onClick={() => {
+                                    setUpdatedCommentID(comment.id);
+                                    setUpdatedCommentText(comment.text);
+                                  }}
+                                >
+                                  수정
+                                </button>
+                              ) : (
+                                <button
+                                  className="comment__button"
+                                  onClick={() => {
+                                    setUpdatedCommentID(-1);
+                                  }}
+                                >
+                                  취소
+                                </button>
+                              )}
+                              <button
+                                className="comment__button"
+                                onClick={async () => {
+                                  await deleteComment({ id: comment.id });
+                                }}
+                              >
+                                삭제
+                              </button>
+                            </>
+                          )}
+                        </p>
+                        {updatedCommentId === comment.id ? (
+                          <UpdatedCommentForm
+                            onSubmit={(e) => handleUpdateComment(e, comment.id)}
+                          >
+                            <TextArea
+                              name="comment"
+                              minRows={1}
+                              value={updatedCommentText}
+                              onChange={(e) =>
+                                setUpdatedCommentText(e.target.value)
+                              }
+                              styles={css`
+                                font-size: 0.875rem;
+                              `}
+                            />
+                            <button type="submit">확인</button>
+                          </UpdatedCommentForm>
+                        ) : (
+                          <p className="comment__text">{comment.text}</p>
+                        )}
+                      </div>
+                    ))}
+                </Comments>
               </RightPanel>
             </MainPanel>
           </Container>

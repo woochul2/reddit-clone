@@ -36,12 +36,21 @@ function getMonth(month: string) {
   return month;
 }
 
-export function getLocalDate(
-  date: string
-): [string, string, string, string, string] {
+export const isDateToday = (date: string) => {
+  const localDate = new Date(parseInt(date)).toString();
+  const now = new Date().toString();
+  return now.slice(0, 15) === localDate.slice(0, 15);
+};
+
+export function getLocalDate(date: string): string {
   const localDate = new Date(parseInt(date)).toString();
   const [, month, day, year, time] = localDate.split(' ');
   const [hour, minute] = time.split(':');
 
-  return [year, getMonth(month), cutZero(day), hour, minute];
+  let result = `${year}년 ${getMonth(month)}월 ${cutZero(day)}일`;
+
+  if (isDateToday(date)) {
+    result += ` ${hour}:${minute}`;
+  }
+  return result;
 }

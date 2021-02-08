@@ -69,8 +69,8 @@ const validatePassword = (password: string, field: string) => {
 @Resolver()
 export class UserResolver {
   @Query(() => [User])
-  users(): Promise<User[]> {
-    return User.find();
+  async users(): Promise<User[]> {
+    return await User.find();
   }
 
   @Query(() => User, { nullable: true })

@@ -12,6 +12,7 @@ import {
   UseMiddleware,
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
+import { Comment } from '../entities/Comment';
 import { Post } from '../entities/Post';
 import { User } from '../entities/User';
 import { Vote } from '../entities/Vote';
@@ -29,20 +30,40 @@ class PostInput {
 @Resolver(() => Post)
 export class PostResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() post: Post) {
+  textSnippet(@Root() post: Post): string {
     if (post.text.length > 50) {
       return post.text.slice(0, 50) + ' ...';
     }
     return post.text;
   }
 
-  @FieldResolver(() => User)
-  async creator(@Root() post: Post) {
-    return await User.findOne(post.creatorId);
+  @FieldResolver(() => User, { nullable: true })
+  async creator(@Root() post: Post): Promise<User | null> {
+    const user = await User.findOne(post.creatorId);
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  }
+
+  @FieldResolver(() => [Comment])
+  async comments(@Root() post: Post): Promise<Comment[]> {
+    const comments = await getConnection()
+      .getRepository(Comment)
+      .createQueryBuilder('comment')
+      .orderBy('comment.createdAt', 'DESC')
+      .where('comment.postId = :id', { id: post.id })
+      .getMany();
+
+    return comments;
   }
 
   @FieldResolver(() => User)
-  async voteStatus(@Root() post: Post, @Ctx() { req }: MyContext) {
+  async voteStatus(
+    @Root() post: Post,
+    @Ctx() { req }: MyContext
+  ): Promise<number | null> {
     const { userId } = req.session;
     if (!userId) {
       return null;

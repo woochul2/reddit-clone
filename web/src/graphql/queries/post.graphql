@@ -4,5 +4,8 @@ query Post($id: Int!) {
     creator {
       ...User
     }
+    comments {
+      ...Comment
+    }
   }
 }

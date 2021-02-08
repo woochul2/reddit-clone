@@ -102,6 +102,12 @@ export const createUrqlClient = () => ({
               id: (args as DeletePostMutationVariables).id,
             });
           },
+          writeComment: (_result, _args, cache, _info) => {
+            invalidateAllPosts(cache);
+          },
+          deleteComment: (_result, _args, cache, _info) => {
+            invalidateAllPosts(cache);
+          },
         },
       },
     }),

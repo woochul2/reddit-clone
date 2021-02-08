@@ -4,17 +4,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Comment } from './Comment';
 import { Post } from './Post';
-import { Vote } from './Vote';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
+export class Comment extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id!: number;
@@ -29,21 +28,20 @@ export class User extends BaseEntity {
 
   @Field()
   @Column()
-  email!: string;
+  text: string;
 
   @Field()
   @Column()
-  username!: string;
+  creatorId: number;
 
+  @Field()
+  @ManyToOne(() => User, (user) => user.comments)
+  creator: User;
+
+  @Field()
   @Column()
-  password!: string;
+  postId: number;
 
-  @OneToMany(() => Post, (post) => post.creator)
-  posts: Post[];
-
-  @OneToMany(() => Vote, (vote) => vote.user)
-  votes: Vote[];
-
-  @OneToMany(() => Comment, (comment) => comment.creator)
-  comments: Comment[];
+  @ManyToOne(() => Post, (post) => post.comments, { onDelete: 'CASCADE' })
+  post: Post;
 }

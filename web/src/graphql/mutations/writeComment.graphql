@@ -1,0 +1,5 @@
+mutation writeComment($input: CommentInput!) {
+  writeComment(input: $input) {
+    ...Comment
+  }
+}

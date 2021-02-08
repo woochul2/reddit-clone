@@ -4,5 +4,8 @@ query Posts($variant: String!) {
     creator {
       ...User
     }
+    comments {
+      ...Comment
+    }
   }
 }

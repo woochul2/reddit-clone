@@ -8,10 +8,12 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { COOKIE_NAME, WEB_URL, __prod__ } from './constants';
+import { Comment } from './entities/Comment';
 import { Post } from './entities/Post';
 import { User } from './entities/User';
 import { Vote } from './entities/Vote';
 import { MyContext } from './interfaces';
+import { CommentResolver } from './resolvers/comment';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
 import { VoteResolver } from './resolvers/vote';
@@ -25,7 +27,7 @@ const main = async () => {
     password: 'a',
     logging: true,
     synchronize: true,
-    entities: [Post, User, Vote],
+    entities: [Post, User, Vote, Comment],
     migrations: [__dirname + '/migrations/*.js'],
   });
   // orm.runMigrations();
@@ -59,7 +61,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [PostResolver, UserResolver, VoteResolver],
+      resolvers: [PostResolver, UserResolver, VoteResolver, CommentResolver],
       validate: false,
     }),
     context: ({ req, res }): MyContext => <MyContext>{ req, res, redis },

@@ -39,7 +39,7 @@ export class VoteResolver {
   ): Promise<Post | null> {
     const { userId } = req.session;
     const vote = await Vote.findOne({ userId, postId });
-    const post = await Post.findOne(postId, { relations: ['creator'] });
+    const post = await Post.findOne(postId);
     if (!post) {
       return null;
     }

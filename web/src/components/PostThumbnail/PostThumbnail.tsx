@@ -5,7 +5,6 @@ import { FlattenSimpleInterpolation } from 'styled-components';
 import { POST_DETAIL } from '../../constants';
 import { Post, User } from '../../generated/graphql';
 import { getLocalDate } from '../../utils/getLocalDate';
-import { isSameDate } from '../../utils/isSameDate';
 import VoteIcon from '../VoteIcon';
 import {
   Comment,
@@ -27,7 +26,6 @@ interface Props {
 }
 
 export default function PostThumbnail({ post, styles }: Props) {
-  const [year, month, day, hour, minute] = getLocalDate(post.createdAt);
   const router = useRouter();
   const postPath = `${POST_DETAIL}/${post.id}`;
 
@@ -52,16 +50,8 @@ export default function PostThumbnail({ post, styles }: Props) {
             <Creator>
               <span>by</span> {post.creator.username}
             </Creator>
-            <Comment>댓글 0개</Comment>
-            <CreatedTime>
-              {year}년 {month}월 {day}일
-              {isSameDate(post.createdAt) && (
-                <>
-                  {' '}
-                  {hour}:{minute}
-                </>
-              )}
-            </CreatedTime>
+            <Comment>댓글 {post.comments.length}개</Comment>
+            <CreatedTime>{getLocalDate(post.createdAt)}</CreatedTime>
           </Info>
         </Content>
       </Container>
