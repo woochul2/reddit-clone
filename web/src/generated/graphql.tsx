@@ -127,8 +127,8 @@ export type MutationCreatePostArgs = {
 
 
 export type MutationUpdatePostArgs = {
-  title?: Maybe<Scalars['String']>;
-  id: Scalars['Float'];
+  input: PostInput;
+  id: Scalars['Int'];
 };
 
 
@@ -333,6 +333,20 @@ export type UpdateCommentMutation = (
   & { updateComment?: Maybe<(
     { __typename?: 'Comment' }
     & CommentFragment
+  )> }
+);
+
+export type UpdatePostMutationVariables = Exact<{
+  id: Scalars['Int'];
+  input: PostInput;
+}>;
+
+
+export type UpdatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePost?: Maybe<(
+    { __typename?: 'Post' }
+    & PostFragment
   )> }
 );
 
@@ -566,6 +580,17 @@ export const UpdateCommentDocument = gql`
 
 export function useUpdateCommentMutation() {
   return Urql.useMutation<UpdateCommentMutation, UpdateCommentMutationVariables>(UpdateCommentDocument);
+};
+export const UpdatePostDocument = gql`
+    mutation UpdatePost($id: Int!, $input: PostInput!) {
+  updatePost(id: $id, input: $input) {
+    ...Post
+  }
+}
+    ${PostFragmentDoc}`;
+
+export function useUpdatePostMutation() {
+  return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);
 };
 export const VoteDocument = gql`
     mutation Vote($value: Int!, $postId: Int!) {

@@ -7,3 +7,8 @@ export type AuthFormikProps = FormikProps<{
   password?: string;
   newPassword?: string;
 }>;
+
+export type PostFormikProps = FormikProps<{
+  title?: string;
+  text?: string;
+}>;

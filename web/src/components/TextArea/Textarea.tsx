@@ -5,7 +5,7 @@ import { Container } from './textarea';
 interface Props {
   name: string;
   minRows: number;
-  value: string;
+  value?: string;
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
   styles?: FlattenSimpleInterpolation;

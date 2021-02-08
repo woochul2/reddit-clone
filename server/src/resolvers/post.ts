@@ -117,16 +117,19 @@ export class PostResolver {
 
   @Mutation(() => Post, { nullable: true })
   async updatePost(
-    @Arg('id') id: number,
-    @Arg('title', () => String, { nullable: true }) title: string
+    @Arg('id', () => Int) id: number,
+    @Arg('input') input: PostInput
   ): Promise<Post | null> {
     const post = await Post.findOne(id);
     if (!post) {
       return null;
     }
-    if (typeof title !== 'undefined') {
-      await Post.update({ id }, { title, updatedAt: Date() });
-    }
+
+    post.title = input.title;
+    post.text = input.text;
+    post.updatedAt = Date();
+    await Post.save(post);
+
     return post;
   }
 

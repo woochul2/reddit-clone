@@ -120,22 +120,22 @@ export const CreationInfo = styled.div`
   .creation-info__date {
     color: var(--post-second-text-color);
   }
-`;
 
-export const DeleteButton = styled.button`
-  cursor: pointer;
-  padding: 0;
-  outline: 0;
-  border: 0;
-  background: 0;
-  color: var(--body-text-color);
+  button {
+    cursor: pointer;
+    padding: 0;
+    outline: 0;
+    border: 0;
+    background: 0;
+    color: var(--body-text-color);
 
-  &:hover {
-    text-decoration: underline;
-  }
+    &:hover {
+      text-decoration: underline;
+    }
 
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+    &:focus-visible {
+      box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+    }
   }
 `;
 

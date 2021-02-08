@@ -9,7 +9,7 @@ import Layout from '../../components/Layout';
 import TextArea from '../../components/TextArea';
 import Tooltip from '../../components/Tooltip';
 import VoteIcon from '../../components/VoteIcon';
-import { HOME, LOGIN } from '../../constants';
+import { EDIT_POST, HOME, LOGIN } from '../../constants';
 import {
   useCurrentUserQuery,
   useDeleteCommentMutation,
@@ -31,7 +31,6 @@ import {
   ContentPanel,
   ContentText,
   CreationInfo,
-  DeleteButton,
   LeftPanel,
   MainPanel,
   RightPanel,
@@ -140,6 +139,9 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                   backgroundColor="var(--post-top-panel-hover-background-color)"
                   id={post.id}
                   voteStatus={post.voteStatus}
+                  styles={css`
+                    margin: 0;
+                  `}
                 />
                 <VoteCounts>{post.voteCounts}</VoteCounts>
                 <VoteIcon
@@ -148,6 +150,9 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                   backgroundColor="var(--post-top-panel-hover-background-color)"
                   id={post.id}
                   voteStatus={post.voteStatus}
+                  styles={css`
+                    margin: 0;
+                  `}
                 />
                 <SmallTitle>{post.title}</SmallTitle>
                 <CloseIcon onClick={async () => await router.push(HOME)}>
@@ -175,9 +180,16 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                       {getLocalDate(post.createdAt)}
                     </span>
                     {currentUserData?.currentUser?.id === post.creatorId && (
-                      <DeleteButton onClick={() => handleDeletePost(post.id)}>
-                        삭제
-                      </DeleteButton>
+                      <>
+                        <button
+                          onClick={() => router.push(`${EDIT_POST}/${post.id}`)}
+                        >
+                          수정
+                        </button>
+                        <button onClick={() => handleDeletePost(post.id)}>
+                          삭제
+                        </button>
+                      </>
                     )}
                   </CreationInfo>
                   <ContentText>{post.text}</ContentText>
