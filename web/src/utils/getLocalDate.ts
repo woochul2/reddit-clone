@@ -42,15 +42,26 @@ export const isDateToday = (date: string) => {
   return now.slice(0, 15) === localDate.slice(0, 15);
 };
 
-export function getLocalDate(date: string): string {
+export function getLocalDate(
+  date: string,
+  variant: 'default' | 'dot' = 'default',
+  showTime: boolean = true
+): string {
   const localDate = new Date(parseInt(date)).toString();
   const [, month, day, year, time] = localDate.split(' ');
   const [hour, minute] = time.split(':');
 
-  let result = `${year}년 ${getMonth(month)}월 ${cutZero(day)}일`;
+  let result = '';
 
-  if (isDateToday(date)) {
+  if (variant === 'default') {
+    result = `${year}년 ${getMonth(month)}월 ${cutZero(day)}일`;
+  } else if (variant === 'dot') {
+    result = `${year}.${getMonth(month)}.${cutZero(day)}`;
+  }
+
+  if (showTime && isDateToday(date)) {
     result += ` ${hour}:${minute}`;
   }
+
   return result;
 }

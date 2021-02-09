@@ -1,11 +1,12 @@
-import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import { BREAKPOINT_MD } from '../../constants';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
 }
 
 export const Container = styled.header<ContainerProps>`
-  z-index: 2;
+  z-index: 3;
   position: sticky;
   top: 0;
   padding: 0.375rem 0;
@@ -15,12 +16,46 @@ export const Container = styled.header<ContainerProps>`
 `;
 
 export const Inside = styled.div`
+  .inside__desktop {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+
+    @media (max-width: ${BREAKPOINT_MD}) {
+      display: none;
+    }
+  }
+
+  .inside__mobile {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    height: 2.375rem;
+    padding: 0 1.5rem;
+
+    @media (max-width: ${BREAKPOINT_MD}) {
+      display: flex;
+    }
+  }
+`;
+
+export const MenuButton = styled.button`
+  background: 0;
+  border: 0;
+
+  .close-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+`;
+
+export const RightPanel = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  max-width: 75rem;
-  margin: 0 auto;
-  padding: 0 1.5rem;
 `;
 
 export const Logo = styled.a`
@@ -31,6 +66,12 @@ export const Logo = styled.a`
   border-radius: 0.125em;
   color: var(--logo-color);
 
+  @media (max-width: ${BREAKPOINT_MD}) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   span {
     font-size: 1.125rem;
   }
@@ -39,74 +80,6 @@ export const Logo = styled.a`
     box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
   }
 `;
-
-export const SearchBox = styled.div<{ value?: string }>`
-  position: relative;
-  flex-grow: 1;
-
-  svg {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .search-icon {
-    cursor: text;
-    left: 0.75rem;
-    color: var(--input-label-color);
-  }
-
-  .close-icon {
-    display: ${({ value }) => (value ? 'block' : 'none')};
-    right: 0.875rem;
-  }
-`;
-
-export const searchInputStyles = css`
-  margin: 0;
-
-  input {
-    background-color: var(--search-box--background-color);
-    padding: 0.375rem 2.5rem 0.375rem 3.125rem;
-  }
-`;
-
-export const SearchResult = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem 2.5rem;
-  background-color: var(--search-box--background-color);
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
-
-  button {
-    cursor: pointer;
-    align-self: flex-start;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0;
-    outline: 0;
-    border: 0;
-    background: 0;
-    color: var(--body-text-color);
-
-    &:hover {
-      text-decoration: underline;
-    }
-
-    &:focus-visible {
-      box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
-    }
-  }
-`;
-
-export const Username = styled.span``;
 
 export const LogoutButton = styled.button`
   cursor: pointer;
@@ -185,5 +158,38 @@ export const IconLink = styled.a`
 
   &:focus-visible {
     box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
+  }
+`;
+
+export const MobileMenu = styled.div<{ offset: string }>`
+  z-index: 2;
+  position: absolute;
+  top: ${({ offset }) => offset};
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100vh;
+  padding: 4rem 0.25rem 2rem;
+  background-color: var(--body-background-color);
+`;
+
+export const Bottom = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 1.125rem;
+
+  button {
+    padding: 0;
+    border: 0;
+    background: 0;
+    color: var(--body-text-color);
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;

@@ -21,17 +21,19 @@ export const Container = styled.button<ContainerProps>`
   color: var(--body-text-color);
   color: ${({ color }) => color};
   color: ${({ hasClicked }) => hasClicked && 'var(--post-clicked-icon-color)'};
-  ${({ variant }) =>
-    variant === 'down' &&
-    css`
-      transform: rotate(180deg);
-    `}
 
   svg {
     position: absolute;
+    top: 50%;
     left: 0;
-    top: 0;
     display: block;
+    transform: translateY(-50%);
+
+    ${({ variant }) =>
+      variant === 'down' &&
+      css`
+        transform: translateY(-50%) rotate(180deg);
+      `}
   }
 
   .original {

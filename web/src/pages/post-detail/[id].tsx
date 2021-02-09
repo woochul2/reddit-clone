@@ -177,21 +177,30 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                 <ContentPanel>
                   <Title>{post.title}</Title>
                   <CreationInfo>
-                    <span>{post.creator.username}</span>
-                    <span className="creation-info__date">
-                      {getLocalDate(post.createdAt)}
-                    </span>
+                    <div className="creation-info__left">
+                      <span>{post.creator.username}</span>
+                      <span className="creation-info__date">
+                        <span className="desktop">
+                          {getLocalDate(post.createdAt)}
+                        </span>
+                        <span className="mobile">
+                          {getLocalDate(post.createdAt, 'dot')}
+                        </span>
+                      </span>
+                    </div>
                     {currentUserData?.currentUser?.id === post.creatorId && (
-                      <>
+                      <div className="creation-info__button-container">
                         <button
-                          onClick={() => router.push(`${EDIT_POST}/${post.id}`)}
+                          onClick={async () =>
+                            await router.push(`${EDIT_POST}/${post.id}`)
+                          }
                         >
                           수정
                         </button>
                         <button onClick={() => handleDeletePost(post.id)}>
                           삭제
                         </button>
-                      </>
+                      </div>
                     )}
                   </CreationInfo>
                   <ContentText>{post.text}</ContentText>
@@ -219,47 +228,56 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                   {post.comments &&
                     post.comments.map((comment) => (
                       <div className="comment" key={comment.id}>
-                        <p className="comment__username">
-                          {comment.creator.username}{' '}
-                          <span className="comment__middot">&middot;</span>
-                          <span className="comment__created-date">
-                            {' '}
-                            {getLocalDate(comment.createdAt)}
-                          </span>
-                          {currentUserData?.currentUser?.id ===
-                            comment.creatorId && (
-                            <>
-                              {updatedCommentId !== comment.id ? (
+                        <div className="comment__top">
+                          <p className="comment__top-left">
+                            {comment.creator.username}{' '}
+                            <span className="comment__middot">&middot; </span>
+                            <span className="comment__created-date">
+                              <span className="desktop">
+                                {getLocalDate(comment.createdAt)}
+                              </span>
+                              <span className="mobile">
+                                {getLocalDate(comment.createdAt, 'dot')}
+                              </span>
+                            </span>
+                          </p>
+                          <div className="comment__top-right">
+                            {currentUserData?.currentUser?.id ===
+                              comment.creatorId && (
+                              <>
+                                {updatedCommentId !== comment.id ? (
+                                  <button
+                                    className="comment__button"
+                                    onClick={() => {
+                                      setUpdatedCommentID(comment.id);
+                                      setUpdatedCommentText(comment.text);
+                                    }}
+                                  >
+                                    수정
+                                  </button>
+                                ) : (
+                                  <button
+                                    className="comment__button"
+                                    onClick={() => {
+                                      setUpdatedCommentID(-1);
+                                    }}
+                                  >
+                                    취소
+                                  </button>
+                                )}
                                 <button
                                   className="comment__button"
-                                  onClick={() => {
-                                    setUpdatedCommentID(comment.id);
-                                    setUpdatedCommentText(comment.text);
+                                  onClick={async () => {
+                                    await deleteComment({ id: comment.id });
                                   }}
                                 >
-                                  수정
+                                  삭제
                                 </button>
-                              ) : (
-                                <button
-                                  className="comment__button"
-                                  onClick={() => {
-                                    setUpdatedCommentID(-1);
-                                  }}
-                                >
-                                  취소
-                                </button>
-                              )}
-                              <button
-                                className="comment__button"
-                                onClick={async () => {
-                                  await deleteComment({ id: comment.id });
-                                }}
-                              >
-                                삭제
-                              </button>
-                            </>
-                          )}
-                        </p>
+                              </>
+                            )}
+                          </div>
+                        </div>
+
                         {updatedCommentId === comment.id ? (
                           <UpdatedCommentForm
                             onSubmit={(e) => handleUpdateComment(e, comment.id)}

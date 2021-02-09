@@ -8,7 +8,8 @@ interface ContainerProps {
 export const Container = styled(TextareaAutosize)<ContainerProps>`
   resize: none;
   word-break: break-all;
-  line-height: 1.4;
+  font-family: 'Nanum Gothic', sans-serif;
+  line-height: 1.6;
   padding: 0.75em 0.875em;
   outline: 0;
   border: 0.065em solid var(--input-border-color);

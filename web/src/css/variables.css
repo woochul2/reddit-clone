@@ -41,7 +41,8 @@
   --header-border-color: var(--gray-100);
   --header-background-color: var(--white);
   --logo-color: var(--black);
-  --search-box--background-color: var(--mint-100);
+  --search-box-background-color: var(--mint-100);
+  --search-box-hover-background-color: var(--mint-200);
 
   --post-border-color: var(--gray-200);
   --post-focused-border-color: var(--gray-400);

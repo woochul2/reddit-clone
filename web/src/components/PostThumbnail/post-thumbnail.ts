@@ -1,4 +1,5 @@
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import { BREAKPOINT_SM } from '../../constants';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
@@ -26,6 +27,10 @@ export const LeftPanel = styled.div`
   gap: 0.375rem;
   padding: 0.5rem;
   background-color: var(--post-left-panel-background-color);
+
+  @media (max-width: ${BREAKPOINT_SM}) {
+    display: none;
+  }
 `;
 
 export const VoteCounts = styled.p`
@@ -41,6 +46,10 @@ export const Content = styled.div`
   word-break: break-all;
   padding: 1rem 1.25rem 0.875rem;
   background-color: var(--post-background-color);
+
+  @media (max-width: ${BREAKPOINT_SM}) {
+    padding: 0.75rem;
+  }
 `;
 
 export const Title = styled.a`
@@ -60,10 +69,34 @@ export const Snippet = styled.h3`
 
 export const Info = styled.div`
   display: flex;
-  align-items: center;
   gap: 1rem;
   font-size: 0.875rem;
   margin: 0 0.125rem;
+
+  .info__vote {
+    display: none;
+    align-items: center;
+    gap: 0.375rem;
+
+    @media (max-width: ${BREAKPOINT_SM}) {
+      display: flex;
+    }
+  }
+
+  .info__left {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .info__right {
+    display: flex;
+    flex-grow: 1;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: ${BREAKPOINT_SM}) {
+    flex-direction: column;
+  }
 `;
 
 export const Creator = styled.p`
@@ -76,4 +109,20 @@ export const Comment = styled.p`
   flex-grow: 1;
 `;
 
-export const CreatedTime = styled.p``;
+export const CreatedTime = styled.p`
+  color: var(--post-second-text-color);
+
+  .desktop {
+    @media (max-width: ${BREAKPOINT_SM}) {
+      display: none;
+    }
+  }
+
+  .mobile {
+    display: none;
+
+    @media (max-width: ${BREAKPOINT_SM}) {
+      display: block;
+    }
+  }
+`;

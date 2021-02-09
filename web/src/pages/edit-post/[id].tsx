@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import Layout from '../../components/Layout';
 import PostForm from '../../components/PostForm';
-import { HOME } from '../../constants';
+import { POST_DETAIL } from '../../constants';
 import { usePostQuery, useUpdatePostMutation } from '../../generated/graphql';
 import { useIsCreator } from '../../hooks/useIsCreator';
 import { PostFormikProps } from '../../types';
@@ -34,7 +34,7 @@ const EditPost: NextPage<{ id: string }> = ({ id }) => {
               console.error(error);
               return;
             }
-            await router.push(HOME);
+            await router.push(`${POST_DETAIL}/${id}`);
           }}
         >
           {(formik) => (

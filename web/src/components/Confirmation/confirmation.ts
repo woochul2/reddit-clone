@@ -8,6 +8,7 @@ export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 
   .confirmation__text {
     font-size: 1.5em;

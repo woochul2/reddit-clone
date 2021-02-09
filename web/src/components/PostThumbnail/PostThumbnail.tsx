@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { FlattenSimpleInterpolation } from 'styled-components';
+import { css, FlattenSimpleInterpolation } from 'styled-components';
 import { POST_DETAIL } from '../../constants';
 import { Post, User } from '../../generated/graphql';
 import { getLocalDate } from '../../utils/getLocalDate';
@@ -47,11 +47,38 @@ export default function PostThumbnail({ post, styles }: Props) {
           </NextLink>
           <Snippet>{post.textSnippet}</Snippet>
           <Info>
-            <Creator>
-              <span>by</span> {post.creator.username}
-            </Creator>
-            <Comment>댓글 {post.comments.length}개</Comment>
-            <CreatedTime>{getLocalDate(post.createdAt)}</CreatedTime>
+            <div className="info__left">
+              <div className="info__vote">
+                <VoteIcon
+                  id={post.id}
+                  voteStatus={post.voteStatus}
+                  styles={css`
+                    margin: 0;
+                  `}
+                />
+                <VoteCounts>{post.voteCounts}</VoteCounts>
+                <VoteIcon
+                  variant="down"
+                  id={post.id}
+                  voteStatus={post.voteStatus}
+                  styles={css`
+                    margin: 0;
+                  `}
+                />
+              </div>
+              <Creator>
+                <span>by</span> {post.creator.username}
+              </Creator>
+            </div>
+            <div className="info__right">
+              <Comment>댓글 {post.comments.length}개</Comment>
+              <CreatedTime>
+                <span className="desktop">{getLocalDate(post.createdAt)}</span>
+                <span className="mobile">
+                  {getLocalDate(post.createdAt, 'dot')}
+                </span>
+              </CreatedTime>
+            </div>
           </Info>
         </Content>
       </Container>

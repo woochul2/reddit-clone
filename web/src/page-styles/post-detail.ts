@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { BREAKPOINT_SM } from '../constants';
 
 export const Container = styled.div<{ minHeight: string }>`
   max-width: 75rem;
@@ -6,6 +7,20 @@ export const Container = styled.div<{ minHeight: string }>`
   margin: 0 auto;
   padding-bottom: 1.875rem;
   background-color: var(--layout-background-color);
+
+  .desktop {
+    @media (max-width: ${BREAKPOINT_SM}) {
+      display: none;
+    }
+  }
+
+  .mobile {
+    display: none;
+
+    @media (max-width: ${BREAKPOINT_SM}) {
+      display: inline;
+    }
+  }
 `;
 
 export const TopPanel = styled.div<{ offset: string }>`
@@ -88,6 +103,10 @@ export const LeftPanel = styled.div`
   align-items: center;
   gap: 0.375rem;
   padding: 0.5rem;
+
+  @media (max-width: ${BREAKPOINT_SM}) {
+    display: none;
+  }
 `;
 
 export const VoteCounts = styled.p`
@@ -109,6 +128,7 @@ export const ContentPanel = styled.div`
 `;
 
 export const ContentText = styled.p`
+  font-family: 'Nanum Gothic', sans-serif;
   line-height: 1.6;
 `;
 
@@ -119,12 +139,27 @@ export const Title = styled.h1`
 
 export const CreationInfo = styled.div`
   display: flex;
-  align-items: flex-start;
   gap: 1rem;
   font-size: 0.875rem;
 
+  @media (max-width: ${BREAKPOINT_SM}) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .creation-info__left {
+    display: flex;
+    gap: 1rem;
+  }
+
   .creation-info__date {
     color: var(--post-second-text-color);
+  }
+
+  .creation-info__button-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
   }
 
   button {
@@ -133,7 +168,7 @@ export const CreationInfo = styled.div`
     outline: 0;
     border: 0;
     background: 0;
-    color: var(--body-text-color);
+    color: var(--post-second-text-color);
 
     &:hover {
       text-decoration: underline;
@@ -170,18 +205,30 @@ export const buttonStyles = css`
 `;
 
 export const Comments = styled.div`
+  font-size: 0.875rem;
+
   .comment {
     margin-bottom: 1rem;
   }
 
-  .comment__username {
-    font-weight: bold;
-    font-size: 0.875rem;
+  .comment__top {
+    display: flex;
+    gap: 0.75rem;
     margin-bottom: 0.375rem;
+
+    @media (max-width: ${BREAKPOINT_SM}) {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }
+
+  .comment__top-left {
+    font-weight: bold;
   }
 
   .comment__text {
-    font-size: 0.875rem;
+    font-family: 'Nanum Gothic', sans-serif;
+    line-height: 1.6;
   }
 
   .comment__middot {
@@ -193,15 +240,20 @@ export const Comments = styled.div`
     color: var(--post-second-text-color);
   }
 
+  .comment__top-right {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
   .comment__button {
     cursor: pointer;
     border: 0;
     border-radius: 0.125rem;
     padding: 0;
-    margin-left: 0.75rem;
     outline: 0;
     background: 0;
-    color: var(--body-text-color);
+    color: var(--post-second-text-color);
 
     &:hover {
       text-decoration: underline;
