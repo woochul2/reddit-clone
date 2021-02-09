@@ -23,6 +23,12 @@ export const TopPanelInside = styled.div`
   max-width: 49.5rem;
   margin: 0 auto;
   padding: 0.875rem 0.625rem;
+
+  .top-panel-inside__vote {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
 `;
 
 export const SmallTitle = styled.h2`

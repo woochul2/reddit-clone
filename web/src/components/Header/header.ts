@@ -71,6 +71,41 @@ export const searchInputStyles = css`
   }
 `;
 
+export const SearchResult = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 2.5rem;
+  background-color: var(--search-box--background-color);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+
+  button {
+    cursor: pointer;
+    align-self: flex-start;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+    outline: 0;
+    border: 0;
+    background: 0;
+    color: var(--body-text-color);
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+    }
+  }
+`;
+
 export const Username = styled.span``;
 
 export const LogoutButton = styled.button`

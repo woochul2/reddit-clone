@@ -1,10 +1,20 @@
+import Fuse from 'fuse.js';
 import NextLink from 'next/link';
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { CREATE_POST, HOME, LOGIN, REGISTER } from '../../constants';
 import {
+  CREATE_POST,
+  HOME,
+  LOGIN,
+  POST_DETAIL,
+  REGISTER,
+} from '../../constants';
+import {
+  Post,
   useCurrentUserQuery,
   useLogoutMutation,
+  usePostsQuery,
 } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import PencilFilled from '../../icons/PencilFilled';
@@ -21,6 +31,7 @@ import {
   LogoutButton,
   SearchBox,
   searchInputStyles,
+  SearchResult,
   Username,
 } from './header';
 
@@ -37,6 +48,26 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   const [{ fetching: fetchingLogout }, logout] = useLogoutMutation();
   const [searchValue, setSearchValue] = useState('');
   const [isSearchIconClicked, setIsSearchIconClicked] = useState(false);
+  const [{ data: postsData, fetching: fetchingPosts }] = usePostsQuery({
+    variables: { variant: 'all' },
+  });
+  const [searchedItems, setSearchedItems] = useState<Fuse.FuseResult<Post>[]>(
+    []
+  );
+  const router = useRouter();
+
+  useEffect(() => {
+    const options = {
+      keys: ['title'],
+    };
+    const posts = postsData?.posts as Post[];
+    if (!posts) {
+      return;
+    }
+    const fuse = new Fuse(posts, options);
+    const items = fuse.search(searchValue).slice(0, 5);
+    setSearchedItems(items);
+  }, [searchValue]);
 
   const handleLogout = async () => {
     await logout();
@@ -50,24 +81,39 @@ export default function Header({ searchBox, onClick, styles }: Props) {
             reddit<span>.clone</span>
           </Logo>
         </NextLink>
-        {searchBox === 'on' ? (
+        {searchBox === 'on' && !fetchingPosts ? (
           <SearchBox value={searchValue}>
             <Input
               type="text"
               name="search"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              label="검색"
+              label="제목 검색"
               focus={isSearchIconClicked}
               onBlur={() => setIsSearchIconClicked(false)}
-              styles={searchInputStyles}
               autoComplete="off"
+              styles={searchInputStyles}
             />
             <SearchOutlined
               className="search-icon"
               onClick={() => setIsSearchIconClicked(true)}
             />
             <Close className="close-icon" onClick={() => setSearchValue('')} />
+            {searchedItems.length !== 0 && (
+              <SearchResult>
+                {searchedItems.map(({ item }) => (
+                  <button
+                    key={item.id}
+                    onClick={async () => {
+                      await router.push(`${POST_DETAIL}/${item.id}`);
+                      setSearchValue('');
+                    }}
+                  >
+                    {item.title}
+                  </button>
+                ))}
+              </SearchResult>
+            )}
           </SearchBox>
         ) : (
           <SearchBox></SearchBox>

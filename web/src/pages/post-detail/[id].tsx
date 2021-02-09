@@ -134,26 +134,28 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
           >
             <TopPanel offset={`${topPanelOffset}px`}>
               <TopPanelInside>
-                <VoteIcon
-                  color="var(--top-panel-text-color)"
-                  backgroundColor="var(--post-top-panel-hover-background-color)"
-                  id={post.id}
-                  voteStatus={post.voteStatus}
-                  styles={css`
-                    margin: 0;
-                  `}
-                />
-                <VoteCounts>{post.voteCounts}</VoteCounts>
-                <VoteIcon
-                  variant="down"
-                  color="var(--top-panel-text-color)"
-                  backgroundColor="var(--post-top-panel-hover-background-color)"
-                  id={post.id}
-                  voteStatus={post.voteStatus}
-                  styles={css`
-                    margin: 0;
-                  `}
-                />
+                <div className="top-panel-inside__vote">
+                  <VoteIcon
+                    color="var(--top-panel-text-color)"
+                    backgroundColor="var(--post-top-panel-hover-background-color)"
+                    id={post.id}
+                    voteStatus={post.voteStatus}
+                    styles={css`
+                      margin: 0;
+                    `}
+                  />
+                  <VoteCounts>{post.voteCounts}</VoteCounts>
+                  <VoteIcon
+                    variant="down"
+                    color="var(--top-panel-text-color)"
+                    backgroundColor="var(--post-top-panel-hover-background-color)"
+                    id={post.id}
+                    voteStatus={post.voteStatus}
+                    styles={css`
+                      margin: 0;
+                    `}
+                  />
+                </div>
                 <SmallTitle>{post.title}</SmallTitle>
                 <CloseIcon onClick={async () => await router.push(HOME)}>
                   <Close className="close-icon" />
