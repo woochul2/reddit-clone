@@ -19,6 +19,6 @@ export const Link = styled.a`
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
 `;

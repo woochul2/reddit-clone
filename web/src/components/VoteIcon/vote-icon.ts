@@ -67,13 +67,13 @@ export const Container = styled.button<ContainerProps>`
     }
 
     svg {
-      background-color: var(--post-icon-hover-background-color);
+      background-color: var(--post-vote-icon-hover-background-color);
       background-color: ${({ backgroundColor }) => backgroundColor};
     }
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
 
   ${({ styles }) => styles}

@@ -137,22 +137,28 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                 <div className="top-panel-inside__vote">
                   <VoteIcon
                     color="var(--top-panel-text-color)"
-                    backgroundColor="var(--post-top-panel-hover-background-color)"
+                    backgroundColor="var(--post-top-panel-icon-hover-background-color)"
                     id={post.id}
                     voteStatus={post.voteStatus}
                     styles={css`
                       margin: 0;
+                      &:focus-visible {
+                        box-shadow: 0 0 0 0.125rem var(--body-text-color);
+                      }
                     `}
                   />
                   <VoteCounts>{post.voteCounts}</VoteCounts>
                   <VoteIcon
                     variant="down"
                     color="var(--top-panel-text-color)"
-                    backgroundColor="var(--post-top-panel-hover-background-color)"
+                    backgroundColor="var(--post-top-panel-icon-hover-background-color)"
                     id={post.id}
                     voteStatus={post.voteStatus}
                     styles={css`
                       margin: 0;
+                      &:focus-visible {
+                        box-shadow: 0 0 0 0.125rem var(--body-text-color);
+                      }
                     `}
                   />
                 </div>

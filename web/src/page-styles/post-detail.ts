@@ -72,7 +72,7 @@ export const CloseIcon = styled.button`
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--post-border-color);
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
 
   .tooltip {
@@ -175,7 +175,7 @@ export const CreationInfo = styled.div`
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+      box-shadow: 0 0 0 0.125rem var(--body-text-color);
     }
   }
 `;
@@ -260,7 +260,7 @@ export const Comments = styled.div`
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+      box-shadow: 0 0 0 0.125rem var(--body-text-color);
     }
   }
 `;
@@ -286,7 +286,7 @@ export const UpdatedCommentForm = styled.form`
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+      box-shadow: 0 0 0 0.125rem var(--body-text-color);
     }
   }
 `;

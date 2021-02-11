@@ -1,4 +1,4 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
 import { BREAKPOINT_MD } from '../../constants';
 
 interface ContainerProps {
@@ -10,8 +10,8 @@ export const Container = styled.header<ContainerProps>`
   position: sticky;
   top: 0;
   padding: 0.375rem 0;
-  border-bottom: 0.07rem solid var(--header-border-color);
-  background-color: var(--header-background-color);
+  border-bottom: 0.065rem solid var(--header-border-color);
+  background-color: var(--body-background-color);
   ${({ styles }) => styles}
 `;
 
@@ -45,6 +45,7 @@ export const Inside = styled.div`
 export const MenuButton = styled.button`
   background: 0;
   border: 0;
+  color: var(--body-text-color);
 
   .close-icon {
     width: 1rem;
@@ -64,7 +65,7 @@ export const Logo = styled.a`
   outline: 0;
   padding: 0.16rem 0;
   border-radius: 0.125em;
-  color: var(--logo-color);
+  color: var(--body-text-color);
 
   @media (max-width: ${BREAKPOINT_MD}) {
     position: absolute;
@@ -77,7 +78,7 @@ export const Logo = styled.a`
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
 `;
 
@@ -94,7 +95,7 @@ export const LogoutButton = styled.button`
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--button-focused-border-color);
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
 `;
 
@@ -110,14 +111,12 @@ export const Link = styled.a`
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
 `;
 
-export const IconLink = styled.a`
+export const iconStyles = css`
   position: relative;
-  width: 1.25rem;
-  height: 1.25rem;
   outline: 0;
   border-radius: 0.125em;
   color: var(--body-text-color);
@@ -125,6 +124,9 @@ export const IconLink = styled.a`
   svg {
     display: block;
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .original {
@@ -157,8 +159,23 @@ export const IconLink = styled.a`
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--link-focused-border-color);
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
+`;
+
+export const IconButton = styled.button`
+  ${iconStyles};
+  cursor: pointer;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0;
+  background: 0;
+`;
+
+export const IconLink = styled.a`
+  ${iconStyles};
+  width: 1.25rem;
+  height: 1.25rem;
 `;
 
 export const MobileMenu = styled.div<{ offset: string }>`

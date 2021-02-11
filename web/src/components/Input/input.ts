@@ -59,8 +59,7 @@ export const Container = styled.div<ContainerProps>`
     ${({ variant }) => setInputProperties(variant)};
 
     &:focus {
-      border-color: var(--input-focused-border-color);
-      box-shadow: 0 0 0 0.065em var(--input-focused-border-color);
+      box-shadow: 0 0 0 0.065em var(--input-border-color);
     }
 
     &::placeholder {

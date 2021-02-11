@@ -14,11 +14,11 @@ export const Container = styled(TextareaAutosize)<ContainerProps>`
   outline: 0;
   border: 0.065em solid var(--input-border-color);
   border-radius: 0.125em;
+  background-color: var(--input-background-color);
   color: var(--input-text-color);
 
   &:focus {
-    border-color: var(--input-focused-border-color);
-    box-shadow: 0 0 0 0.065em var(--input-focused-border-color);
+    box-shadow: 0 0 0 0.065em var(--input-border-color);
   }
 
   &::placeholder {

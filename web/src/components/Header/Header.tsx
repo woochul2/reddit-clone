@@ -15,14 +15,20 @@ import {
 } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import Menu from '../../icons/Menu';
+import MoonFilled from '../../icons/MoonFilled';
+import MoonOutlined from '../../icons/MoonOutlined';
 import PencilFilled from '../../icons/PencilFilled';
 import PencilOutlined from '../../icons/PencilOutlined';
+import SunFilled from '../../icons/SunFilled';
+import SunOutlined from '../../icons/SunOutlined';
+import { isServer } from '../../utils/isServer';
 import { remToPx } from '../../utils/remToPx';
 import SearchBox from '../SearchBox';
 import Tooltip from '../Tooltip';
 import {
   Bottom,
   Container,
+  IconButton,
   IconLink,
   Inside,
   Link,
@@ -39,12 +45,23 @@ interface Props {
   styles?: FlattenSimpleInterpolation;
 }
 
+function isDarkMode(): boolean {
+  if (isServer()) {
+    return false;
+  }
+
+  if (document.documentElement.getAttribute('data-color-mode') === 'light') {
+    return false;
+  }
+
+  return true;
+}
+
 export default function Header({ searchBox, onClick, styles }: Props) {
   const [
     { data: currentUserData, fetching: fetchingCurrentUser },
   ] = useCurrentUserQuery();
   const [{ fetching: fetchingLogout }, logout] = useLogoutMutation();
-
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileMenuOffset, setMobileMenuOffset] = useState(0);
@@ -52,6 +69,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
     await logout();
     closeMobileMenu();
   };
+  const [, setColorMode] = useState('light');
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -106,6 +124,37 @@ export default function Header({ searchBox, onClick, styles }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    const currentColorMode = localStorage.getItem('color-mode');
+    if (!currentColorMode) {
+      localStorage.setItem('color-mode', 'light');
+      return;
+    }
+    setColorMode(currentColorMode);
+
+    if (currentColorMode === 'dark') {
+      document.documentElement.setAttribute('data-color-mode', 'dark');
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const currentMode = localStorage.getItem('color-mode');
+
+    if (currentMode === 'dark') {
+      document.documentElement.setAttribute('data-color-mode', 'light');
+      localStorage.setItem('color-mode', 'light');
+      setColorMode('light');
+      return;
+    }
+
+    if (currentMode === 'light') {
+      document.documentElement.setAttribute('data-color-mode', 'dark');
+      localStorage.setItem('color-mode', 'dark');
+      setColorMode('dark');
+      return;
+    }
+  };
+
   return (
     <>
       <Container styles={styles} onClick={onClick}>
@@ -122,6 +171,22 @@ export default function Header({ searchBox, onClick, styles }: Props) {
               <div style={{ flexGrow: 1 }}></div>
             )}
             <RightPanel>
+              <IconButton onClick={toggleDarkMode}>
+                {!isDarkMode() && (
+                  <>
+                    <MoonOutlined className="original" />
+                    <MoonFilled className="hovered" />
+                    <Tooltip className="tooltip">다크 모드</Tooltip>
+                  </>
+                )}
+                {isDarkMode() && (
+                  <>
+                    <SunOutlined className="original" />
+                    <SunFilled className="hovered" />
+                    <Tooltip className="tooltip">라이트 모드</Tooltip>
+                  </>
+                )}
+              </IconButton>
               {!fetchingCurrentUser && currentUserData?.currentUser && (
                 <>
                   <NextLink href={CREATE_POST} passHref>
@@ -178,6 +243,20 @@ export default function Header({ searchBox, onClick, styles }: Props) {
             <SearchBox />
           </div>
           <Bottom>
+            <IconButton onClick={toggleDarkMode}>
+              {!isDarkMode() && (
+                <>
+                  <MoonOutlined className="original" />
+                  <MoonFilled className="hovered" />
+                </>
+              )}
+              {isDarkMode() && (
+                <>
+                  <SunOutlined className="original" />
+                  <SunFilled className="hovered" />
+                </>
+              )}
+            </IconButton>
             {!fetchingCurrentUser && currentUserData?.currentUser && (
               <>
                 <p>{currentUserData.currentUser.username}</p>

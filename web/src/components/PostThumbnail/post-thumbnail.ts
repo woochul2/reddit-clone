@@ -59,7 +59,13 @@ export const Title = styled.a`
   text-decoration: none;
   font-weight: bold;
   font-size: 1.5rem;
+  outline: 0;
+  border-radius: 0.25rem;
   color: var(--body-text-color);
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
+  }
 `;
 
 export const Snippet = styled.h3`
