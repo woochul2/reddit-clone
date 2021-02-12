@@ -5,6 +5,7 @@ html {
 
 body {
   line-height: 1.4;
+  background-color: var(--body-background-color);
   color: var(--body-text-color);
 }
 
