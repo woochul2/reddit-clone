@@ -36,7 +36,7 @@ export default function PostForm({ formik, title, styles }: Props) {
       />
       <Button
         type="submit"
-        disabled={values.title === '' || values.text === ''}
+        disabled={values.title === '' || values.text === '' || isSubmitting}
       >
         {isSubmitting ? (
           <ReactLoading type={'spokes'} width={'1.125em'} height={'1.125em'} />

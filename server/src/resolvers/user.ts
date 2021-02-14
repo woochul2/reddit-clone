@@ -11,7 +11,7 @@ import {
 } from 'type-graphql';
 import { v4 } from 'uuid';
 import validator from 'validator';
-import { COOKIE_NAME, FORGET_PASSWORD_PREFIX, WEB_URL } from '../constants';
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants';
 import { User } from '../entities/User';
 import { MyContext } from '../interfaces';
 import { sendEmail } from '../utils/sendEmail';
@@ -211,7 +211,7 @@ export class UserResolver {
 
     await sendEmail(
       email,
-      `<a href="${WEB_URL}/change-password/${token}">비밀번호 재설정</a>`
+      `<a href="${process.env.CORS_ORIGIN}/change-password/${token}">비밀번호 재설정</a>`
     );
     return true;
   }

@@ -1,5 +1,5 @@
 import { Cache, cacheExchange, QueryInput } from '@urql/exchange-graphcache';
-import { dedupExchange, fetchExchange, ssrExchange } from 'urql';
+import { dedupExchange, fetchExchange } from 'urql';
 import {
   CurrentUserDocument,
   CurrentUserQuery,
@@ -29,92 +29,96 @@ function invalidateAllPosts(cache: Cache) {
   });
 }
 
-const ssr = ssrExchange({
-  isClient: !isServer(),
-});
+export const createUrqlClient = (ssrExchange: any, ctx: any) => {
+  let headers = {};
+  if (isServer()) {
+    headers = ctx?.req?.headers;
+  }
 
-export const createUrqlClient = () => ({
-  url: 'http://localhost:4000/graphql',
-  fetchOptions: {
-    credentials: 'include' as const,
-  },
-  exchanges: [
-    dedupExchange,
-    cacheExchange({
-      keys: {
-        Vote: () => null,
-      },
-      updates: {
-        Mutation: {
-          login: (_result, _args, cache, _info) => {
-            myUpdateQuery<LoginMutation, CurrentUserQuery>(
-              cache,
-              _result,
-              { query: CurrentUserDocument },
-              (result, data) => {
-                if (result.login.errors) {
-                  return data;
+  return {
+    url: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_URL,
+    fetchOptions: {
+      credentials: 'include' as const,
+      headers,
+    },
+    exchanges: [
+      dedupExchange,
+      cacheExchange({
+        keys: {
+          Vote: () => null,
+        },
+        updates: {
+          Mutation: {
+            login: (_result, _args, cache, _info) => {
+              myUpdateQuery<LoginMutation, CurrentUserQuery>(
+                cache,
+                _result,
+                { query: CurrentUserDocument },
+                (result, data) => {
+                  if (result.login.errors) {
+                    return data;
+                  }
+                  return {
+                    currentUser: result.login.user,
+                  };
                 }
-                return {
-                  currentUser: result.login.user,
-                };
-              }
-            );
-            invalidateAllPosts(cache);
-          },
-          register: (_result, _args, cache, _info) => {
-            myUpdateQuery<RegisterMutation, CurrentUserQuery>(
-              cache,
-              _result,
-              { query: CurrentUserDocument },
-              (result, data) => {
-                if (result.register.errors) {
-                  return data;
+              );
+              invalidateAllPosts(cache);
+            },
+            register: (_result, _args, cache, _info) => {
+              myUpdateQuery<RegisterMutation, CurrentUserQuery>(
+                cache,
+                _result,
+                { query: CurrentUserDocument },
+                (result, data) => {
+                  if (result.register.errors) {
+                    return data;
+                  }
+                  return {
+                    currentUser: result.register.user,
+                  };
                 }
-                return {
-                  currentUser: result.register.user,
-                };
-              }
-            );
-          },
-          logout: (_result, _args, cache, _info) => {
-            myUpdateQuery<LogoutMutation, CurrentUserQuery>(
-              cache,
-              _result,
-              { query: CurrentUserDocument },
-              (result, data) => {
-                if (!result.logout) {
-                  return data;
+              );
+            },
+            logout: (_result, _args, cache, _info) => {
+              myUpdateQuery<LogoutMutation, CurrentUserQuery>(
+                cache,
+                _result,
+                { query: CurrentUserDocument },
+                (result, data) => {
+                  if (!result.logout) {
+                    return data;
+                  }
+                  return {
+                    currentUser: null,
+                  };
                 }
-                return {
-                  currentUser: null,
-                };
-              }
-            );
-            invalidateAllPosts(cache);
-          },
-          createPost: (_result, _args, cache, _info) => {
-            invalidateAllPosts(cache);
-          },
-          updatePost: (_result, _args, cache, _info) => {
-            invalidateAllPosts(cache);
-          },
-          deletePost: (_result, args, cache, _info) => {
-            cache.invalidate({
-              __typename: 'Post',
-              id: (args as DeletePostMutationVariables).id,
-            });
-          },
-          writeComment: (_result, _args, cache, _info) => {
-            invalidateAllPosts(cache);
-          },
-          deleteComment: (_result, _args, cache, _info) => {
-            invalidateAllPosts(cache);
+              );
+              invalidateAllPosts(cache);
+            },
+            createPost: (_result, _args, cache, _info) => {
+              invalidateAllPosts(cache);
+            },
+            updatePost: (_result, _args, cache, _info) => {
+              invalidateAllPosts(cache);
+            },
+            deletePost: (_result, args, cache, _info) => {
+              cache.invalidate({
+                __typename: 'Post',
+                id: (args as DeletePostMutationVariables).id,
+              });
+            },
+            writeComment: (_result, _args, cache, _info) => {
+              invalidateAllPosts(cache);
+            },
+            deleteComment: (_result, _args, cache, _info) => {
+              invalidateAllPosts(cache);
+            },
           },
         },
-      },
-    }),
-    ssr,
-    fetchExchange,
-  ],
-});
+      }),
+      ssrExchange,
+      fetchExchange,
+    ],
+  };
+};

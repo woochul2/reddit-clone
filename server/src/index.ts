@@ -7,7 +7,7 @@ import Redis from 'ioredis';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
-import { COOKIE_NAME, WEB_URL, __prod__ } from './constants';
+import { COOKIE_NAME, __prod__ } from './constants';
 import { Comment } from './entities/Comment';
 import { Post } from './entities/Post';
 import { User } from './entities/User';
@@ -22,23 +22,30 @@ require('dotenv').config();
 const main = async () => {
   await createConnection({
     type: 'postgres',
-    database: 'reddit_clone',
-    username: 'postgres',
-    password: 'a',
-    logging: true,
+    host: process.env.DATABASE_HOST,
+    database: process.env.DATABASE_DATABASE,
+    username: process.env.DATABASE_USERNAME,
+    port: parseInt(process.env.DATABASE_PORT),
+    password: process.env.DATABASE_PASSWORD,
+    url: process.env.DATABASE_URL,
+    logging: false,
     synchronize: true,
     entities: [Post, User, Vote, Comment],
+    ssl: {
+      rejectUnauthorized: false,
+    },
     migrations: [__dirname + '/migrations/*.js'],
   });
   // orm.runMigrations();
 
   const app = express();
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis(process.env.REDIS_URL);
 
+  app.set('trust proxy', true);
   app.use(
     cors({
-      origin: WEB_URL,
+      origin: process.env.CORS_ORIGIN,
       credentials: true,
     })
   );
@@ -49,17 +56,19 @@ const main = async () => {
         client: redis,
         ttl: 60 * 60 * 24 * 7 * 4, // 2주일
       }),
-      secret: 'sfaoiupbsbzxcbklmqer;ioguqwoi;gjsv',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       cookie: {
-        sameSite: 'lax',
         secure: __prod__,
+        httpOnly: true,
       },
       saveUninitialized: false,
     })
   );
 
   const apolloServer = new ApolloServer({
+    introspection: true,
+    playground: true,
     schema: await buildSchema({
       resolvers: [PostResolver, UserResolver, VoteResolver, CommentResolver],
       validate: false,
@@ -72,10 +81,8 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(4000, () => {
+  app.listen(parseInt(process.env.PORT), () => {
     console.log('서버가 시작됐습니다.');
-    console.log('이제 브라우저에서 Apollo Server를 볼 수 있습니다.');
-    console.log('로컬 주소: http://localhost:4000' + apolloServer.graphqlPath);
   });
 };
 

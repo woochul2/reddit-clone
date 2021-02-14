@@ -28,7 +28,7 @@ export async function sendEmail(to: string, html: string) {
     const info = await transporter.sendMail({
       from: '"이우철" <leewoo0686@gmail.com>',
       to,
-      subject: 'reddit-clone 비밀번호 변경',
+      subject: 'reddit clone 비밀번호 변경',
       html,
     });
 
