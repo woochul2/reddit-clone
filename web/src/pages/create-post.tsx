@@ -1,5 +1,4 @@
 import { Formik } from 'formik';
-import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Layout from '../components/Layout';
@@ -8,11 +7,11 @@ import { HOME } from '../constants';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
 import { PostFormikProps } from '../types';
-import { createUrqlClient } from '../utils/createUrqlClient';
+import withApollo from '../utils/withApollo';
 
 const CreatePost = () => {
   const isLoggedIn = useIsLoggedIn();
-  const [, createPost] = useCreatePostMutation();
+  const [createPost] = useCreatePostMutation();
   const router = useRouter();
 
   return (
@@ -21,9 +20,14 @@ const CreatePost = () => {
         <Formik
           initialValues={{ title: '', text: '' }}
           onSubmit={async (values) => {
-            const { error } = await createPost({ input: values });
-            if (error) {
-              console.error(error);
+            const { errors } = await createPost({
+              variables: { input: values },
+              update: (cache) => {
+                cache.evict({ fieldName: 'posts' });
+              },
+            });
+            if (errors) {
+              console.error(errors);
               return;
             }
             await router.push(HOME);
@@ -38,4 +42,4 @@ const CreatePost = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(CreatePost);
+export default withApollo({ ssr: false })(CreatePost);

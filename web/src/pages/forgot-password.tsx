@@ -1,5 +1,4 @@
 import { Formik } from 'formik';
-import { withUrqlClient } from 'next-urql';
 import React, { useState } from 'react';
 import validator from 'validator';
 import AuthForm from '../components/AuthForm';
@@ -8,10 +7,10 @@ import Layout from '../components/Layout';
 import { useForgotPasswordMutation } from '../generated/graphql';
 import { Container } from '../page-styles/forgot-password';
 import { AuthFormikProps } from '../types';
-import { createUrqlClient } from '../utils/createUrqlClient';
+import withApollo from '../utils/withApollo';
 
 const ForgotPassword = () => {
-  const [, forgotPassword] = useForgotPasswordMutation();
+  const [forgotPassword] = useForgotPasswordMutation();
   const [isFinished, setIsFinished] = useState(false);
 
   return (
@@ -25,7 +24,7 @@ const ForgotPassword = () => {
               return;
             }
             setIsFinished(true);
-            await forgotPassword(values);
+            await forgotPassword({ variables: values });
           }}
         >
           {(formik) => (
@@ -48,4 +47,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(ForgotPassword);
+export default withApollo({ ssr: false })(ForgotPassword);

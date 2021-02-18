@@ -1,5 +1,4 @@
 import { NextPage } from 'next';
-import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { css } from 'styled-components';
@@ -41,28 +40,29 @@ import {
   UpdatedCommentForm,
   VoteCounts,
 } from '../../page-styles/post-detail';
-import { createUrqlClient } from '../../utils/createUrqlClient';
 import { getLocalDate } from '../../utils/getLocalDate';
 import { isServer } from '../../utils/isServer';
+import withApollo from '../../utils/withApollo';
 
 const PostDetail: NextPage<{ id: string }> = ({ id }) => {
-  const [{ data: postData, fetching: fetchingPost }] = usePostQuery({
+  const { data: postData, loading: loadingPost } = usePostQuery({
     variables: { id: parseInt(id) },
   });
   const post = postData?.post;
   const router = useRouter();
   const [topPanelOffset, setTopPanelOffest] = useState(0);
   const [commentText, setCommentText] = useState('');
-  const [
-    { data: currentUserData, fetching: fetchingCurrentUser },
-  ] = useCurrentUserQuery();
-  const [, deletePost] = useDeletePostMutation();
+  const {
+    data: currentUserData,
+    loading: loadingCurrentUser,
+  } = useCurrentUserQuery();
+  const [deletePost] = useDeletePostMutation();
   const [hasCommentError, setHasCommentError] = useState(false);
-  const [, writeComment] = useWriteCommentMutation();
-  const [, deleteComment] = useDeleteCommentMutation();
+  const [writeComment] = useWriteCommentMutation();
+  const [deleteComment] = useDeleteCommentMutation();
   const [updatedCommentId, setUpdatedCommentID] = useState(-1);
   const [updatedCommentText, setUpdatedCommentText] = useState('');
-  const [, updateComment] = useUpdateCommentMutation();
+  const [updateComment] = useUpdateCommentMutation();
 
   useEffect(() => {
     const header = document.querySelector('header');
@@ -77,7 +77,12 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
   };
 
   const handleDeletePost = async (id: number) => {
-    await deletePost({ id });
+    await deletePost({
+      variables: { id },
+      update: (cache) => {
+        cache.evict({ fieldName: 'posts' });
+      },
+    });
     await router.push(HOME);
   };
 
@@ -106,7 +111,12 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
     if (!post) {
       return;
     }
-    await writeComment({ input: { postId: post.id, text: commentText } });
+    await writeComment({
+      variables: { input: { postId: post.id, text: commentText } },
+      update: (cache) => {
+        cache.evict({ id: 'Post:' + id });
+      },
+    });
     setCommentText('');
     setUpdatedCommentID(-1);
   };
@@ -120,13 +130,18 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
     commentId: number
   ) => {
     event.preventDefault();
-    await updateComment({ id: commentId, text: updatedCommentText });
+    await updateComment({
+      variables: { id: commentId, text: updatedCommentText },
+      update: (cache) => {
+        cache.evict({ id: 'Post:' + id });
+      },
+    });
     setUpdatedCommentID(-1);
   };
 
   return (
     <>
-      {!fetchingPost && !fetchingCurrentUser && post && (
+      {!loadingPost && !loadingCurrentUser && post && (
         <Layout variant="modal" onClickBackground={handleClickBackground}>
           <Container
             onClick={(event) => event.stopPropagation()}
@@ -274,7 +289,12 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                                 <button
                                   className="comment__button"
                                   onClick={async () => {
-                                    await deleteComment({ id: comment.id });
+                                    await deleteComment({
+                                      variables: { id: comment.id },
+                                      update: (cache) => {
+                                        cache.evict({ id: 'Post:' + id });
+                                      },
+                                    });
                                   }}
                                 >
                                   삭제
@@ -312,7 +332,7 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
           </Container>
         </Layout>
       )}
-      {!fetchingPost && !post && (
+      {!loadingPost && !post && (
         <Layout>
           <Confirmation text="게시물이 존재하지 않습니다." />
         </Layout>
@@ -327,6 +347,4 @@ PostDetail.getInitialProps = ({ query }) => {
   };
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(
-  PostDetail as any
-);
+export default withApollo({ ssr: true })(PostDetail as any);

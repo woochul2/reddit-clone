@@ -10,13 +10,13 @@
     "deploy": "git add . && git commit -m deploy && git push heroku master"
   },
   "dependencies": {
-    "@urql/exchange-graphcache": "^3.4.0",
+    "@apollo/client": "^3.3.11",
     "formik": "^2.2.6",
     "fuse.js": "^6.4.6",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "next": "10.0.5",
-    "next-urql": "^2.2.0",
+    "next-apollo": "^5.0.4",
     "normalize.css": "^8.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -24,14 +24,13 @@
     "react-loading": "^2.0.3",
     "react-textarea-autosize": "^8.3.0",
     "styled-components": "^5.2.1",
-    "urql": "^1.11.6",
     "validator": "^13.5.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.20.0",
     "@graphql-codegen/typescript": "1.20.0",
     "@graphql-codegen/typescript-operations": "1.17.13",
-    "@graphql-codegen/typescript-urql": "^2.0.3",
+    "@graphql-codegen/typescript-react-apollo": "^2.2.1",
     "@types/node": "^14.14.21",
     "@types/react": "^17.0.0",
     "@types/styled-components": "^5.1.7",

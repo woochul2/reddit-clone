@@ -1,20 +1,23 @@
 import { Formik } from 'formik';
-import { withUrqlClient } from 'next-urql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
 import { HOME } from '../constants';
-import { useRegisterMutation } from '../generated/graphql';
+import {
+  CurrentUserDocument,
+  CurrentUserQuery,
+  useRegisterMutation,
+} from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { Container } from '../page-styles/register';
 import { AuthFormikProps } from '../types';
-import { createUrqlClient } from '../utils/createUrqlClient';
 import { errorsToMap } from '../utils/errorsToMap';
+import withApollo from '../utils/withApollo';
 
 const Register = () => {
   const isLoggedOut = useIsLoggedOut();
-  const [, register] = useRegisterMutation();
+  const [register] = useRegisterMutation();
   const router = useRouter();
 
   return (
@@ -24,7 +27,18 @@ const Register = () => {
           <Formik
             initialValues={{ email: '', username: '', password: '' }}
             onSubmit={async (values, { setErrors }) => {
-              const response = await register({ input: values });
+              const response = await register({
+                variables: { input: values },
+                update: (cache, { data }) => {
+                  cache.writeQuery<CurrentUserQuery>({
+                    query: CurrentUserDocument,
+                    data: {
+                      __typename: 'Query',
+                      currentUser: data?.register.user,
+                    },
+                  });
+                },
+              });
               if (response.data?.register.errors) {
                 setErrors(errorsToMap(response.data.register.errors));
                 return;
@@ -48,4 +62,4 @@ const Register = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Register);
+export default withApollo({ ssr: false })(Register);

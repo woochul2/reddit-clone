@@ -4,21 +4,22 @@ import { HOME } from '../constants';
 import { useCurrentUserQuery } from '../generated/graphql';
 
 export function useIsLoggedIn() {
-  const [
-    { data: currentUserData, fetching: fetchingCurrentUser },
-  ] = useCurrentUserQuery();
+  const {
+    data: currentUserData,
+    loading: loadingCurrentUser,
+  } = useCurrentUserQuery();
   const currentUser = currentUserData?.currentUser;
   const router = useRouter();
 
   useEffect(() => {
     (async function () {
-      if (!fetchingCurrentUser && !currentUser) {
+      if (!loadingCurrentUser && !currentUser) {
         await router.push(HOME);
       }
     })();
   }, [currentUserData]);
 
-  const isLoggedIn = !fetchingCurrentUser && currentUser;
+  const isLoggedIn = !loadingCurrentUser && currentUser;
 
   return isLoggedIn;
 }

@@ -1,6 +1,5 @@
 import { Formik } from 'formik';
 import { NextPage } from 'next';
-import { withUrqlClient } from 'next-urql';
 import React, { useState } from 'react';
 import AuthForm from '../../components/AuthForm';
 import Confirmation from '../../components/Confirmation';
@@ -11,26 +10,25 @@ import {
 } from '../../generated/graphql';
 import { Container, ExpirationError } from '../../page-styles/change-password';
 import { AuthFormikProps } from '../../types';
-import { createUrqlClient } from '../../utils/createUrqlClient';
 import { errorsToMap } from '../../utils/errorsToMap';
+import withApollo from '../../utils/withApollo';
 
 const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
-  const [{ data: userIdData, fetching: fetchingUserId }] = useUserIdQuery({
+  const { data: userIdData, loading: loadingUserId } = useUserIdQuery({
     variables: { token },
   });
-  const [, changePassword] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
   const [isFinished, setIsFinished] = useState(false);
 
   return (
     <Layout searchBox="off">
       <Container>
-        {!fetchingUserId && userIdData?.userId && (
+        {!loadingUserId && userIdData?.userId && (
           <Formik
             initialValues={{ newPassword: '' }}
             onSubmit={async (values, { setErrors }) => {
               const response = await changePassword({
-                token,
-                newPassword: values.newPassword,
+                variables: { token, newPassword: values.newPassword },
               });
               if (response.data?.changePassword.errors) {
                 setErrors(errorsToMap(response.data.changePassword.errors));
@@ -54,7 +52,7 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             )}
           </Formik>
         )}
-        {!fetchingUserId && !userIdData?.userId && (
+        {!loadingUserId && !userIdData?.userId && (
           <ExpirationError>유효 기간이 만료되었습니다.</ExpirationError>
         )}
       </Container>
@@ -68,4 +66,4 @@ ChangePassword.getInitialProps = ({ query }) => {
   };
 };
 
-export default withUrqlClient(createUrqlClient)(ChangePassword as any);
+export default withApollo({ ssr: false })(ChangePassword as any);

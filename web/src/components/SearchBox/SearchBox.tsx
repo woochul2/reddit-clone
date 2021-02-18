@@ -19,9 +19,7 @@ export default function SearchBox({ styles }: Props) {
   const [searchedItems, setSearchedItems] = useState<Fuse.FuseResult<Post>[]>(
     []
   );
-  const [{ data: postsData, fetching: fetchingPosts }] = usePostsQuery({
-    variables: { variant: 'all' },
-  });
+  const { data: postsData, loading: loadingPosts } = usePostsQuery();
   const router = useRouter();
 
   useEffect(() => {
@@ -39,7 +37,7 @@ export default function SearchBox({ styles }: Props) {
 
   return (
     <Container value={searchValue} styles={styles}>
-      {!fetchingPosts && (
+      {!loadingPosts && (
         <>
           <Input
             type="text"

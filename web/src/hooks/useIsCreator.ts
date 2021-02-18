@@ -4,18 +4,19 @@ import { HOME } from '../constants';
 import { useCurrentUserQuery, usePostQuery } from '../generated/graphql';
 
 export function useIsCreator(id: string): boolean {
-  const [{ data: postData, fetching: fetchingPost }] = usePostQuery({
+  const { data: postData, loading: loadingPost } = usePostQuery({
     variables: { id: parseInt(id) },
   });
-  const [
-    { data: currentUserData, fetching: fetchingCurrentUser },
-  ] = useCurrentUserQuery();
+  const {
+    data: currentUserData,
+    loading: loadingCurrentUser,
+  } = useCurrentUserQuery();
   const currentUser = currentUserData?.currentUser;
   const router = useRouter();
 
   useEffect(() => {
     (async function () {
-      if (!fetchingPost && !fetchingCurrentUser) {
+      if (!loadingPost && !loadingCurrentUser) {
         if (
           currentUser?.id !== postData?.post?.creatorId ||
           !currentUser ||
@@ -28,8 +29,8 @@ export function useIsCreator(id: string): boolean {
   }, [postData, currentUserData]);
 
   const isCreator =
-    !fetchingPost &&
-    !fetchingCurrentUser &&
+    !loadingPost &&
+    !loadingCurrentUser &&
     currentUser?.id === postData?.post?.creatorId;
 
   return isCreator;

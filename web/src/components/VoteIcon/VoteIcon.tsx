@@ -24,10 +24,11 @@ export default function Icon({
   backgroundColor,
   styles,
 }: Props) {
-  const [, vote] = useVoteMutation();
-  const [
-    { data: currentUserData, fetching: fetchingCurrentUser },
-  ] = useCurrentUserQuery();
+  const [vote, { loading: loadingVote }] = useVoteMutation();
+  const {
+    data: currentUserData,
+    loading: loadingCurrentUser,
+  } = useCurrentUserQuery();
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -47,18 +48,19 @@ export default function Icon({
       await router.push(LOGIN);
       return;
     }
-    await vote({ postId: id, value });
+    await vote({ variables: { value, postId: id } });
   };
 
   return (
     <>
-      {!fetchingCurrentUser && (
+      {!loadingCurrentUser && (
         <Container
           variant={variant}
           color={color}
           backgroundColor={backgroundColor}
           onClick={(event) => handleVote(event, value)}
           hasClicked={voteStatus === value}
+          disabled={loadingVote}
           styles={styles}
         >
           <ArrowUpOutlined className="original" />

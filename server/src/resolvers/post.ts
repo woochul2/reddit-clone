@@ -78,7 +78,7 @@ export class PostResolver {
   }
 
   @Query(() => [Post])
-  async posts(@Arg('variant') _variant: string): Promise<Post[]> {
+  async posts(): Promise<Post[]> {
     return await getConnection()
       .getRepository(Post)
       .createQueryBuilder('post')

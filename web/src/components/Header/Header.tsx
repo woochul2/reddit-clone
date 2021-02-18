@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -58,18 +59,22 @@ function isDarkMode(): boolean {
 }
 
 export default function Header({ searchBox, onClick, styles }: Props) {
-  const [
-    { data: currentUserData, fetching: fetchingCurrentUser },
-  ] = useCurrentUserQuery();
-  const [{ fetching: fetchingLogout }, logout] = useLogoutMutation();
+  const {
+    data: currentUserData,
+    loading: loadingCurrentuser,
+  } = useCurrentUserQuery();
+  const [logout, { loading: loadingLogout }] = useLogoutMutation();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileMenuOffset, setMobileMenuOffset] = useState(0);
+  const [, setColorMode] = useState('light');
+  const apolloClient = useApolloClient();
+
   const handleLogout = async () => {
     await logout();
+    await apolloClient.resetStore();
     closeMobileMenu();
   };
-  const [, setColorMode] = useState('light');
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -187,7 +192,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                   </>
                 )}
               </IconButton>
-              {!fetchingCurrentUser && currentUserData?.currentUser && (
+              {!loadingCurrentuser && currentUserData?.currentUser && (
                 <>
                   <NextLink href={CREATE_POST} passHref>
                     <IconLink>
@@ -197,15 +202,12 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                     </IconLink>
                   </NextLink>
                   <span>{currentUserData.currentUser.username}</span>
-                  <LogoutButton
-                    onClick={handleLogout}
-                    disabled={fetchingLogout}
-                  >
+                  <LogoutButton onClick={handleLogout} disabled={loadingLogout}>
                     로그아웃
                   </LogoutButton>
                 </>
               )}
-              {!fetchingCurrentUser && !currentUserData?.currentUser && (
+              {!loadingCurrentuser && !currentUserData?.currentUser && (
                 <>
                   <NextLink href={LOGIN} passHref>
                     <Link>로그인</Link>
@@ -226,7 +228,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                 reddit<span>.clone</span>
               </Logo>
             </NextLink>
-            {!fetchingCurrentUser && currentUserData?.currentUser && (
+            {!loadingCurrentuser && currentUserData?.currentUser && (
               <NextLink href={CREATE_POST} passHref>
                 <IconLink onClick={closeMobileMenu}>
                   <PencilOutlined className="original" />
@@ -257,15 +259,15 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                 </>
               )}
             </IconButton>
-            {!fetchingCurrentUser && currentUserData?.currentUser && (
+            {!loadingCurrentuser && currentUserData?.currentUser && (
               <>
                 <p>{currentUserData.currentUser.username}</p>
-                <button onClick={handleLogout} disabled={fetchingLogout}>
+                <button onClick={handleLogout} disabled={loadingLogout}>
                   로그아웃
                 </button>
               </>
             )}
-            {!fetchingCurrentUser && !currentUserData?.currentUser && (
+            {!loadingCurrentuser && !currentUserData?.currentUser && (
               <>
                 <button onClick={handleLogin}>로그인</button>
                 <button onClick={handleRegister}>회원가입</button>

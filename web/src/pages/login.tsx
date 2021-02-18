@@ -1,21 +1,24 @@
 import { Formik } from 'formik';
-import { withUrqlClient } from 'next-urql';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
 import { FORGOT_PASSWORD, HOME } from '../constants';
-import { useLoginMutation } from '../generated/graphql';
+import {
+  CurrentUserDocument,
+  CurrentUserQuery,
+  useLoginMutation,
+} from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { Container, Link } from '../page-styles/login';
 import { AuthFormikProps } from '../types';
-import { createUrqlClient } from '../utils/createUrqlClient';
 import { errorsToMap } from '../utils/errorsToMap';
+import withApollo from '../utils/withApollo';
 
 const Login = () => {
   const isLoggedOut = useIsLoggedOut();
-  const [, login] = useLoginMutation();
+  const [login] = useLoginMutation();
   const router = useRouter();
 
   return (
@@ -25,7 +28,20 @@ const Login = () => {
           <Formik
             initialValues={{ usernameOrEmail: '', password: '' }}
             onSubmit={async (values, { setErrors }) => {
-              const response = await login({ input: values });
+              const response = await login({
+                variables: { input: values },
+                update: (cache, { data }) => {
+                  cache.writeQuery<CurrentUserQuery>({
+                    query: CurrentUserDocument,
+                    data: {
+                      __typename: 'Query',
+                      currentUser: data?.login.user,
+                    },
+                  });
+                  cache.evict({ fieldName: 'posts' });
+                },
+              });
+
               if (response.data?.login.errors) {
                 setErrors(errorsToMap(response.data.login.errors));
                 return;
@@ -53,4 +69,4 @@ const Login = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Login);
+export default withApollo({ ssr: false })(Login);
