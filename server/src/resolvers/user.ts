@@ -1,4 +1,5 @@
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import {
   Arg,
   Ctx,
@@ -11,9 +12,9 @@ import {
 } from 'type-graphql';
 import { v4 } from 'uuid';
 import validator from 'validator';
-import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants';
+import { FORGET_PASSWORD_PREFIX } from '../constants';
 import { User } from '../entities/User';
-import { MyContext } from '../interfaces';
+import { MyContext } from '../types';
 import { sendEmail } from '../utils/sendEmail';
 
 @InputType()
@@ -48,6 +49,8 @@ class UserResponse {
   errors?: FieldError[];
   @Field(() => User, { nullable: true })
   user?: User;
+  @Field({ nullable: true })
+  token?: string;
 }
 
 const setError = (field: string, message: string) => {
@@ -74,11 +77,11 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  async currentUser(@Ctx() { req }: MyContext) {
-    if (!req.session.userId) {
+  async currentUser(@Ctx() { userId }: MyContext) {
+    if (!userId) {
       return null;
     }
-    const user = await User.findOne(req.session.userId);
+    const user = await User.findOne(userId);
     return user;
   }
 
@@ -89,10 +92,7 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
-  async register(
-    @Arg('input') input: RegisterInput,
-    @Ctx() { req }: MyContext
-  ): Promise<UserResponse> {
+  async register(@Arg('input') input: RegisterInput): Promise<UserResponse> {
     if (!validator.isEmail(input.email)) {
       return {
         errors: [setError('email', '올바른 이메일 주소를 입력해 주세요.')],
@@ -136,15 +136,17 @@ export class UserResolver {
       password: hashedPassword,
     });
     await User.save(newUser);
-    req.session.userId = newUser.id;
-    return { user: newUser };
+
+    const token = jwt.sign(
+      { userId: newUser.id },
+      process.env.JWT_TOKEN_SECRET
+    );
+
+    return { token, user: newUser };
   }
 
   @Mutation(() => UserResponse)
-  async login(
-    @Arg('input') input: LoginInput,
-    @Ctx() { req }: MyContext
-  ): Promise<UserResponse> {
+  async login(@Arg('input') input: LoginInput): Promise<UserResponse> {
     let user: User | undefined;
     if (validator.isEmail(input.usernameOrEmail)) {
       user = await User.findOne({ email: input.usernameOrEmail });
@@ -169,26 +171,17 @@ export class UserResolver {
       };
     }
 
-    req.session.userId = user.id;
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_TOKEN_SECRET);
 
-    return { user };
+    return { token, user };
   }
 
   @Mutation(() => Boolean)
-  logout(@Ctx() { req, res }: MyContext) {
-    if (!req.session.userId) {
+  logout(@Ctx() { userId }: MyContext) {
+    if (!userId) {
       return false;
     }
-    return new Promise((resolve) =>
-      req.session.destroy((err) => {
-        if (err) {
-          resolve(false);
-          return;
-        }
-        res.clearCookie(COOKIE_NAME);
-        resolve(true);
-      })
-    );
+    return true;
   }
 
   @Mutation(() => Boolean)

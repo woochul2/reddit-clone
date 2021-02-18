@@ -37,15 +37,21 @@ const Register = () => {
                       currentUser: data?.register.user,
                     },
                   });
+                  cache.evict({ fieldName: 'posts' });
                 },
               });
+
+              if (!response.data?.register) {
+                return;
+              }
+
               if (response.data?.register.errors) {
                 setErrors(errorsToMap(response.data.register.errors));
                 return;
               }
-              if (response.data?.register.user) {
-                await router.push(HOME);
-              }
+
+              localStorage.setItem('auth-token', response.data?.register.token);
+              await router.push(HOME);
             }}
           >
             {(formik) => (

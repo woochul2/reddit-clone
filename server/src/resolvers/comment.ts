@@ -14,8 +14,8 @@ import {
 import { Comment } from '../entities/Comment';
 import { Post } from '../entities/Post';
 import { User } from '../entities/User';
-import { MyContext } from '../interfaces';
 import { isLoggedIn } from '../middleware/isLoggedIn';
+import { MyContext } from '../types';
 
 @InputType()
 class CommentInput {
@@ -47,9 +47,8 @@ export class CommentResolver {
   @UseMiddleware(isLoggedIn)
   async writeComment(
     @Arg('input') input: CommentInput,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<Comment | null> {
-    const { userId } = req.session;
     const post = await Post.findOne(input.postId);
     if (!post) {
       return null;

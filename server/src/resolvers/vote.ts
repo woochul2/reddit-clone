@@ -9,8 +9,8 @@ import {
 } from 'type-graphql';
 import { Post } from '../entities/Post';
 import { Vote } from '../entities/Vote';
-import { MyContext } from '../interfaces';
 import { isLoggedIn } from '../middleware/isLoggedIn';
+import { MyContext } from '../types';
 
 @Resolver(() => Vote)
 export class VoteResolver {
@@ -24,9 +24,8 @@ export class VoteResolver {
   @UseMiddleware(isLoggedIn)
   async voting(
     @Arg('postId', () => Int) postId: number,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<Vote | undefined> {
-    const { userId } = req.session;
     return await Vote.findOne({ userId, postId });
   }
 
@@ -35,9 +34,8 @@ export class VoteResolver {
   async vote(
     @Arg('postId', () => Int) postId: number,
     @Arg('value', () => Int) value: number,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<Post | null> {
-    const { userId } = req.session;
     const vote = await Vote.findOne({ userId, postId });
     const post = await Post.findOne(postId);
     if (!post) {

@@ -71,8 +71,9 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   const apolloClient = useApolloClient();
 
   const handleLogout = async () => {
-    await logout();
+    localStorage.removeItem('auth-token');
     await apolloClient.resetStore();
+    await logout();
     closeMobileMenu();
   };
 

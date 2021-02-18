@@ -13,14 +13,13 @@
   "dependencies": {
     "apollo-server-express": "^2.19.1",
     "argon2": "^0.27.1",
-    "connect-redis": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-session": "^1.17.1",
     "googleapis": "^67.0.0",
     "graphql": "^15.4.0",
     "ioredis": "^4.19.4",
+    "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.4.17",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
@@ -30,8 +29,8 @@
     "validator": "^13.5.2"
   },
   "devDependencies": {
-    "@types/connect-redis": "^0.0.16",
-    "@types/express-session": "^1.17.3",
+    "@types/ioredis": "^4.19.4",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.14.22",
     "@types/nodemailer": "^6.4.0",
     "@types/uuid": "^8.3.0",

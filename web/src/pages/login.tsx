@@ -42,13 +42,17 @@ const Login = () => {
                 },
               });
 
+              if (!response.data?.login) {
+                return;
+              }
+
               if (response.data?.login.errors) {
                 setErrors(errorsToMap(response.data.login.errors));
                 return;
               }
-              if (response.data?.login.user) {
-                await router.push(HOME);
-              }
+
+              localStorage.setItem('auth-token', response.data?.login.token);
+              await router.push(HOME);
             }}
           >
             {(formik) => (

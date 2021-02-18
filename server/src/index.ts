@@ -1,22 +1,20 @@
 import { ApolloServer } from 'apollo-server-express';
-import connectRedis from 'connect-redis';
 import cors from 'cors';
 import express from 'express';
-import session from 'express-session';
 import Redis from 'ioredis';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
-import { COOKIE_NAME, __prod__ } from './constants';
 import { Comment } from './entities/Comment';
 import { Post } from './entities/Post';
 import { User } from './entities/User';
 import { Vote } from './entities/Vote';
-import { MyContext } from './interfaces';
 import { CommentResolver } from './resolvers/comment';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
 import { VoteResolver } from './resolvers/vote';
+import { MyContext } from './types';
+import { getUserId } from './utils/getUserId';
 require('dotenv').config();
 
 const main = async () => {
@@ -39,7 +37,6 @@ const main = async () => {
   // orm.runMigrations();
 
   const app = express();
-  const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
 
   app.set('trust proxy', true);
@@ -49,31 +46,20 @@ const main = async () => {
       credentials: true,
     })
   );
-  app.use(
-    session({
-      name: COOKIE_NAME,
-      store: new RedisStore({
-        client: redis,
-        ttl: 60 * 60 * 24 * 7 * 4, // 2주일
-      }),
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-      cookie: {
-        secure: __prod__,
-        httpOnly: true,
-      },
-      saveUninitialized: false,
-    })
-  );
 
   const apolloServer = new ApolloServer({
-    introspection: true,
-    playground: true,
+    // introspection: true,
+    // playground: true,
     schema: await buildSchema({
       resolvers: [PostResolver, UserResolver, VoteResolver, CommentResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => <MyContext>{ req, res, redis },
+    context: ({ req }: MyContext) => {
+      return {
+        redis,
+        userId: req && req.headers.authorization ? getUserId(req) : null,
+      };
+    },
   });
 
   apolloServer.applyMiddleware({

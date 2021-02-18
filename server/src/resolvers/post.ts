@@ -16,8 +16,8 @@ import { Comment } from '../entities/Comment';
 import { Post } from '../entities/Post';
 import { User } from '../entities/User';
 import { Vote } from '../entities/Vote';
-import { MyContext } from '../interfaces';
 import { isLoggedIn } from '../middleware/isLoggedIn';
+import { MyContext } from '../types';
 
 @InputType()
 class PostInput {
@@ -62,9 +62,8 @@ export class PostResolver {
   @FieldResolver(() => User)
   async voteStatus(
     @Root() post: Post,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<number | null> {
-    const { userId } = req.session;
     if (!userId) {
       return null;
     }
@@ -105,13 +104,13 @@ export class PostResolver {
   @UseMiddleware(isLoggedIn)
   async createPost(
     @Arg('input') input: PostInput,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<Post | null> {
     return await Post.create({
       ...input,
       createdAt: Date(),
       updatedAt: Date(),
-      creatorId: req.session.userId,
+      creatorId: userId,
     }).save();
   }
 
@@ -136,9 +135,9 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async deletePost(
     @Arg('id', () => Int) id: number,
-    @Ctx() { req }: MyContext
+    @Ctx() { userId }: MyContext
   ): Promise<boolean> {
-    await Post.delete({ id, creatorId: req.session.userId });
+    await Post.delete({ id, creatorId: userId });
     return true;
   }
 }

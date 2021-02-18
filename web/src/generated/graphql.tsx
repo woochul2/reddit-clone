@@ -171,6 +171,7 @@ export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+  token: Scalars['String'];
 };
 
 export type FieldError = {
@@ -216,6 +217,7 @@ export type UserFragment = (
 
 export type UserResponseFragment = (
   { __typename?: 'UserResponse' }
+  & Pick<UserResponse, 'token'>
   & { errors?: Maybe<Array<(
     { __typename?: 'FieldError' }
     & ErrorFragment
@@ -479,6 +481,7 @@ export const UserResponseFragmentDoc = gql`
   user {
     ...User
   }
+  token
 }
     ${ErrorFragmentDoc}
 ${UserFragmentDoc}`;
