@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import ReactLoading from 'react-loading';
 import { css } from 'styled-components';
 import Button from '../../components/Button';
 import Confirmation from '../../components/Confirmation';
@@ -58,7 +59,10 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
   } = useCurrentUserQuery();
   const [deletePost] = useDeletePostMutation();
   const [hasCommentError, setHasCommentError] = useState(false);
-  const [writeComment] = useWriteCommentMutation();
+  const [
+    writeComment,
+    { loading: loadingWriteComment },
+  ] = useWriteCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [updatedCommentId, setUpdatedCommentID] = useState(-1);
   const [updatedCommentText, setUpdatedCommentText] = useState('');
@@ -141,6 +145,17 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
 
   return (
     <>
+      {loadingPost && (
+        <Layout>
+          <ReactLoading
+            className="layout__loading-icon"
+            type="spinningBubbles"
+            width="1.5em"
+            height="1.5em"
+            color="var(--body-text-color)"
+          />
+        </Layout>
+      )}
       {!loadingPost && !loadingCurrentUser && post && (
         <Layout variant="modal" onClickBackground={handleClickBackground}>
           <Container
@@ -241,7 +256,11 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                   {hasCommentError && (
                     <CommentError>댓글이 비어있습니다.</CommentError>
                   )}
-                  <Button styles={buttonStyles} type="submit">
+                  <Button
+                    styles={buttonStyles}
+                    type="submit"
+                    disabled={loadingWriteComment}
+                  >
                     작성
                   </Button>
                 </CommentForm>

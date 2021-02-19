@@ -27,7 +27,6 @@ import { remToPx } from '../../utils/remToPx';
 import SearchBox from '../SearchBox';
 import Tooltip from '../Tooltip';
 import {
-  Bottom,
   Container,
   IconButton,
   IconLink,
@@ -37,6 +36,7 @@ import {
   LogoutButton,
   MenuButton,
   MobileMenu,
+  MobileMenuBottom,
   RightPanel,
 } from './header';
 
@@ -67,14 +67,15 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileMenuOffset, setMobileMenuOffset] = useState(0);
+  const [mobileMenuHeight, setMobileMenuHeight] = useState(0);
   const [, setColorMode] = useState('light');
   const apolloClient = useApolloClient();
 
   const handleLogout = async () => {
     localStorage.removeItem('auth-token');
+    closeMobileMenu();
     await apolloClient.resetStore();
     await logout();
-    closeMobileMenu();
   };
 
   useEffect(() => {
@@ -86,6 +87,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
     if (isMobileMenuOpen) {
       body.style.overflowY = 'hidden';
       setMobileMenuOffset(window.scrollY);
+      setMobileMenuHeight(window.innerHeight);
     }
 
     if (!isMobileMenuOpen) {
@@ -241,40 +243,46 @@ export default function Header({ searchBox, onClick, styles }: Props) {
         </Inside>
       </Container>
       {isMobileMenuOpen && (
-        <MobileMenu offset={`${mobileMenuOffset}px`}>
-          <div>
-            <SearchBox />
+        <MobileMenu
+          offset={`${mobileMenuOffset}px`}
+          height={`${mobileMenuHeight}px`}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="mobile-menu__inside">
+            <div>
+              <SearchBox />
+            </div>
+            <MobileMenuBottom>
+              <IconButton onClick={toggleDarkMode}>
+                {!isDarkMode() && (
+                  <>
+                    <MoonOutlined className="original" />
+                    <MoonFilled className="hovered" />
+                  </>
+                )}
+                {isDarkMode() && (
+                  <>
+                    <SunOutlined className="original" />
+                    <SunFilled className="hovered" />
+                  </>
+                )}
+              </IconButton>
+              {!loadingCurrentuser && currentUserData?.currentUser && (
+                <>
+                  <p>{currentUserData.currentUser.username}</p>
+                  <button onClick={handleLogout} disabled={loadingLogout}>
+                    로그아웃
+                  </button>
+                </>
+              )}
+              {!loadingCurrentuser && !currentUserData?.currentUser && (
+                <>
+                  <button onClick={handleLogin}>로그인</button>
+                  <button onClick={handleRegister}>회원가입</button>
+                </>
+              )}
+            </MobileMenuBottom>
           </div>
-          <Bottom>
-            <IconButton onClick={toggleDarkMode}>
-              {!isDarkMode() && (
-                <>
-                  <MoonOutlined className="original" />
-                  <MoonFilled className="hovered" />
-                </>
-              )}
-              {isDarkMode() && (
-                <>
-                  <SunOutlined className="original" />
-                  <SunFilled className="hovered" />
-                </>
-              )}
-            </IconButton>
-            {!loadingCurrentuser && currentUserData?.currentUser && (
-              <>
-                <p>{currentUserData.currentUser.username}</p>
-                <button onClick={handleLogout} disabled={loadingLogout}>
-                  로그아웃
-                </button>
-              </>
-            )}
-            {!loadingCurrentuser && !currentUserData?.currentUser && (
-              <>
-                <button onClick={handleLogin}>로그인</button>
-                <button onClick={handleRegister}>회원가입</button>
-              </>
-            )}
-          </Bottom>
         </MobileMenu>
       )}
     </>

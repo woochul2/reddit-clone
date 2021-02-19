@@ -42,16 +42,14 @@ const Login = () => {
                 },
               });
 
-              if (!response.data?.login) {
-                return;
-              }
-
               if (response.data?.login.errors) {
                 setErrors(errorsToMap(response.data.login.errors));
                 return;
               }
 
-              localStorage.setItem('auth-token', response.data?.login.token);
+              if (response.data?.login.token) {
+                localStorage.setItem('auth-token', response.data.login.token);
+              }
               await router.push(HOME);
             }}
           >

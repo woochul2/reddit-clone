@@ -41,16 +41,17 @@ const Register = () => {
                 },
               });
 
-              if (!response.data?.register) {
-                return;
-              }
-
               if (response.data?.register.errors) {
                 setErrors(errorsToMap(response.data.register.errors));
                 return;
               }
 
-              localStorage.setItem('auth-token', response.data?.register.token);
+              if (response.data?.register.token) {
+                localStorage.setItem(
+                  'auth-token',
+                  response.data.register.token
+                );
+              }
               await router.push(HOME);
             }}
           >

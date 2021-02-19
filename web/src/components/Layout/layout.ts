@@ -24,5 +24,10 @@ export const Container = styled.div<ContainerProps>`
   padding-bottom: 1rem;
   padding-bottom: ${({ variant }) => variant === 'modal' && '0'};
   background-color: ${({ variant }) => setBackground(variant)};
+
+  .layout__loading-icon {
+    margin: 2rem auto;
+  }
+
   ${({ styles }) => styles}
 `;

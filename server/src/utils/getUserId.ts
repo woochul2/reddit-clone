@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { MyReq } from '../types';
 
 function getTokenPayload(token: string): { userId: string } {
-  return jwt.verify(token, process.env.JWT_TOKEN_SECRET) as { userId: string };
+  return jwt.verify(token, process.env.JWT_SECRET) as { userId: string };
 }
 
 export function getUserId(req: MyReq, authToken?: string): number {

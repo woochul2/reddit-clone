@@ -137,10 +137,7 @@ export class UserResolver {
     });
     await User.save(newUser);
 
-    const token = jwt.sign(
-      { userId: newUser.id },
-      process.env.JWT_TOKEN_SECRET
-    );
+    const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET);
 
     return { token, user: newUser };
   }
@@ -171,7 +168,7 @@ export class UserResolver {
       };
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_TOKEN_SECRET);
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
 
     return { token, user };
   }

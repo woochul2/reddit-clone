@@ -171,7 +171,7 @@ export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
-  token: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
 };
 
 export type FieldError = {

@@ -44,8 +44,14 @@ export const Inside = styled.div`
 
 export const MenuButton = styled.button`
   background: 0;
+  outline: 0;
   border: 0;
+  border-radius: 0.25rem;
   color: var(--body-text-color);
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
+  }
 
   .close-icon {
     width: 1rem;
@@ -178,21 +184,26 @@ export const IconLink = styled.a`
   height: 1.25rem;
 `;
 
-export const MobileMenu = styled.div<{ offset: string }>`
+export const MobileMenu = styled.div<{ offset: string; height: string }>`
   z-index: 2;
   position: absolute;
   top: ${({ offset }) => offset};
   left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   width: 100%;
   height: 100vh;
-  padding: 4rem 0.25rem 2rem;
   background-color: var(--body-background-color);
+
+  .mobile-menu__inside {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: ${({ height }) => height};
+    padding: 4rem 0.25rem 2rem;
+  }
 `;
 
-export const Bottom = styled.div`
+export const MobileMenuBottom = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -201,12 +212,18 @@ export const Bottom = styled.div`
 
   button {
     padding: 0;
+    outline: 0;
     border: 0;
+    border-radius: 0.25rem;
     background: 0;
     color: var(--body-text-color);
 
     &:hover {
       text-decoration: underline;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 0.125rem var(--body-text-color);
     }
   }
 `;
