@@ -24,6 +24,9 @@ const main = async () => {
     entities: [Post, User, Vote, Comment],
     synchronize: true,
     logging: false,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
 
   const app = express();
