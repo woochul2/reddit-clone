@@ -3,17 +3,8 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import {
-  BREAKPOINT_SM,
-  CREATE_POST,
-  HOME,
-  LOGIN,
-  REGISTER,
-} from '../../constants';
-import {
-  useCurrentUserQuery,
-  useLogoutMutation,
-} from '../../generated/graphql';
+import { BREAKPOINT_SM, CREATE_POST, HOME, LOGIN, REGISTER } from '../../constants';
+import { useCurrentUserQuery, useLogoutMutation } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import Menu from '../../icons/Menu';
 import MoonFilled from '../../icons/MoonFilled';
@@ -22,7 +13,6 @@ import PencilFilled from '../../icons/PencilFilled';
 import PencilOutlined from '../../icons/PencilOutlined';
 import SunFilled from '../../icons/SunFilled';
 import SunOutlined from '../../icons/SunOutlined';
-import { isServer } from '../../utils/isServer';
 import { remToPx } from '../../utils/remToPx';
 import SearchBox from '../SearchBox';
 import Tooltip from '../Tooltip';
@@ -47,7 +37,7 @@ interface Props {
 }
 
 function isDarkMode(): boolean {
-  if (isServer()) {
+  if (typeof window === 'undefined') {
     return false;
   }
 
@@ -59,10 +49,7 @@ function isDarkMode(): boolean {
 }
 
 export default function Header({ searchBox, onClick, styles }: Props) {
-  const {
-    data: currentUserData,
-    loading: loadingCurrentuser,
-  } = useCurrentUserQuery();
+  const { data: currentUserData, loading: loadingCurrentuser } = useCurrentUserQuery();
   const [logout, { loading: loadingLogout }] = useLogoutMutation();
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -173,11 +160,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                 reddit<span>.clone</span>
               </Logo>
             </NextLink>
-            {searchBox === 'on' ? (
-              <SearchBox />
-            ) : (
-              <div style={{ flexGrow: 1 }}></div>
-            )}
+            {searchBox === 'on' ? <SearchBox /> : <div style={{ flexGrow: 1 }}></div>}
             <RightPanel>
               <IconButton onClick={toggleDarkMode}>
                 {!isDarkMode() && (

@@ -45,7 +45,6 @@ import {
   VoteCounts,
 } from '../../page-styles/post-detail';
 import { getLocalDate } from '../../utils/getLocalDate';
-import { isServer } from '../../utils/isServer';
 
 export default function PostDetail() {
   const router = useRouter();
@@ -88,7 +87,7 @@ export default function PostDetail() {
   };
 
   const getMinHeight = () => {
-    if (!isServer()) {
+    if (typeof window !== 'undefined') {
       return `${window.innerHeight - topPanelOffset}px`;
     }
     return '0px';
