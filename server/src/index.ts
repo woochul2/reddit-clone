@@ -24,6 +24,7 @@ const main = async () => {
     entities: [Post, User, Vote, Comment],
     synchronize: true,
     logging: false,
+    // 로컬 데이터베이스를 사용할 때는 ssl 주석 처리해야 함
     ssl: {
       rejectUnauthorized: false,
     },
