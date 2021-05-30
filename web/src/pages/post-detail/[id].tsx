@@ -53,16 +53,10 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
   const router = useRouter();
   const [topPanelOffset, setTopPanelOffest] = useState(0);
   const [commentText, setCommentText] = useState('');
-  const {
-    data: currentUserData,
-    loading: loadingCurrentUser,
-  } = useCurrentUserQuery();
+  const { data: currentUserData, loading: loadingCurrentUser } = useCurrentUserQuery();
   const [deletePost] = useDeletePostMutation();
   const [hasCommentError, setHasCommentError] = useState(false);
-  const [
-    writeComment,
-    { loading: loadingWriteComment },
-  ] = useWriteCommentMutation();
+  const [writeComment, { loading: loadingWriteComment }] = useWriteCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [updatedCommentId, setUpdatedCommentID] = useState(-1);
   const [updatedCommentText, setUpdatedCommentText] = useState('');
@@ -97,9 +91,7 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
     return '0px';
   };
 
-  const handleSubmitComment = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmitComment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!currentUserData?.currentUser) {
@@ -129,10 +121,7 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
     setHasCommentError(false);
   };
 
-  const handleUpdateComment = async (
-    event: React.FormEvent<HTMLFormElement>,
-    commentId: number
-  ) => {
+  const handleUpdateComment = async (event: React.FormEvent<HTMLFormElement>, commentId: number) => {
     event.preventDefault();
     await updateComment({
       variables: { id: commentId, text: updatedCommentText },
@@ -158,16 +147,12 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
       )}
       {!loadingPost && !loadingCurrentUser && post && (
         <Layout variant="modal" onClickBackground={handleClickBackground}>
-          <Container
-            onClick={(event) => event.stopPropagation()}
-            minHeight={getMinHeight()}
-          >
+          <Container onClick={(event) => event.stopPropagation()} minHeight={getMinHeight()}>
             <TopPanel offset={`${topPanelOffset}px`}>
               <TopPanelInside>
                 <div className="top-panel-inside__vote">
                   <VoteIcon
                     color="var(--top-panel-text-color)"
-                    backgroundColor="var(--post-top-panel-icon-hover-background-color)"
                     id={post.id}
                     voteStatus={post.voteStatus}
                     styles={css`
@@ -181,7 +166,6 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                   <VoteIcon
                     variant="down"
                     color="var(--top-panel-text-color)"
-                    backgroundColor="var(--post-top-panel-icon-hover-background-color)"
                     id={post.id}
                     voteStatus={post.voteStatus}
                     styles={css`
@@ -203,11 +187,7 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
               <LeftPanel>
                 <VoteIcon id={post.id} voteStatus={post.voteStatus} />
                 <VoteCounts>{post.voteCounts}</VoteCounts>
-                <VoteIcon
-                  variant="down"
-                  id={post.id}
-                  voteStatus={post.voteStatus}
-                />
+                <VoteIcon variant="down" id={post.id} voteStatus={post.voteStatus} />
               </LeftPanel>
               <RightPanel>
                 <ContentPanel>
@@ -216,35 +196,20 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                     <div className="creation-info__left">
                       <span>{post.creator.username}</span>
                       <span className="creation-info__date">
-                        <span className="desktop">
-                          {getLocalDate(post.createdAt)}
-                        </span>
-                        <span className="mobile">
-                          {getLocalDate(post.createdAt, 'dot')}
-                        </span>
+                        <span className="desktop">{getLocalDate(post.createdAt)}</span>
+                        <span className="mobile">{getLocalDate(post.createdAt, 'dot')}</span>
                       </span>
                     </div>
                     {currentUserData?.currentUser?.id === post.creatorId && (
                       <div className="creation-info__button-container">
-                        <button
-                          onClick={async () =>
-                            await router.push(`${EDIT_POST}/${post.id}`)
-                          }
-                        >
-                          수정
-                        </button>
-                        <button onClick={() => handleDeletePost(post.id)}>
-                          삭제
-                        </button>
+                        <button onClick={async () => await router.push(`${EDIT_POST}/${post.id}`)}>수정</button>
+                        <button onClick={() => handleDeletePost(post.id)}>삭제</button>
                       </div>
                     )}
                   </CreationInfo>
                   <ContentText>{post.text}</ContentText>
                 </ContentPanel>
-                <CommentForm
-                  onSubmit={handleSubmitComment}
-                  onChange={handleCommentChange}
-                >
+                <CommentForm onSubmit={handleSubmitComment} onChange={handleCommentChange}>
                   <CommentCount>댓글 {post.comments.length}개</CommentCount>
                   <TextArea
                     name="commentText"
@@ -253,14 +218,8 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                     onChange={(e) => setCommentText(e.target.value)}
                     styles={commentTextAreaStyles}
                   />
-                  {hasCommentError && (
-                    <CommentError>댓글이 비어있습니다.</CommentError>
-                  )}
-                  <Button
-                    styles={buttonStyles}
-                    type="submit"
-                    disabled={loadingWriteComment}
-                  >
+                  {hasCommentError && <CommentError>댓글이 비어있습니다.</CommentError>}
+                  <Button styles={buttonStyles} type="submit" disabled={loadingWriteComment}>
                     작성
                   </Button>
                 </CommentForm>
@@ -270,20 +229,14 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                       <div className="comment" key={comment.id}>
                         <div className="comment__top">
                           <p className="comment__top-left">
-                            {comment.creator.username}{' '}
-                            <span className="comment__middot">&middot; </span>
+                            {comment.creator.username} <span className="comment__middot">&middot; </span>
                             <span className="comment__created-date">
-                              <span className="desktop">
-                                {getLocalDate(comment.createdAt)}
-                              </span>
-                              <span className="mobile">
-                                {getLocalDate(comment.createdAt, 'dot')}
-                              </span>
+                              <span className="desktop">{getLocalDate(comment.createdAt)}</span>
+                              <span className="mobile">{getLocalDate(comment.createdAt, 'dot')}</span>
                             </span>
                           </p>
                           <div className="comment__top-right">
-                            {currentUserData?.currentUser?.id ===
-                              comment.creatorId && (
+                            {currentUserData?.currentUser?.id === comment.creatorId && (
                               <>
                                 {updatedCommentId !== comment.id ? (
                                   <button
@@ -324,16 +277,12 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
                         </div>
 
                         {updatedCommentId === comment.id ? (
-                          <UpdatedCommentForm
-                            onSubmit={(e) => handleUpdateComment(e, comment.id)}
-                          >
+                          <UpdatedCommentForm onSubmit={(e) => handleUpdateComment(e, comment.id)}>
                             <TextArea
                               name="comment"
                               minRows={1}
                               value={updatedCommentText}
-                              onChange={(e) =>
-                                setUpdatedCommentText(e.target.value)
-                              }
+                              onChange={(e) => setUpdatedCommentText(e.target.value)}
                               styles={css`
                                 font-size: 0.875rem;
                               `}

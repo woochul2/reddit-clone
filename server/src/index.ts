@@ -20,21 +20,11 @@ require('dotenv').config();
 const main = async () => {
   await createConnection({
     type: 'postgres',
-    host: process.env.DATABASE_HOST,
-    database: process.env.DATABASE_DATABASE,
-    username: process.env.DATABASE_USERNAME,
-    port: parseInt(process.env.DATABASE_PORT),
-    password: process.env.DATABASE_PASSWORD,
     url: process.env.DATABASE_URL,
-    logging: false,
-    synchronize: true,
     entities: [Post, User, Vote, Comment],
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    migrations: [__dirname + '/migrations/*.js'],
+    synchronize: true,
+    logging: false,
   });
-  // orm.runMigrations();
 
   const app = express();
   const redis = new Redis(process.env.REDIS_URL);

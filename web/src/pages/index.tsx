@@ -20,8 +20,7 @@ const Home = () => {
             color="var(--body-text-color)"
           />
         )}
-        {!loadingPosts &&
-          postsData?.posts.map((post) => <Post key={post.id} post={post} />)}
+        {!loadingPosts && postsData?.posts.map((post) => <Post key={post.id} post={post} />)}
       </>
     </Layout>
   );

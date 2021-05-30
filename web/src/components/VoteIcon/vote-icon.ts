@@ -67,7 +67,6 @@ export const Container = styled.button<ContainerProps>`
     }
 
     svg {
-      background-color: var(--post-vote-icon-hover-background-color);
       background-color: ${({ backgroundColor }) => backgroundColor};
     }
   }

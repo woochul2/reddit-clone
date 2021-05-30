@@ -49,7 +49,6 @@
   --post-focused-border-color: var(--gray-400);
   --post-background-color: var(--white);
   --post-left-panel-background-color: var(--mint-50);
-  --post-vote-icon-hover-background-color: var(--gray-100);
   --post-clicked-icon-color: var(--orange);
   --post-second-text-color: var(--gray-400);
   --post-top-panel-background-color: var(--gray-800);
@@ -84,7 +83,6 @@
   --post-focused-border-color: var(--gray-300);
   --post-background-color: var(--gray-800);
   --post-left-panel-background-color: var(--gray-850);
-  --post-vote-icon-hover-background-color: var(--gray-400);
   --post-clicked-icon-color: var(--orange);
   --post-second-text-color: var(--gray-300);
   --post-top-panel-background-color: var(--black);
