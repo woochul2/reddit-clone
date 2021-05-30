@@ -2,10 +2,10 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 import Layout from '../components/Layout';
 import Post from '../components/PostThumbnail';
-import { usePostsQuery } from '../generated/graphql';
-import withApollo from '../utils/withApollo';
+import { PostsDocument, usePostsQuery } from '../generated/graphql';
+import { addApolloState, initializeApollo } from '../lib/apolloClient';
 
-const Home = () => {
+export default function Home() {
   const { data: postsData, loading: loadingPosts } = usePostsQuery();
 
   return (
@@ -24,6 +24,16 @@ const Home = () => {
       </>
     </Layout>
   );
-};
+}
 
-export default withApollo({ ssr: true })(Home);
+export async function getStaticProps() {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: PostsDocument,
+  });
+
+  return addApolloState(apolloClient, {
+    props: {},
+  });
+}

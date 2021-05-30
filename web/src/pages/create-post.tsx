@@ -7,9 +7,8 @@ import { HOME } from '../constants';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
 import { PostFormikProps } from '../types';
-import withApollo from '../utils/withApollo';
 
-const CreatePost = () => {
+export default function CreatePost() {
   const isLoggedIn = useIsLoggedIn();
   const [createPost] = useCreatePostMutation();
   const router = useRouter();
@@ -33,13 +32,9 @@ const CreatePost = () => {
             await router.push(HOME);
           }}
         >
-          {(formik) => (
-            <PostForm formik={formik as PostFormikProps} title="글 작성" />
-          )}
+          {(formik) => <PostForm formik={formik as PostFormikProps} title="글 작성" />}
         </Formik>
       )}
     </Layout>
   );
-};
-
-export default withApollo({ ssr: false })(CreatePost);
+}

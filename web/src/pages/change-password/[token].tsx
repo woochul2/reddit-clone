@@ -1,22 +1,21 @@
 import { Formik } from 'formik';
-import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import AuthForm from '../../components/AuthForm';
 import Confirmation from '../../components/Confirmation';
 import Layout from '../../components/Layout';
-import {
-  useChangePasswordMutation,
-  useUserIdQuery,
-} from '../../generated/graphql';
+import { useChangePasswordMutation, useUserIdQuery } from '../../generated/graphql';
 import { Container, ExpirationError } from '../../page-styles/change-password';
 import { AuthFormikProps } from '../../types';
 import { errorsToMap } from '../../utils/errorsToMap';
-import withApollo from '../../utils/withApollo';
 
-const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
+export default function ChangePassword() {
+  const router = useRouter();
+  const token = router.query.token as string;
   const { data: userIdData, loading: loadingUserId } = useUserIdQuery({
     variables: { token },
   });
+
   const [changePassword] = useChangePasswordMutation();
   const [isFinished, setIsFinished] = useState(false);
 
@@ -42,28 +41,14 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
                 {isFinished ? (
                   <Confirmation text="비밀번호를 성공적으로 변경했습니다." />
                 ) : (
-                  <AuthForm
-                    formik={formik as AuthFormikProps}
-                    title="비밀번호 재설정"
-                    buttonLabel="확인"
-                  />
+                  <AuthForm formik={formik as AuthFormikProps} title="비밀번호 재설정" buttonLabel="확인" />
                 )}
               </>
             )}
           </Formik>
         )}
-        {!loadingUserId && !userIdData?.userId && (
-          <ExpirationError>유효 기간이 만료되었습니다.</ExpirationError>
-        )}
+        {!loadingUserId && !userIdData?.userId && <ExpirationError>유효 기간이 만료되었습니다.</ExpirationError>}
       </Container>
     </Layout>
   );
-};
-
-ChangePassword.getInitialProps = ({ query }) => {
-  return {
-    token: query.token as string,
-  };
-};
-
-export default withApollo({ ssr: false })(ChangePassword as any);
+}

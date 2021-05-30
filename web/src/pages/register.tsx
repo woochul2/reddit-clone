@@ -4,18 +4,13 @@ import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
 import { HOME } from '../constants';
-import {
-  CurrentUserDocument,
-  CurrentUserQuery,
-  useRegisterMutation,
-} from '../generated/graphql';
+import { CurrentUserDocument, CurrentUserQuery, useRegisterMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { Container } from '../page-styles/register';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
-import withApollo from '../utils/withApollo';
 
-const Register = () => {
+export default function Register() {
   const isLoggedOut = useIsLoggedOut();
   const [register] = useRegisterMutation();
   const router = useRouter();
@@ -47,26 +42,15 @@ const Register = () => {
               }
 
               if (response.data?.register.token) {
-                localStorage.setItem(
-                  'auth-token',
-                  response.data.register.token
-                );
+                localStorage.setItem('auth-token', response.data.register.token);
               }
               await router.push(HOME);
             }}
           >
-            {(formik) => (
-              <AuthForm
-                formik={formik as AuthFormikProps}
-                title="회원가입"
-                buttonLabel="가입"
-              />
-            )}
+            {(formik) => <AuthForm formik={formik as AuthFormikProps} title="회원가입" buttonLabel="가입" />}
           </Formik>
         </Container>
       )}
     </Layout>
   );
-};
-
-export default withApollo({ ssr: false })(Register);
+}

@@ -7,9 +7,8 @@ import Layout from '../components/Layout';
 import { useForgotPasswordMutation } from '../generated/graphql';
 import { Container } from '../page-styles/forgot-password';
 import { AuthFormikProps } from '../types';
-import withApollo from '../utils/withApollo';
 
-const ForgotPassword = () => {
+export default function ForgotPassword() {
   const [forgotPassword] = useForgotPasswordMutation();
   const [isFinished, setIsFinished] = useState(false);
 
@@ -45,6 +44,4 @@ const ForgotPassword = () => {
       </Container>
     </Layout>
   );
-};
-
-export default withApollo({ ssr: false })(ForgotPassword);
+}

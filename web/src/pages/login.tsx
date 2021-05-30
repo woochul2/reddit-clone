@@ -5,18 +5,13 @@ import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
 import { FORGOT_PASSWORD, HOME } from '../constants';
-import {
-  CurrentUserDocument,
-  CurrentUserQuery,
-  useLoginMutation,
-} from '../generated/graphql';
+import { CurrentUserDocument, CurrentUserQuery, useLoginMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { Container, Link } from '../page-styles/login';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
-import withApollo from '../utils/withApollo';
 
-const Login = () => {
+export default function Login() {
   const isLoggedOut = useIsLoggedOut();
   const [login] = useLoginMutation();
   const router = useRouter();
@@ -54,11 +49,7 @@ const Login = () => {
             }}
           >
             {(formik) => (
-              <AuthForm
-                formik={formik as AuthFormikProps}
-                title="로그인"
-                buttonLabel="로그인"
-              >
+              <AuthForm formik={formik as AuthFormikProps} title="로그인" buttonLabel="로그인">
                 <NextLink href={FORGOT_PASSWORD} passHref>
                   <Link>비밀번호를 잊으셨습니까?</Link>
                 </NextLink>
@@ -69,6 +60,4 @@ const Login = () => {
       )}
     </Layout>
   );
-};
-
-export default withApollo({ ssr: false })(Login);
+}

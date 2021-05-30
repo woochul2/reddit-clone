@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
@@ -11,6 +11,8 @@ import Tooltip from '../../components/Tooltip';
 import VoteIcon from '../../components/VoteIcon';
 import { EDIT_POST, HOME, LOGIN } from '../../constants';
 import {
+  CurrentUserDocument,
+  PostDocument,
   useCurrentUserQuery,
   useDeleteCommentMutation,
   useDeletePostMutation,
@@ -19,6 +21,7 @@ import {
   useWriteCommentMutation,
 } from '../../generated/graphql';
 import Close from '../../icons/Close';
+import { addApolloState, initializeApollo } from '../../lib/apolloClient';
 import {
   buttonStyles,
   CloseIcon,
@@ -43,14 +46,14 @@ import {
 } from '../../page-styles/post-detail';
 import { getLocalDate } from '../../utils/getLocalDate';
 import { isServer } from '../../utils/isServer';
-import withApollo from '../../utils/withApollo';
 
-const PostDetail: NextPage<{ id: string }> = ({ id }) => {
+export default function PostDetail() {
+  const router = useRouter();
+  const id = router.query.id as string;
   const { data: postData, loading: loadingPost } = usePostQuery({
     variables: { id: parseInt(id) },
   });
   const post = postData?.post;
-  const router = useRouter();
   const [topPanelOffset, setTopPanelOffest] = useState(0);
   const [commentText, setCommentText] = useState('');
   const { data: currentUserData, loading: loadingCurrentUser } = useCurrentUserQuery();
@@ -307,12 +310,22 @@ const PostDetail: NextPage<{ id: string }> = ({ id }) => {
       )}
     </>
   );
-};
+}
 
-PostDetail.getInitialProps = ({ query }) => {
-  return {
-    id: query.id as string,
-  };
-};
+export async function getServerSideProps(ctx: NextPageContext) {
+  const apolloClient = initializeApollo();
+  const id = parseInt(ctx.query.id as string);
 
-export default withApollo({ ssr: true })(PostDetail as any);
+  await apolloClient.query({
+    query: PostDocument,
+    variables: { id },
+  });
+
+  await apolloClient.query({
+    query: CurrentUserDocument,
+  });
+
+  return addApolloState(apolloClient, {
+    props: {},
+  });
+}

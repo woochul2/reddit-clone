@@ -3701,11 +3701,6 @@ native-url@0.3.4:
   dependencies:
     querystring "^0.2.0"
 
-next-apollo@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/next-apollo/-/next-apollo-5.0.4.tgz#01952cd1803a663672bb18e10e0a09800ebc76fa"
-  integrity sha512-nkm8W8XmZiLziFFa7X8FxxbanRx6pRWhkhDIIAprD1A5siSNwZnMPW3GbjwnOoQLyFH8rMHS0SZZ6AAmSWzF9Q==
-
 next@10.2.2:
   version "10.2.2"
   resolved "https://registry.yarnpkg.com/next/-/next-10.2.2.tgz#aadcc526e420282b4a735b0595041195d748a91d"
