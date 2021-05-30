@@ -22,28 +22,7 @@ import {
 } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import { addApolloState, initializeApollo } from '../../lib/apolloClient';
-import {
-  buttonStyles,
-  CloseIcon,
-  CommentCount,
-  CommentError,
-  CommentForm,
-  Comments,
-  commentTextAreaStyles,
-  Container,
-  ContentPanel,
-  ContentText,
-  CreationInfo,
-  LeftPanel,
-  MainPanel,
-  RightPanel,
-  SmallTitle,
-  Title,
-  TopPanel,
-  TopPanelInside,
-  UpdatedCommentForm,
-  VoteCounts,
-} from '../../page-styles/post-detail';
+import * as Styled from '../../page-styles/post-detail';
 import { getLocalDate } from '../../utils/getLocalDate';
 
 export default function PostDetail() {
@@ -149,9 +128,9 @@ export default function PostDetail() {
       )}
       {!loadingPost && !loadingCurrentUser && post && (
         <Layout variant="modal" onClickBackground={handleClickBackground}>
-          <Container onClick={(event) => event.stopPropagation()} minHeight={getMinHeight()}>
-            <TopPanel offset={`${topPanelOffset}px`}>
-              <TopPanelInside>
+          <Styled.Container onClick={(event) => event.stopPropagation()} minHeight={getMinHeight()}>
+            <Styled.TopPanel offset={`${topPanelOffset}px`}>
+              <Styled.TopPanelInside>
                 <div className="top-panel-inside__vote">
                   <VoteIcon
                     color="var(--top-panel-text-color)"
@@ -164,7 +143,7 @@ export default function PostDetail() {
                       }
                     `}
                   />
-                  <VoteCounts>{post.voteCounts}</VoteCounts>
+                  <Styled.VoteCounts>{post.voteCounts}</Styled.VoteCounts>
                   <VoteIcon
                     variant="down"
                     color="var(--top-panel-text-color)"
@@ -178,23 +157,23 @@ export default function PostDetail() {
                     `}
                   />
                 </div>
-                <SmallTitle>{post.title}</SmallTitle>
-                <CloseIcon onClick={async () => await router.push(HOME)}>
+                <Styled.SmallTitle>{post.title}</Styled.SmallTitle>
+                <Styled.CloseIcon onClick={async () => await router.push(HOME)}>
                   <Close className="close-icon" />
                   <Tooltip className="tooltip">닫기</Tooltip>
-                </CloseIcon>
-              </TopPanelInside>
-            </TopPanel>
-            <MainPanel>
-              <LeftPanel>
+                </Styled.CloseIcon>
+              </Styled.TopPanelInside>
+            </Styled.TopPanel>
+            <Styled.MainPanel>
+              <Styled.LeftPanel>
                 <VoteIcon id={post.id} voteStatus={post.voteStatus} />
-                <VoteCounts>{post.voteCounts}</VoteCounts>
+                <Styled.VoteCounts>{post.voteCounts}</Styled.VoteCounts>
                 <VoteIcon variant="down" id={post.id} voteStatus={post.voteStatus} />
-              </LeftPanel>
-              <RightPanel>
-                <ContentPanel>
-                  <Title>{post.title}</Title>
-                  <CreationInfo>
+              </Styled.LeftPanel>
+              <Styled.RightPanel>
+                <Styled.ContentPanel>
+                  <Styled.Title>{post.title}</Styled.Title>
+                  <Styled.CreationInfo>
                     <div className="creation-info__left">
                       <span>{post.creator.username}</span>
                       <span className="creation-info__date">
@@ -208,24 +187,24 @@ export default function PostDetail() {
                         <button onClick={() => handleDeletePost(post.id)}>삭제</button>
                       </div>
                     )}
-                  </CreationInfo>
-                  <ContentText>{post.text}</ContentText>
-                </ContentPanel>
-                <CommentForm onSubmit={handleSubmitComment} onChange={handleCommentChange}>
-                  <CommentCount>댓글 {post.comments.length}개</CommentCount>
+                  </Styled.CreationInfo>
+                  <Styled.ContentText>{post.text}</Styled.ContentText>
+                </Styled.ContentPanel>
+                <Styled.CommentForm onSubmit={handleSubmitComment} onChange={handleCommentChange}>
+                  <Styled.CommentCount>댓글 {post.comments.length}개</Styled.CommentCount>
                   <TextArea
                     name="commentText"
                     minRows={4}
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    styles={commentTextAreaStyles}
+                    styles={Styled.commentTextAreaStyles}
                   />
-                  {hasCommentError && <CommentError>댓글이 비어있습니다.</CommentError>}
-                  <Button styles={buttonStyles} type="submit" disabled={loadingWriteComment}>
+                  {hasCommentError && <Styled.CommentError>댓글이 비어있습니다.</Styled.CommentError>}
+                  <Button styles={Styled.buttonStyles} type="submit" disabled={loadingWriteComment}>
                     작성
                   </Button>
-                </CommentForm>
-                <Comments>
+                </Styled.CommentForm>
+                <Styled.Comments>
                   {post.comments &&
                     post.comments.map((comment) => (
                       <div className="comment" key={comment.id}>
@@ -279,7 +258,7 @@ export default function PostDetail() {
                         </div>
 
                         {updatedCommentId === comment.id ? (
-                          <UpdatedCommentForm onSubmit={(e) => handleUpdateComment(e, comment.id)}>
+                          <Styled.UpdatedCommentForm onSubmit={(e) => handleUpdateComment(e, comment.id)}>
                             <TextArea
                               name="comment"
                               minRows={1}
@@ -290,16 +269,16 @@ export default function PostDetail() {
                               `}
                             />
                             <button type="submit">확인</button>
-                          </UpdatedCommentForm>
+                          </Styled.UpdatedCommentForm>
                         ) : (
                           <p className="comment__text">{comment.text}</p>
                         )}
                       </div>
                     ))}
-                </Comments>
-              </RightPanel>
-            </MainPanel>
-          </Container>
+                </Styled.Comments>
+              </Styled.RightPanel>
+            </Styled.MainPanel>
+          </Styled.Container>
         </Layout>
       )}
       {!loadingPost && !post && (

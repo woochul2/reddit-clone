@@ -7,7 +7,7 @@ import Layout from '../components/Layout';
 import { FORGOT_PASSWORD, HOME } from '../constants';
 import { CurrentUserDocument, CurrentUserQuery, useLoginMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
-import { Container, Link } from '../page-styles/login';
+import * as Styled from '../page-styles/login';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
 
@@ -19,7 +19,7 @@ export default function Login() {
   return (
     <Layout searchBox="off">
       {isLoggedOut && (
-        <Container>
+        <div>
           <Formik
             initialValues={{ usernameOrEmail: '', password: '' }}
             onSubmit={async (values, { setErrors }) => {
@@ -51,12 +51,12 @@ export default function Login() {
             {(formik) => (
               <AuthForm formik={formik as AuthFormikProps} title="로그인" buttonLabel="로그인">
                 <NextLink href={FORGOT_PASSWORD} passHref>
-                  <Link>비밀번호를 잊으셨습니까?</Link>
+                  <Styled.Link>비밀번호를 잊으셨습니까?</Styled.Link>
                 </NextLink>
               </AuthForm>
             )}
           </Formik>
-        </Container>
+        </div>
       )}
     </Layout>
   );

@@ -6,18 +6,7 @@ import { POST_DETAIL } from '../../constants';
 import { Post, User } from '../../generated/graphql';
 import { getLocalDate } from '../../utils/getLocalDate';
 import VoteIcon from '../VoteIcon';
-import {
-  Comment,
-  Container,
-  Content,
-  CreatedTime,
-  Creator,
-  Info,
-  LeftPanel,
-  Snippet,
-  Title,
-  VoteCounts,
-} from './post-thumbnail';
+import * as Styled from './styles/PostThumbnail';
 
 interface Props {
   post: Post;
@@ -35,18 +24,18 @@ export default function PostThumbnail({ post, styles }: Props) {
 
   return (
     <>
-      <Container styles={styles} onClick={handleClickContainer}>
-        <LeftPanel>
+      <Styled.Container styles={styles} onClick={handleClickContainer}>
+        <Styled.LeftPanel>
           <VoteIcon id={post.id} voteStatus={post.voteStatus} />
-          <VoteCounts>{post.voteCounts}</VoteCounts>
+          <Styled.VoteCounts>{post.voteCounts}</Styled.VoteCounts>
           <VoteIcon variant="down" id={post.id} voteStatus={post.voteStatus} />
-        </LeftPanel>
-        <Content>
+        </Styled.LeftPanel>
+        <Styled.Content>
           <NextLink href={postPath} passHref>
-            <Title>{post.title}</Title>
+            <Styled.Title>{post.title}</Styled.Title>
           </NextLink>
-          <Snippet>{post.textSnippet}</Snippet>
-          <Info>
+          <Styled.Snippet>{post.textSnippet}</Styled.Snippet>
+          <Styled.Info>
             <div className="info__left">
               <div className="info__vote">
                 <VoteIcon
@@ -56,7 +45,7 @@ export default function PostThumbnail({ post, styles }: Props) {
                     margin: 0;
                   `}
                 />
-                <VoteCounts>{post.voteCounts}</VoteCounts>
+                <Styled.VoteCounts>{post.voteCounts}</Styled.VoteCounts>
                 <VoteIcon
                   variant="down"
                   id={post.id}
@@ -66,22 +55,20 @@ export default function PostThumbnail({ post, styles }: Props) {
                   `}
                 />
               </div>
-              <Creator>
+              <Styled.Creator>
                 <span>by</span> {post.creator.username}
-              </Creator>
+              </Styled.Creator>
             </div>
             <div className="info__right">
-              <Comment>댓글 {post.comments.length}개</Comment>
-              <CreatedTime>
+              <Styled.Comment>댓글 {post.comments.length}개</Styled.Comment>
+              <Styled.CreatedTime>
                 <span className="desktop">{getLocalDate(post.createdAt)}</span>
-                <span className="mobile">
-                  {getLocalDate(post.createdAt, 'dot')}
-                </span>
-              </CreatedTime>
+                <span className="mobile">{getLocalDate(post.createdAt, 'dot')}</span>
+              </Styled.CreatedTime>
             </div>
-          </Info>
-        </Content>
-      </Container>
+          </Styled.Info>
+        </Styled.Content>
+      </Styled.Container>
     </>
   );
 }

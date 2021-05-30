@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { BREAKPOINT_SM } from '../constants';
 
-export const Container = styled.div``;
-
 export const Link = styled.a`
   align-self: flex-end;
   text-decoration: none;

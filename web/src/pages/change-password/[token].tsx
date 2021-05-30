@@ -5,7 +5,7 @@ import AuthForm from '../../components/AuthForm';
 import Confirmation from '../../components/Confirmation';
 import Layout from '../../components/Layout';
 import { useChangePasswordMutation, useUserIdQuery } from '../../generated/graphql';
-import { Container, ExpirationError } from '../../page-styles/change-password';
+import * as Styled from '../../page-styles/change-password';
 import { AuthFormikProps } from '../../types';
 import { errorsToMap } from '../../utils/errorsToMap';
 
@@ -21,7 +21,7 @@ export default function ChangePassword() {
 
   return (
     <Layout searchBox="off">
-      <Container>
+      <Styled.Container>
         {!loadingUserId && userIdData?.userId && (
           <Formik
             initialValues={{ newPassword: '' }}
@@ -47,8 +47,10 @@ export default function ChangePassword() {
             )}
           </Formik>
         )}
-        {!loadingUserId && !userIdData?.userId && <ExpirationError>유효 기간이 만료되었습니다.</ExpirationError>}
-      </Container>
+        {!loadingUserId && !userIdData?.userId && (
+          <Styled.ExpirationError>유효 기간이 만료되었습니다.</Styled.ExpirationError>
+        )}
+      </Styled.Container>
     </Layout>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
 import Header from '../Header';
-import { Container } from './layout';
+import * as Styled from './styles/Layout';
 
 interface Props {
   variant?: 'default' | 'colored' | 'modal';
@@ -13,9 +13,9 @@ interface Props {
 
 export default function Layout({ variant = 'default', searchBox = 'on', onClickBackground, children, styles }: Props) {
   return (
-    <Container variant={variant} styles={styles} onClick={onClickBackground}>
+    <Styled.Container variant={variant} styles={styles} onClick={onClickBackground}>
       <Header searchBox={searchBox} onClick={(event) => event.stopPropagation()} />
       {children}
-    </Container>
+    </Styled.Container>
   );
 }

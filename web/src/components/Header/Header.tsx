@@ -16,19 +16,7 @@ import SunOutlined from '../../icons/SunOutlined';
 import { remToPx } from '../../utils/remToPx';
 import SearchBox from '../SearchBox';
 import Tooltip from '../Tooltip';
-import {
-  Container,
-  IconButton,
-  IconLink,
-  Inside,
-  Link,
-  Logo,
-  LogoutButton,
-  MenuButton,
-  MobileMenu,
-  MobileMenuBottom,
-  RightPanel,
-} from './header';
+import * as Styled from './styles/Header';
 
 interface Props {
   searchBox?: 'on' | 'off';
@@ -152,17 +140,17 @@ export default function Header({ searchBox, onClick, styles }: Props) {
 
   return (
     <>
-      <Container styles={styles} onClick={onClick}>
-        <Inside>
+      <Styled.Container styles={styles} onClick={onClick}>
+        <Styled.Inside>
           <div className="inside__desktop">
             <NextLink href={HOME} passHref>
-              <Logo>
+              <Styled.Logo>
                 reddit<span>.clone</span>
-              </Logo>
+              </Styled.Logo>
             </NextLink>
             {searchBox === 'on' ? <SearchBox /> : <div style={{ flexGrow: 1 }}></div>}
-            <RightPanel>
-              <IconButton onClick={toggleDarkMode}>
+            <Styled.RightPanel>
+              <Styled.IconButton onClick={toggleDarkMode}>
                 {!isDarkMode() && (
                   <>
                     <MoonOutlined className="original" />
@@ -177,56 +165,56 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                     <Tooltip className="tooltip">라이트 모드</Tooltip>
                   </>
                 )}
-              </IconButton>
+              </Styled.IconButton>
               {!loadingCurrentuser && currentUserData?.currentUser && (
                 <>
                   <NextLink href={CREATE_POST} passHref>
-                    <IconLink>
+                    <Styled.IconLink>
                       <PencilOutlined className="original" />
                       <PencilFilled className="hovered" />
                       <Tooltip className="tooltip">글 작성</Tooltip>
-                    </IconLink>
+                    </Styled.IconLink>
                   </NextLink>
                   <span>{currentUserData.currentUser.username}</span>
-                  <LogoutButton onClick={handleLogout} disabled={loadingLogout}>
+                  <Styled.LogoutButton onClick={handleLogout} disabled={loadingLogout}>
                     로그아웃
-                  </LogoutButton>
+                  </Styled.LogoutButton>
                 </>
               )}
               {!loadingCurrentuser && !currentUserData?.currentUser && (
                 <>
                   <NextLink href={LOGIN} passHref>
-                    <Link>로그인</Link>
+                    <Styled.Link>로그인</Styled.Link>
                   </NextLink>
                   <NextLink href={REGISTER} passHref>
-                    <Link>회원가입</Link>
+                    <Styled.Link>회원가입</Styled.Link>
                   </NextLink>
                 </>
               )}
-            </RightPanel>
+            </Styled.RightPanel>
           </div>
           <div className="inside__mobile">
-            <MenuButton onClick={toggleMobileMenu}>
+            <Styled.MenuButton onClick={toggleMobileMenu}>
               {isMobileMenuOpen ? <Close className="close-icon" /> : <Menu />}
-            </MenuButton>
+            </Styled.MenuButton>
             <NextLink href={HOME} passHref>
-              <Logo onClick={closeMobileMenu}>
+              <Styled.Logo onClick={closeMobileMenu}>
                 reddit<span>.clone</span>
-              </Logo>
+              </Styled.Logo>
             </NextLink>
             {!loadingCurrentuser && currentUserData?.currentUser && (
               <NextLink href={CREATE_POST} passHref>
-                <IconLink onClick={closeMobileMenu}>
+                <Styled.IconLink onClick={closeMobileMenu}>
                   <PencilOutlined className="original" />
                   <PencilFilled className="hovered" />
-                </IconLink>
+                </Styled.IconLink>
               </NextLink>
             )}
           </div>
-        </Inside>
-      </Container>
+        </Styled.Inside>
+      </Styled.Container>
       {isMobileMenuOpen && (
-        <MobileMenu
+        <Styled.MobileMenu
           offset={`${mobileMenuOffset}px`}
           height={`${mobileMenuHeight}px`}
           onClick={(event) => event.stopPropagation()}
@@ -235,8 +223,8 @@ export default function Header({ searchBox, onClick, styles }: Props) {
             <div>
               <SearchBox />
             </div>
-            <MobileMenuBottom>
-              <IconButton onClick={toggleDarkMode}>
+            <Styled.MobileMenuBottom>
+              <Styled.IconButton onClick={toggleDarkMode}>
                 {!isDarkMode() && (
                   <>
                     <MoonOutlined className="original" />
@@ -249,7 +237,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                     <SunFilled className="hovered" />
                   </>
                 )}
-              </IconButton>
+              </Styled.IconButton>
               {!loadingCurrentuser && currentUserData?.currentUser && (
                 <>
                   <p>{currentUserData.currentUser.username}</p>
@@ -264,9 +252,9 @@ export default function Header({ searchBox, onClick, styles }: Props) {
                   <button onClick={handleRegister}>회원가입</button>
                 </>
               )}
-            </MobileMenuBottom>
+            </Styled.MobileMenuBottom>
           </div>
-        </MobileMenu>
+        </Styled.MobileMenu>
       )}
     </>
   );

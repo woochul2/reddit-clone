@@ -4,7 +4,7 @@ import { FlattenSimpleInterpolation } from 'styled-components';
 import { PostFormikProps } from '../../types';
 import Button from '../Button';
 import Textarea from '../TextArea';
-import { Container, textAreaStyles, Title } from './post-form';
+import * as Styled from './styles/PostForm';
 
 interface Props {
   formik: PostFormikProps;
@@ -16,15 +16,15 @@ export default function PostForm({ formik, title, styles }: Props) {
   const { values, handleChange, handleSubmit, isSubmitting } = formik;
 
   return (
-    <Container onSubmit={handleSubmit} autoComplete="off" styles={styles}>
-      <Title>{title}</Title>
+    <Styled.Container onSubmit={handleSubmit} autoComplete="off" styles={styles}>
+      <Styled.Title>{title}</Styled.Title>
       <Textarea
         name="title"
         minRows={1}
         value={values.title}
         onChange={handleChange}
         placeholder="제목"
-        styles={textAreaStyles}
+        styles={Styled.textAreaStyles}
       />
       <Textarea
         name="text"
@@ -32,18 +32,11 @@ export default function PostForm({ formik, title, styles }: Props) {
         value={values.text}
         onChange={handleChange}
         placeholder="내용"
-        styles={textAreaStyles}
+        styles={Styled.textAreaStyles}
       />
-      <Button
-        type="submit"
-        disabled={values.title === '' || values.text === '' || isSubmitting}
-      >
-        {isSubmitting ? (
-          <ReactLoading type={'spokes'} width={'1.125em'} height={'1.125em'} />
-        ) : (
-          <>제출</>
-        )}
+      <Button type="submit" disabled={values.title === '' || values.text === '' || isSubmitting}>
+        {isSubmitting ? <ReactLoading type={'spokes'} width={'1.125em'} height={'1.125em'} /> : <>제출</>}
       </Button>
-    </Container>
+    </Styled.Container>
   );
 }

@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { Container } from './textarea';
+import * as Styled from './styles/Textarea';
 
 interface Props {
   name: string;
@@ -11,20 +11,13 @@ interface Props {
   styles?: FlattenSimpleInterpolation;
 }
 
-export default function Textarea({
-  name,
-  minRows,
-  value,
-  onChange,
-  placeholder,
-  styles,
-}: Props) {
+export default function Textarea({ name, minRows, value, onChange, placeholder, styles }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event);
   };
 
   return (
-    <Container
+    <Styled.Container
       name={name}
       minRows={minRows}
       value={value}

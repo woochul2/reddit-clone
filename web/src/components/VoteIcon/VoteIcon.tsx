@@ -5,7 +5,7 @@ import { LOGIN } from '../../constants';
 import { useCurrentUserQuery, useVoteMutation } from '../../generated/graphql';
 import ArrowUpFilled from '../../icons/ArrowUpFilled';
 import ArrowUpOutlined from '../../icons/ArrowUpOutlined';
-import { Container } from './vote-icon';
+import * as Styled from './styles/VoteIcon';
 
 interface Props {
   id: number;
@@ -16,19 +16,9 @@ interface Props {
   styles?: FlattenSimpleInterpolation;
 }
 
-export default function Icon({
-  id,
-  voteStatus,
-  variant = 'up',
-  color,
-  backgroundColor,
-  styles,
-}: Props) {
+export default function Icon({ id, voteStatus, variant = 'up', color, backgroundColor, styles }: Props) {
   const [vote, { loading: loadingVote }] = useVoteMutation();
-  const {
-    data: currentUserData,
-    loading: loadingCurrentUser,
-  } = useCurrentUserQuery();
+  const { data: currentUserData, loading: loadingCurrentUser } = useCurrentUserQuery();
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -39,10 +29,7 @@ export default function Icon({
     }
   }, []);
 
-  const handleVote = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    value: number
-  ) => {
+  const handleVote = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: number) => {
     event.stopPropagation();
     if (!currentUserData?.currentUser) {
       await router.push(LOGIN);
@@ -54,7 +41,7 @@ export default function Icon({
   return (
     <>
       {!loadingCurrentUser && (
-        <Container
+        <Styled.Container
           variant={variant}
           color={color}
           backgroundColor={backgroundColor}
@@ -65,7 +52,7 @@ export default function Icon({
         >
           <ArrowUpOutlined className="original" />
           <ArrowUpFilled className="hovered" />
-        </Container>
+        </Styled.Container>
       )}
     </>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
 import { HOME } from '../../constants';
 import ButtonLink from '../ButtonLink';
-import { Container } from './confirmation';
+import * as Styled from './styles/Confirmation';
 
 interface Props {
   text: string;
@@ -11,9 +11,9 @@ interface Props {
 
 export default function Confirmation({ text, styles }: Props) {
   return (
-    <Container styles={styles}>
+    <Styled.Container styles={styles}>
       <p className="confirmation__text">{text}</p>
       <ButtonLink href={HOME}>홈 화면으로</ButtonLink>
-    </Container>
+    </Styled.Container>
   );
 }

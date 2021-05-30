@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { Container } from './tooltip';
+import * as Styled from './styles/Tooltip';
 
 interface Props {
   className?: string;
@@ -10,8 +10,8 @@ interface Props {
 
 export default function Tooltip({ className, children, styles }: Props) {
   return (
-    <Container className={className} styles={styles}>
+    <Styled.Container className={className} styles={styles}>
       {children}
-    </Container>
+    </Styled.Container>
   );
 }

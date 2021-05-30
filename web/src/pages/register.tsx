@@ -6,7 +6,6 @@ import Layout from '../components/Layout';
 import { HOME } from '../constants';
 import { CurrentUserDocument, CurrentUserQuery, useRegisterMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
-import { Container } from '../page-styles/register';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
 
@@ -18,7 +17,7 @@ export default function Register() {
   return (
     <Layout searchBox="off">
       {isLoggedOut && (
-        <Container>
+        <div>
           <Formik
             initialValues={{ email: '', username: '', password: '' }}
             onSubmit={async (values, { setErrors }) => {
@@ -49,7 +48,7 @@ export default function Register() {
           >
             {(formik) => <AuthForm formik={formik as AuthFormikProps} title="회원가입" buttonLabel="가입" />}
           </Formik>
-        </Container>
+        </div>
       )}
     </Layout>
   );

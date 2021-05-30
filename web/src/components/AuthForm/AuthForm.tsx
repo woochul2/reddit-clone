@@ -4,7 +4,7 @@ import { FlattenSimpleInterpolation } from 'styled-components';
 import { AuthFormikProps } from '../../types';
 import Button from '../Button';
 import Input from '../Input';
-import { Container, Error, SubTitle, Title } from './auth-form';
+import * as Styled from './styles/AuthForm';
 
 const valuesKeyToType = (key: string) => {
   if (key === 'newPassword') {
@@ -41,20 +41,13 @@ interface Props {
   styles?: FlattenSimpleInterpolation;
 }
 
-export default function AuthForm({
-  formik,
-  title,
-  subTitle,
-  buttonLabel,
-  children,
-  styles,
-}: Props) {
+export default function AuthForm({ formik, title, subTitle, buttonLabel, children, styles }: Props) {
   const { values, handleChange, handleSubmit, isSubmitting } = formik;
   const errors = formik.errors as Record<string, string>;
   return (
-    <Container onSubmit={handleSubmit} styles={styles}>
-      <Title>{title}</Title>
-      {subTitle && <SubTitle>{subTitle}</SubTitle>}
+    <Styled.Container onSubmit={handleSubmit} styles={styles}>
+      <Styled.Title>{title}</Styled.Title>
+      {subTitle && <Styled.SubTitle>{subTitle}</Styled.SubTitle>}
       {Object.entries(values).map(([key, value], idx) => (
         <div key={idx}>
           <Input
@@ -66,17 +59,13 @@ export default function AuthForm({
             label={valuesKeyToLabel(key)}
             focus={errors[key] !== undefined}
           />
-          <Error>{errors[key]}</Error>
+          <Styled.Error>{errors[key]}</Styled.Error>
         </div>
       ))}
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? (
-          <ReactLoading type={'spokes'} width={'1.125em'} height={'1.125em'} />
-        ) : (
-          <>{buttonLabel}</>
-        )}
+        {isSubmitting ? <ReactLoading type={'spokes'} width={'1.125em'} height={'1.125em'} /> : <>{buttonLabel}</>}
       </Button>
       {children}
-    </Container>
+    </Styled.Container>
   );
 }

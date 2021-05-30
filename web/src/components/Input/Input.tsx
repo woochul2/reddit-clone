@@ -1,13 +1,6 @@
-import React, {
-  ChangeEvent,
-  FocusEvent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { ChangeEvent, FocusEvent, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { Container } from './input';
+import * as Styled from './styles/Input';
 
 interface Props {
   variant?: 'default' | 'labeled';
@@ -52,7 +45,7 @@ export default function Input({
   }, [focus]);
 
   return (
-    <Container
+    <Styled.Container
       variant={variant}
       onFocus={() => {
         setIsFocused(true);
@@ -74,9 +67,7 @@ export default function Input({
         ref={textInput}
         autoComplete={autoComplete}
       />
-      <label onClick={() => textInput.current.focus()}>
-        {variant === 'labeled' && label}
-      </label>
-    </Container>
+      <label onClick={() => textInput.current.focus()}>{variant === 'labeled' && label}</label>
+    </Styled.Container>
   );
 }

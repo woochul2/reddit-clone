@@ -7,7 +7,7 @@ import { Post, usePostsQuery } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import SearchOutlined from '../../icons/SearchOutlined';
 import Input from '../Input';
-import { Container, searchInputStyles, SearchResult } from './search-box';
+import * as Styled from './styles/SearchBox';
 
 interface Props {
   styles?: FlattenSimpleInterpolation;
@@ -16,9 +16,7 @@ interface Props {
 export default function SearchBox({ styles }: Props) {
   const [searchValue, setSearchValue] = useState('');
   const [isSearchIconClicked, setIsSearchIconClicked] = useState(false);
-  const [searchedItems, setSearchedItems] = useState<Fuse.FuseResult<Post>[]>(
-    []
-  );
+  const [searchedItems, setSearchedItems] = useState<Fuse.FuseResult<Post>[]>([]);
   const { data: postsData, loading: loadingPosts } = usePostsQuery();
   const router = useRouter();
 
@@ -36,7 +34,7 @@ export default function SearchBox({ styles }: Props) {
   }, [searchValue]);
 
   return (
-    <Container value={searchValue} styles={styles}>
+    <Styled.Container value={searchValue} styles={styles}>
       {!loadingPosts && (
         <>
           <Input
@@ -48,15 +46,12 @@ export default function SearchBox({ styles }: Props) {
             focus={isSearchIconClicked}
             onBlur={() => setIsSearchIconClicked(false)}
             autoComplete="off"
-            styles={searchInputStyles}
+            styles={Styled.searchInputStyles}
           />
-          <SearchOutlined
-            className="search-icon"
-            onClick={() => setIsSearchIconClicked(true)}
-          />
+          <SearchOutlined className="search-icon" onClick={() => setIsSearchIconClicked(true)} />
           <Close className="close-icon" onClick={() => setSearchValue('')} />
           {searchedItems.length !== 0 && (
-            <SearchResult>
+            <Styled.SearchResult>
               {searchedItems.map(({ item }) => (
                 <button
                   key={item.id}
@@ -68,10 +63,10 @@ export default function SearchBox({ styles }: Props) {
                   {item.title}
                 </button>
               ))}
-            </SearchResult>
+            </Styled.SearchResult>
           )}
         </>
       )}
-    </Container>
+    </Styled.Container>
   );
 }

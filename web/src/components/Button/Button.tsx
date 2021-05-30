@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { Container } from './button';
+import * as Styled from './styles/Button';
 
 interface Props {
   type?: 'button' | 'submit' | 'reset';
@@ -9,15 +9,10 @@ interface Props {
   styles?: FlattenSimpleInterpolation;
 }
 
-export default function Button({
-  type = 'button',
-  disabled,
-  children,
-  styles,
-}: Props) {
+export default function Button({ type = 'button', disabled, children, styles }: Props) {
   return (
-    <Container type={type} disabled={disabled} styles={styles}>
+    <Styled.Container type={type} disabled={disabled} styles={styles}>
       {children}
-    </Container>
+    </Styled.Container>
   );
 }

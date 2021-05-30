@@ -5,7 +5,7 @@ import AuthForm from '../components/AuthForm';
 import Confirmation from '../components/Confirmation';
 import Layout from '../components/Layout';
 import { useForgotPasswordMutation } from '../generated/graphql';
-import { Container } from '../page-styles/forgot-password';
+import * as Styled from '../page-styles/forgot-password';
 import { AuthFormikProps } from '../types';
 
 export default function ForgotPassword() {
@@ -14,7 +14,7 @@ export default function ForgotPassword() {
 
   return (
     <Layout searchBox="off">
-      <Container>
+      <Styled.Container>
         <Formik
           initialValues={{ email: '' }}
           onSubmit={async (values, { setErrors }) => {
@@ -41,7 +41,7 @@ export default function ForgotPassword() {
             </>
           )}
         </Formik>
-      </Container>
+      </Styled.Container>
     </Layout>
   );
 }

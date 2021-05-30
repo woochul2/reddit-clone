@@ -1,5 +1,5 @@
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
-import { BREAKPOINT_MD } from '../../constants';
+import { BREAKPOINT_MD } from '../../../constants';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
