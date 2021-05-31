@@ -8,8 +8,9 @@ import { useChangePasswordMutation, useUserIdQuery } from '../../generated/graph
 import * as Styled from '../../page-styles/change-password';
 import { AuthFormikProps } from '../../types';
 import { errorsToMap } from '../../utils/errorsToMap';
+import withApollo from '../../utils/withApollo';
 
-export default function ChangePassword() {
+function ChangePassword() {
   const router = useRouter();
   const token = router.query.token as string;
   const { data: userIdData, loading: loadingUserId } = useUserIdQuery({
@@ -54,3 +55,5 @@ export default function ChangePassword() {
     </Layout>
   );
 }
+
+export default withApollo()(ChangePassword);

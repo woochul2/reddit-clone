@@ -9,8 +9,9 @@ import { CurrentUserDocument, CurrentUserQuery, useRegisterMutation } from '../g
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
+import withApollo from '../utils/withApollo';
 
-export default function Register() {
+function Register() {
   const isLoggedOut = useIsLoggedOut();
   const [register] = useRegisterMutation();
   const router = useRouter();
@@ -56,3 +57,5 @@ export default function Register() {
     </Layout>
   );
 }
+
+export default withApollo()(Register);

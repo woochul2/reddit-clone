@@ -2,11 +2,10 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 import Layout from '../components/Layout';
 import Post from '../components/PostThumbnail';
-import { AUTH_TOKEN } from '../constants';
-import { PostsDocument, usePostsQuery } from '../generated/graphql';
-import { addApolloState, initializeApollo } from '../lib/apolloClient';
+import { usePostsQuery } from '../generated/graphql';
+import withApollo from '../utils/withApollo';
 
-export default function Home() {
+function Home() {
   const { data: postsData, loading: loadingPosts } = usePostsQuery();
 
   return (
@@ -27,16 +26,4 @@ export default function Home() {
   );
 }
 
-export async function getServerSideProps(ctx: any) {
-  const token = ctx.req.cookies[AUTH_TOKEN];
-
-  const apolloClient = initializeApollo(null, token);
-
-  await apolloClient.query({
-    query: PostsDocument,
-  });
-
-  return addApolloState(apolloClient, {
-    props: {},
-  });
-}
+export default withApollo({ ssr: true })(Home);

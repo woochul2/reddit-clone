@@ -7,8 +7,9 @@ import { HOME } from '../constants';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
 import { PostFormikProps } from '../types';
+import withApollo from '../utils/withApollo';
 
-export default function CreatePost() {
+function CreatePost() {
   const isLoggedIn = useIsLoggedIn();
   const [createPost] = useCreatePostMutation();
   const router = useRouter();
@@ -38,3 +39,5 @@ export default function CreatePost() {
     </Layout>
   );
 }
+
+export default withApollo()(CreatePost);

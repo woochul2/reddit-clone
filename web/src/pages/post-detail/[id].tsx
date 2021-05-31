@@ -8,23 +8,21 @@ import Layout from '../../components/Layout';
 import TextArea from '../../components/TextArea';
 import Tooltip from '../../components/Tooltip';
 import VoteIcon from '../../components/VoteIcon';
-import { AUTH_TOKEN, EDIT_POST, HOME, LOGIN } from '../../constants';
+import { EDIT_POST, HOME, LOGIN } from '../../constants';
 import {
-  CurrentUserDocument,
-  PostDocument,
   useCurrentUserQuery,
   useDeleteCommentMutation,
   useDeletePostMutation,
   usePostQuery,
   useUpdateCommentMutation,
-  useWriteCommentMutation,
+  useWriteCommentMutation
 } from '../../generated/graphql';
 import Close from '../../icons/Close';
-import { addApolloState, initializeApollo } from '../../lib/apolloClient';
 import * as Styled from '../../page-styles/post-detail';
 import { getLocalDate } from '../../utils/getLocalDate';
+import withApollo from '../../utils/withApollo';
 
-export default function PostDetail() {
+function PostDetail() {
   const router = useRouter();
   const id = router.query.id as string;
   const { data: postData, loading: loadingPost } = usePostQuery({
@@ -289,23 +287,4 @@ export default function PostDetail() {
   );
 }
 
-export async function getServerSideProps(ctx: any) {
-  const token = ctx.req.cookies[AUTH_TOKEN];
-
-  const apolloClient = initializeApollo(null, token);
-  // const apolloClient = initializeApollo();
-  const id = parseInt(ctx.query.id as string);
-
-  await apolloClient.query({
-    query: PostDocument,
-    variables: { id },
-  });
-
-  await apolloClient.query({
-    query: CurrentUserDocument,
-  });
-
-  return addApolloState(apolloClient, {
-    props: {},
-  });
-}
+export default withApollo({ ssr: true })(PostDetail);

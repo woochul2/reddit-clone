@@ -11,8 +11,9 @@ import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import * as Styled from '../page-styles/login';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
+import withApollo from '../utils/withApollo';
 
-export default function Login() {
+function Login() {
   const isLoggedOut = useIsLoggedOut();
   const [login] = useLoginMutation();
   const router = useRouter();
@@ -64,3 +65,5 @@ export default function Login() {
     </Layout>
   );
 }
+
+export default withApollo()(Login);

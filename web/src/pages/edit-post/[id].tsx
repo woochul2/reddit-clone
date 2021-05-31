@@ -7,8 +7,9 @@ import { POST_DETAIL } from '../../constants';
 import { usePostQuery, useUpdatePostMutation } from '../../generated/graphql';
 import { useIsCreator } from '../../hooks/useIsCreator';
 import { PostFormikProps } from '../../types';
+import withApollo from '../../utils/withApollo';
 
-export default function EditPost() {
+function EditPost() {
   const router = useRouter();
   const id = router.query.id as string;
   const isCreator = useIsCreator(id);
@@ -43,3 +44,5 @@ export default function EditPost() {
     </Layout>
   );
 }
+
+export default withApollo()(EditPost);
