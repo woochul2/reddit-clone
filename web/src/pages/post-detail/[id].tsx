@@ -8,7 +8,7 @@ import Layout from '../../components/Layout';
 import TextArea from '../../components/TextArea';
 import Tooltip from '../../components/Tooltip';
 import VoteIcon from '../../components/VoteIcon';
-import { EDIT_POST, HOME, LOGIN } from '../../constants';
+import { AUTH_TOKEN, EDIT_POST, HOME, LOGIN } from '../../constants';
 import {
   CurrentUserDocument,
   PostDocument,
@@ -290,7 +290,7 @@ export default function PostDetail() {
 }
 
 export async function getServerSideProps(ctx: any) {
-  const token = ctx.req.cookies['auth-token'] as any;
+  const token = ctx.req.cookies[AUTH_TOKEN];
 
   const apolloClient = initializeApollo(null, token);
   // const apolloClient = initializeApollo();

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactLoading from 'react-loading';
 import Layout from '../components/Layout';
 import Post from '../components/PostThumbnail';
+import { AUTH_TOKEN } from '../constants';
 import { PostsDocument, usePostsQuery } from '../generated/graphql';
 import { addApolloState, initializeApollo } from '../lib/apolloClient';
 
@@ -27,7 +28,7 @@ export default function Home() {
 }
 
 export async function getServerSideProps(ctx: any) {
-  const token = ctx.req.cookies['auth-token'];
+  const token = ctx.req.cookies[AUTH_TOKEN];
 
   const apolloClient = initializeApollo(null, token);
 

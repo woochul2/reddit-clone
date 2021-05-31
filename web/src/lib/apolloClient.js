@@ -3,6 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
 import { useMemo } from 'react';
+import { AUTH_TOKEN } from '../constants';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
@@ -21,7 +22,7 @@ const httpLink = (token) => {
 const getCookieValue = (name) => document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || '';
 
 const authLink = setContext((_, { headers }) => {
-  const token = typeof window === 'undefined' ? '' : getCookieValue('auth-token');
+  const token = getCookieValue(AUTH_TOKEN);
 
   return {
     headers: {

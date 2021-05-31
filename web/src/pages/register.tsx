@@ -1,9 +1,10 @@
+import { useApolloClient } from '@apollo/client';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
-import { HOME } from '../constants';
+import { AUTH_TOKEN, HOME } from '../constants';
 import { CurrentUserDocument, CurrentUserQuery, useRegisterMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { AuthFormikProps } from '../types';
@@ -13,6 +14,7 @@ export default function Register() {
   const isLoggedOut = useIsLoggedOut();
   const [register] = useRegisterMutation();
   const router = useRouter();
+  const apolloClient = useApolloClient();
 
   return (
     <Layout searchBox="off">
@@ -41,9 +43,9 @@ export default function Register() {
               }
 
               if (response.data?.register.token) {
-                localStorage.setItem('auth-token', response.data.register.token);
-                document.cookie = `auth-token=${response.data.register.token}`;
+                document.cookie = `${AUTH_TOKEN}=${response.data.register.token}`;
               }
+              await apolloClient.resetStore();
               await router.push(HOME);
             }}
           >

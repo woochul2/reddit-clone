@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { BREAKPOINT_SM, CREATE_POST, HOME, LOGIN, REGISTER } from '../../constants';
+import { AUTH_TOKEN, BREAKPOINT_SM, CREATE_POST, HOME, LOGIN, REGISTER } from '../../constants';
 import { useCurrentUserQuery, useLogoutMutation } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import Menu from '../../icons/Menu';
@@ -47,7 +47,8 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   const apolloClient = useApolloClient();
 
   const handleLogout = async () => {
-    localStorage.removeItem('auth-token');
+    document.cookie = `${AUTH_TOKEN}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+
     closeMobileMenu();
     await apolloClient.resetStore();
     await logout();

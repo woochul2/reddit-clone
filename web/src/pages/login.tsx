@@ -1,10 +1,11 @@
+import { useApolloClient } from '@apollo/client';
 import { Formik } from 'formik';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
-import { FORGOT_PASSWORD, HOME } from '../constants';
+import { AUTH_TOKEN, FORGOT_PASSWORD, HOME } from '../constants';
 import { CurrentUserDocument, CurrentUserQuery, useLoginMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import * as Styled from '../page-styles/login';
@@ -15,6 +16,7 @@ export default function Login() {
   const isLoggedOut = useIsLoggedOut();
   const [login] = useLoginMutation();
   const router = useRouter();
+  const apolloClient = useApolloClient();
 
   return (
     <Layout searchBox="off">
@@ -43,9 +45,9 @@ export default function Login() {
               }
 
               if (response.data?.login.token) {
-                localStorage.setItem('auth-token', response.data.login.token);
-                document.cookie = `auth-token=${response.data.login.token}`;
+                document.cookie = `${AUTH_TOKEN}=${response.data.login.token}`;
               }
+              await apolloClient.resetStore();
               await router.push(HOME);
             }}
           >
