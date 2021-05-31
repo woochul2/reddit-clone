@@ -8,13 +8,20 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient;
 
-const httpLink = createHttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_URL,
-  credentials: 'include',
-});
+const httpLink = (token) => {
+  return createHttpLink({
+    uri: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_URL,
+    credentials: 'include',
+    headers: {
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  });
+};
+
+const getCookieValue = (name) => document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || '';
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('auth-token');
+  const token = typeof window === 'undefined' ? '' : getCookieValue('auth-token');
 
   return {
     headers: {
@@ -24,16 +31,16 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-function createApolloClient() {
+function createApolloClient(token) {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: typeof window === 'undefined' ? httpLink : authLink.concat(httpLink),
+    link: typeof window === 'undefined' ? httpLink(token) : authLink.concat(httpLink()),
     cache: new InMemoryCache(),
   });
 }
 
-export function initializeApollo(initialState = null) {
-  const _apolloClient = apolloClient ?? createApolloClient();
+export function initializeApollo(initialState = null, token) {
+  const _apolloClient = apolloClient ?? createApolloClient(token);
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here

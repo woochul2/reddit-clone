@@ -1,4 +1,3 @@
-import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
@@ -290,8 +289,11 @@ export default function PostDetail() {
   );
 }
 
-export async function getServerSideProps(ctx: NextPageContext) {
-  const apolloClient = initializeApollo();
+export async function getServerSideProps(ctx: any) {
+  const token = ctx.req.cookies['auth-token'] as any;
+
+  const apolloClient = initializeApollo(null, token);
+  // const apolloClient = initializeApollo();
   const id = parseInt(ctx.query.id as string);
 
   await apolloClient.query({

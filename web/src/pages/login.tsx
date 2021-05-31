@@ -44,6 +44,7 @@ export default function Login() {
 
               if (response.data?.login.token) {
                 localStorage.setItem('auth-token', response.data.login.token);
+                document.cookie = `auth-token=${response.data.login.token}`;
               }
               await router.push(HOME);
             }}

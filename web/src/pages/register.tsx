@@ -42,6 +42,7 @@ export default function Register() {
 
               if (response.data?.register.token) {
                 localStorage.setItem('auth-token', response.data.register.token);
+                document.cookie = `auth-token=${response.data.register.token}`;
               }
               await router.push(HOME);
             }}

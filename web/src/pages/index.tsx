@@ -26,8 +26,10 @@ export default function Home() {
   );
 }
 
-export async function getStaticProps() {
-  const apolloClient = initializeApollo();
+export async function getServerSideProps(ctx: any) {
+  const token = ctx.req.cookies['auth-token'];
+
+  const apolloClient = initializeApollo(null, token);
 
   await apolloClient.query({
     query: PostsDocument,
