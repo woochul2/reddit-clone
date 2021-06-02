@@ -20,7 +20,11 @@ require('dotenv').config();
 const main = async () => {
   await createConnection({
     type: 'postgres',
-    url: process.env.DATABASE_URL,
+    database: process.env.DATABASE_DATABASE,
+    host: process.env.DATABASE_HOST,
+    password: process.env.DATABASE_PASSWORD,
+    port: parseInt(process.env.DATABASE_PORT),
+    username: process.env.DATABASE_USERNAME,
     entities: [Post, User, Vote, Comment],
     synchronize: true,
     logging: false,
