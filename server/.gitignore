@@ -1,4 +1,8 @@
-.env
+.serverless
+.webpack
+
+.env.development
+.env.production
 
 node_modules
 dist

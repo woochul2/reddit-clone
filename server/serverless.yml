@@ -1,0 +1,38 @@
+service: apollo-server-lambda
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-northeast-2
+
+functions:
+  graphql:
+    handler: src/serverless.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors:
+            origin: ${env:CORS_ORIGIN}
+            allowCredentials: true
+      - http:
+          path: graphql
+          method: get
+          cors:
+            origin: ${env:CORS_ORIGIN}
+            allowCredentials: true
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+  webpack:
+    includeModules:
+      # offline으로 실행할 때는 괜찮은데, 배포하면 다음과 같은 에러가 발생해서 강제로 pg를 include 하도록 설정함.
+      # DriverPackageNotInstalledError: Postgres package has not been found installed. Try to install it: npm install pg --save
+      forceInclude:
+        - pg

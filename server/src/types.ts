@@ -1,7 +1,7 @@
 import { Redis } from 'ioredis';
 
 export type MyReq = Request & {
-  headers: Headers & { authorization: string };
+  headers: Headers & { Authorization?: string };
 };
 
 export type MyContext = {

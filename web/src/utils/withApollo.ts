@@ -8,7 +8,7 @@ const httpLink = (token?: string) => {
     uri: process.env.NEXT_PUBLIC_GRAPHQL_SERVER_URL,
     credentials: 'include',
     headers: {
-      authorization: token ? `Bearer ${token}` : '',
+      Authorization: token ? `Bearer ${token}` : '',
     },
   });
 };
@@ -21,7 +21,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      Authorization: token ? `Bearer ${token}` : '',
     },
   };
 });

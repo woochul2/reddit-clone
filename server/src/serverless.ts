@@ -1,21 +1,20 @@
 import { ApolloServer } from 'apollo-server-express';
+import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import cors from 'cors';
 import express from 'express';
 // import Redis from 'ioredis';
 import 'reflect-metadata';
+import serverless from 'serverless-http';
 import { buildSchema } from 'type-graphql';
 import Database from './database';
 import resolvers from './resolvers';
-import { MyContext } from './types';
 import { getUserId } from './utils/getUserId';
-require('dotenv').config();
 
-const main = async () => {
+export const graphqlHandler: APIGatewayProxyHandlerV2 = async (event, context) => {
   const database = new Database();
   await database.getConnection();
 
   const app = express();
-  // const redis = new Redis(process.env.REDIS_URL);
 
   app.set('trust proxy', true);
   app.use(
@@ -25,17 +24,21 @@ const main = async () => {
     })
   );
 
+  // const redis = new Redis(process.env.REDIS_URL);
+
   const apolloServer = new ApolloServer({
     introspection: true,
-    playground: true,
+    playground: {
+      endpoint: '/dev/graphql',
+    },
     schema: await buildSchema({
       resolvers,
       validate: false,
     }),
-    context: ({ req }: MyContext) => {
+    context: () => {
       return {
         // redis,
-        userId: req && req.headers.Authorization ? getUserId(req) : null,
+        userId: event.headers.Authorization ? getUserId(event) : null,
       };
     },
   });
@@ -45,11 +48,6 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(4000, () => {
-    console.log('서버가 시작됐습니다.');
-  });
+  const response = await serverless(app)(event, context);
+  return response;
 };
-
-main().catch((err) => {
-  console.log(err);
-});
