@@ -1,4 +1,4 @@
-service: apollo-server-lambda
+service: reddit-clone-server
 
 provider:
   name: aws
