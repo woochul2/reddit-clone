@@ -1,21 +1,21 @@
 import { ApolloServer } from 'apollo-server-express';
 import cors from 'cors';
 import express from 'express';
-// import Redis from 'ioredis';
+import Redis from 'ioredis';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import Database from './database';
 import resolvers from './resolvers';
 import { MyContext } from './types';
 import { getUserId } from './utils/getUserId';
-require('dotenv').config();
+require('dotenv').config({ path: '.env.development' });
 
 const main = async () => {
   const database = new Database();
   await database.getConnection();
 
   const app = express();
-  // const redis = new Redis(process.env.REDIS_URL);
+  const redis = new Redis(process.env.REDIS_URL);
 
   app.set('trust proxy', true);
   app.use(
@@ -34,7 +34,7 @@ const main = async () => {
     }),
     context: ({ req }: MyContext) => {
       return {
-        // redis,
+        redis,
         userId: req && req.headers.Authorization ? getUserId(req) : null,
       };
     },

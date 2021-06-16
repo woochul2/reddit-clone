@@ -2,7 +2,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import cors from 'cors';
 import express from 'express';
-// import Redis from 'ioredis';
+import Redis from 'ioredis';
 import 'reflect-metadata';
 import serverless from 'serverless-http';
 import { buildSchema } from 'type-graphql';
@@ -24,7 +24,7 @@ export const graphqlHandler: APIGatewayProxyHandlerV2 = async (event, context) =
     })
   );
 
-  // const redis = new Redis(process.env.REDIS_URL);
+  const redis = new Redis(process.env.REDIS_URL);
 
   const apolloServer = new ApolloServer({
     introspection: true,
@@ -37,7 +37,7 @@ export const graphqlHandler: APIGatewayProxyHandlerV2 = async (event, context) =
     }),
     context: () => {
       return {
-        // redis,
+        redis,
         userId: event.headers.Authorization ? getUserId(event) : null,
       };
     },
