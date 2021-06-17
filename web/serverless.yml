@@ -1,6 +1,7 @@
 myNextApplication:
   component: '@sls-next/serverless-component@1.20.0-alpha.16'
   inputs:
-    bucketName: r55dhd-3s0qhfj
+    bucketName: 5pl0gr-0rgpl6r
     cloudfront:
-      distributionId: EVG074ZEE868L
+      distributionId: E36C6419ZVPSKV
+    domain: ['reddit-clone', 'woochul.me']
