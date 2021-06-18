@@ -15,7 +15,6 @@ const main = async () => {
   await database.getConnection();
 
   const app = express();
-  const redis = new Redis(process.env.REDIS_URL);
 
   app.set('trust proxy', true);
   app.use(
@@ -24,6 +23,12 @@ const main = async () => {
       credentials: true,
     })
   );
+
+  const redis = new Redis({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT),
+    password: process.env.REDIS_PASSWORD || '',
+  });
 
   const apolloServer = new ApolloServer({
     introspection: true,

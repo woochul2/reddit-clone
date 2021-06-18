@@ -10,6 +10,8 @@ declare namespace NodeJS {
     GMAIL_CLIENT_SECRET: string;
     GMAIL_REFRESH_TOKEN: string;
     JWT_SECRET: string;
-    REDIS_URL: string;
+    REDIS_HOST: string;
+    REDIS_PASSWORD: string;
+    REDIS_PORT: string;
   }
 }

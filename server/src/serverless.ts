@@ -24,7 +24,11 @@ export const graphqlHandler: APIGatewayProxyHandlerV2 = async (event, context) =
     })
   );
 
-  const redis = new Redis(process.env.REDIS_URL);
+  const redis = new Redis({
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT),
+    password: process.env.REDIS_PASSWORD,
+  });
 
   const apolloServer = new ApolloServer({
     introspection: true,
