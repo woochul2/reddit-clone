@@ -8,14 +8,14 @@ import Layout from '../../components/Layout';
 import TextArea from '../../components/TextArea';
 import Tooltip from '../../components/Tooltip';
 import VoteIcon from '../../components/VoteIcon';
-import { EDIT_POST, HOME, LOGIN } from '../../constants';
+import { PAGES } from '../../constants';
 import {
   useCurrentUserQuery,
   useDeleteCommentMutation,
   useDeletePostMutation,
   usePostQuery,
   useUpdateCommentMutation,
-  useWriteCommentMutation
+  useWriteCommentMutation,
 } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import * as Styled from '../../page-styles/post-detail';
@@ -49,7 +49,7 @@ function PostDetail() {
   }, [post]);
 
   const handleClickBackground = async () => {
-    await router.push(HOME);
+    await router.push(PAGES.HOME);
   };
 
   const handleDeletePost = async (id: number) => {
@@ -59,7 +59,7 @@ function PostDetail() {
         cache.evict({ fieldName: 'posts' });
       },
     });
-    await router.push(HOME);
+    await router.push(PAGES.HOME);
   };
 
   const getMinHeight = () => {
@@ -73,7 +73,7 @@ function PostDetail() {
     event.preventDefault();
 
     if (!currentUserData?.currentUser) {
-      await router.push(LOGIN);
+      await router.push(PAGES.LOGIN);
       return;
     }
 
@@ -155,7 +155,7 @@ function PostDetail() {
                   />
                 </div>
                 <Styled.SmallTitle>{post.title}</Styled.SmallTitle>
-                <Styled.CloseIcon onClick={async () => await router.push(HOME)}>
+                <Styled.CloseIcon onClick={async () => await router.push(PAGES.HOME)}>
                   <Close className="close-icon" />
                   <Tooltip className="tooltip">닫기</Tooltip>
                 </Styled.CloseIcon>
@@ -180,7 +180,7 @@ function PostDetail() {
                     </div>
                     {currentUserData?.currentUser?.id === post.creatorId && (
                       <div className="creation-info__button-container">
-                        <button onClick={async () => await router.push(`${EDIT_POST}/${post.id}`)}>수정</button>
+                        <button onClick={async () => await router.push(`${PAGES.EDIT_POST}/${post.id}`)}>수정</button>
                         <button onClick={() => handleDeletePost(post.id)}>삭제</button>
                       </div>
                     )}

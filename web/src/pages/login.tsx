@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
-import { AUTH_TOKEN, FORGOT_PASSWORD, HOME } from '../constants';
+import { COOKIE_NAMES, PAGES } from '../constants';
 import { CurrentUserDocument, CurrentUserQuery, useLoginMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import * as Styled from '../page-styles/login';
@@ -46,15 +46,15 @@ function Login() {
               }
 
               if (response.data?.login.token) {
-                document.cookie = `${AUTH_TOKEN}=${response.data.login.token}`;
+                document.cookie = `${COOKIE_NAMES.AUTH_TOKEN}=${response.data.login.token}`;
               }
               await apolloClient.resetStore();
-              await router.push(HOME);
+              await router.push(PAGES.HOME);
             }}
           >
             {(formik) => (
               <AuthForm formik={formik as AuthFormikProps} title="로그인" buttonLabel="로그인">
-                <NextLink href={FORGOT_PASSWORD} passHref>
+                <NextLink href={PAGES.FORGOT_PASSWORD} passHref>
                   <Styled.Link>비밀번호를 잊으셨습니까?</Styled.Link>
                 </NextLink>
               </AuthForm>

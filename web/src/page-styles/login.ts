@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BREAKPOINT_SM } from '../constants';
+import { BREAKPOINTS } from '../constants';
 
 export const Link = styled.a`
   align-self: flex-end;
@@ -8,7 +8,7 @@ export const Link = styled.a`
   border-radius: 0.125em;
   color: var(--body-text-color);
 
-  @media (max-width: ${BREAKPOINT_SM}) {
+  @media (max-width: ${BREAKPOINTS.SM}) {
     padding-right: 0.25rem;
   }
 

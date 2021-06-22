@@ -1,7 +1,7 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { withApollo } from 'next-apollo';
-import { AUTH_TOKEN } from '../constants';
+import { COOKIE_NAMES } from '../constants';
 
 const httpLink = (token?: string) => {
   return createHttpLink({
@@ -16,7 +16,7 @@ const httpLink = (token?: string) => {
 const getCookieValue = (name: string) => document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || '';
 
 const authLink = setContext((_, { headers }) => {
-  const token = getCookieValue(AUTH_TOKEN);
+  const token = getCookieValue(COOKIE_NAMES.AUTH_TOKEN);
 
   return {
     headers: {

@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { css, FlattenSimpleInterpolation } from 'styled-components';
-import { POST_DETAIL } from '../../constants';
+import { PAGES } from '../../constants';
 import { Post, User } from '../../generated/graphql';
 import { getLocalDate } from '../../utils/getLocalDate';
 import VoteIcon from '../VoteIcon';
@@ -16,7 +16,7 @@ interface Props {
 
 export default function PostThumbnail({ post, styles }: Props) {
   const router = useRouter();
-  const postPath = `${POST_DETAIL}/${post.id}`;
+  const postPath = `${PAGES.POST_DETAIL}/${post.id}`;
 
   const handleClickContainer = async () => {
     await router.push(postPath);

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import Layout from '../../components/Layout';
 import PostForm from '../../components/PostForm';
-import { POST_DETAIL } from '../../constants';
+import { PAGES } from '../../constants';
 import { usePostQuery, useUpdatePostMutation } from '../../generated/graphql';
 import { useIsCreator } from '../../hooks/useIsCreator';
 import { PostFormikProps } from '../../types';
@@ -35,7 +35,7 @@ function EditPost() {
               console.error(errors);
               return;
             }
-            await router.push(`${POST_DETAIL}/${id}`);
+            await router.push(`${PAGES.POST_DETAIL}/${id}`);
           }}
         >
           {(formik) => <PostForm formik={formik as PostFormikProps} title="글 수정" />}

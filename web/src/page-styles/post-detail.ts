@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { BREAKPOINT_SM } from '../constants';
+import { BREAKPOINTS } from '../constants';
 
 export const Container = styled.div<{ minHeight: string }>`
   max-width: 75rem;
@@ -9,7 +9,7 @@ export const Container = styled.div<{ minHeight: string }>`
   background-color: var(--layout-background-color);
 
   .desktop {
-    @media (max-width: ${BREAKPOINT_SM}) {
+    @media (max-width: ${BREAKPOINTS.SM}) {
       display: none;
     }
   }
@@ -17,7 +17,7 @@ export const Container = styled.div<{ minHeight: string }>`
   .mobile {
     display: none;
 
-    @media (max-width: ${BREAKPOINT_SM}) {
+    @media (max-width: ${BREAKPOINTS.SM}) {
       display: inline;
     }
   }
@@ -104,7 +104,7 @@ export const LeftPanel = styled.div`
   gap: 0.375rem;
   padding: 0.5rem;
 
-  @media (max-width: ${BREAKPOINT_SM}) {
+  @media (max-width: ${BREAKPOINTS.SM}) {
     display: none;
   }
 `;
@@ -142,7 +142,7 @@ export const CreationInfo = styled.div`
   gap: 1rem;
   font-size: 0.875rem;
 
-  @media (max-width: ${BREAKPOINT_SM}) {
+  @media (max-width: ${BREAKPOINTS.SM}) {
     flex-direction: column;
     gap: 0.5rem;
   }
@@ -216,7 +216,7 @@ export const Comments = styled.div`
     gap: 0.75rem;
     margin-bottom: 0.375rem;
 
-    @media (max-width: ${BREAKPOINT_SM}) {
+    @media (max-width: ${BREAKPOINTS.SM}) {
       flex-direction: column;
       gap: 0.25rem;
     }

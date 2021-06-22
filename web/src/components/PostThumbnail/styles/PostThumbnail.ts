@@ -1,5 +1,5 @@
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { BREAKPOINT_SM } from '../../../constants';
+import { BREAKPOINTS } from '../../../constants';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
@@ -28,7 +28,7 @@ export const LeftPanel = styled.div`
   padding: 0.5rem;
   background-color: var(--post-left-panel-background-color);
 
-  @media (max-width: ${BREAKPOINT_SM}) {
+  @media (max-width: ${BREAKPOINTS.SM}) {
     display: none;
   }
 `;
@@ -47,7 +47,7 @@ export const Content = styled.div`
   padding: 1rem 1.25rem 0.875rem;
   background-color: var(--post-background-color);
 
-  @media (max-width: ${BREAKPOINT_SM}) {
+  @media (max-width: ${BREAKPOINTS.SM}) {
     padding: 0.75rem;
   }
 `;
@@ -84,7 +84,7 @@ export const Info = styled.div`
     align-items: center;
     gap: 0.375rem;
 
-    @media (max-width: ${BREAKPOINT_SM}) {
+    @media (max-width: ${BREAKPOINTS.SM}) {
       display: flex;
     }
   }
@@ -100,7 +100,7 @@ export const Info = styled.div`
     gap: 0.75rem;
   }
 
-  @media (max-width: ${BREAKPOINT_SM}) {
+  @media (max-width: ${BREAKPOINTS.SM}) {
     flex-direction: column;
   }
 `;
@@ -119,7 +119,7 @@ export const CreatedTime = styled.p`
   color: var(--post-second-text-color);
 
   .desktop {
-    @media (max-width: ${BREAKPOINT_SM}) {
+    @media (max-width: ${BREAKPOINTS.SM}) {
       display: none;
     }
   }
@@ -127,7 +127,7 @@ export const CreatedTime = styled.p`
   .mobile {
     display: none;
 
-    @media (max-width: ${BREAKPOINT_SM}) {
+    @media (max-width: ${BREAKPOINTS.SM}) {
       display: block;
     }
   }

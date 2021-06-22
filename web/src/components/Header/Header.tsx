@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { AUTH_TOKEN, BREAKPOINT_SM, CREATE_POST, HOME, LOGIN, REGISTER } from '../../constants';
+import { BREAKPOINTS, COOKIE_NAMES, PAGES } from '../../constants';
 import { useCurrentUserQuery, useLogoutMutation } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import Menu from '../../icons/Menu';
@@ -47,7 +47,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   const apolloClient = useApolloClient();
 
   const handleLogout = async () => {
-    document.cookie = `${AUTH_TOKEN}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `${COOKIE_NAMES.AUTH_TOKEN}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
 
     closeMobileMenu();
     await apolloClient.resetStore();
@@ -80,17 +80,17 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   };
 
   const handleLogin = async () => {
-    await router.push(LOGIN);
+    await router.push(PAGES.LOGIN);
     closeMobileMenu();
   };
 
   const handleRegister = async () => {
-    await router.push(REGISTER);
+    await router.push(PAGES.REGISTER);
     closeMobileMenu();
   };
 
   const resizeEvent = () => {
-    const smallBreakPoint = remToPx(BREAKPOINT_SM);
+    const smallBreakPoint = remToPx(BREAKPOINTS.SM);
     if (!smallBreakPoint) {
       return null;
     }
@@ -144,7 +144,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
       <Styled.Container styles={styles} onClick={onClick}>
         <Styled.Inside>
           <div className="inside__desktop">
-            <NextLink href={HOME} passHref>
+            <NextLink href={PAGES.HOME} passHref>
               <Styled.Logo>
                 reddit<span>.clone</span>
               </Styled.Logo>
@@ -169,7 +169,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
               </Styled.IconButton>
               {!loadingCurrentuser && currentUserData?.currentUser && (
                 <>
-                  <NextLink href={CREATE_POST} passHref>
+                  <NextLink href={PAGES.CREATE_POST} passHref>
                     <Styled.IconLink>
                       <PencilOutlined className="original" />
                       <PencilFilled className="hovered" />
@@ -184,10 +184,10 @@ export default function Header({ searchBox, onClick, styles }: Props) {
               )}
               {!loadingCurrentuser && !currentUserData?.currentUser && (
                 <>
-                  <NextLink href={LOGIN} passHref>
+                  <NextLink href={PAGES.LOGIN} passHref>
                     <Styled.Link>로그인</Styled.Link>
                   </NextLink>
-                  <NextLink href={REGISTER} passHref>
+                  <NextLink href={PAGES.REGISTER} passHref>
                     <Styled.Link>회원가입</Styled.Link>
                   </NextLink>
                 </>
@@ -198,13 +198,13 @@ export default function Header({ searchBox, onClick, styles }: Props) {
             <Styled.MenuButton onClick={toggleMobileMenu}>
               {isMobileMenuOpen ? <Close className="close-icon" /> : <Menu />}
             </Styled.MenuButton>
-            <NextLink href={HOME} passHref>
+            <NextLink href={PAGES.HOME} passHref>
               <Styled.Logo onClick={closeMobileMenu}>
                 reddit<span>.clone</span>
               </Styled.Logo>
             </NextLink>
             {!loadingCurrentuser && currentUserData?.currentUser && (
-              <NextLink href={CREATE_POST} passHref>
+              <NextLink href={PAGES.CREATE_POST} passHref>
                 <Styled.IconLink onClick={closeMobileMenu}>
                   <PencilOutlined className="original" />
                   <PencilFilled className="hovered" />

@@ -2,7 +2,7 @@ import Fuse from 'fuse.js';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { POST_DETAIL } from '../../constants';
+import { PAGES } from '../../constants';
 import { Post, usePostsQuery } from '../../generated/graphql';
 import Close from '../../icons/Close';
 import SearchOutlined from '../../icons/SearchOutlined';
@@ -56,7 +56,7 @@ export default function SearchBox({ styles }: Props) {
                 <button
                   key={item.id}
                   onClick={async () => {
-                    await router.push(`${POST_DETAIL}/${item.id}`);
+                    await router.push(`${PAGES.POST_DETAIL}/${item.id}`);
                     setSearchValue('');
                   }}
                 >

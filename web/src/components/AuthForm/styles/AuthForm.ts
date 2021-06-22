@@ -1,5 +1,5 @@
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { BREAKPOINT_SM } from '../../../constants';
+import { BREAKPOINTS } from '../../../constants';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
@@ -28,7 +28,7 @@ export const Error = styled.p`
   color: var(--error-color);
   margin-bottom: 1em;
 
-  @media (max-width: ${BREAKPOINT_SM}) {
+  @media (max-width: ${BREAKPOINTS.SM}) {
     padding: 0 0.25rem;
   }
 `;

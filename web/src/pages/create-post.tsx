@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import Layout from '../components/Layout';
 import PostForm from '../components/PostForm';
-import { HOME } from '../constants';
+import { PAGES } from '../constants';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
 import { PostFormikProps } from '../types';
@@ -30,7 +30,7 @@ function CreatePost() {
               console.error(errors);
               return;
             }
-            await router.push(HOME);
+            await router.push(PAGES.HOME);
           }}
         >
           {(formik) => <PostForm formik={formik as PostFormikProps} title="글 작성" />}

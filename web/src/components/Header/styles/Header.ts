@@ -1,5 +1,5 @@
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
-import { BREAKPOINT_MD } from '../../../constants';
+import { BREAKPOINTS } from '../../../constants';
 
 interface ContainerProps {
   styles?: FlattenSimpleInterpolation;
@@ -24,7 +24,7 @@ export const Inside = styled.div`
     margin: 0 auto;
     padding: 0 1.5rem;
 
-    @media (max-width: ${BREAKPOINT_MD}) {
+    @media (max-width: ${BREAKPOINTS.MD}) {
       display: none;
     }
   }
@@ -36,7 +36,7 @@ export const Inside = styled.div`
     height: 2.375rem;
     padding: 0 1.5rem;
 
-    @media (max-width: ${BREAKPOINT_MD}) {
+    @media (max-width: ${BREAKPOINTS.MD}) {
       display: flex;
     }
   }
@@ -73,7 +73,7 @@ export const Logo = styled.a`
   border-radius: 0.125em;
   color: var(--body-text-color);
 
-  @media (max-width: ${BREAKPOINT_MD}) {
+  @media (max-width: ${BREAKPOINTS.MD}) {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
-import { AUTH_TOKEN, HOME } from '../constants';
+import { COOKIE_NAMES, PAGES } from '../constants';
 import { CurrentUserDocument, CurrentUserQuery, useRegisterMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { AuthFormikProps } from '../types';
@@ -44,10 +44,10 @@ function Register() {
               }
 
               if (response.data?.register.token) {
-                document.cookie = `${AUTH_TOKEN}=${response.data.register.token}`;
+                document.cookie = `${COOKIE_NAMES.AUTH_TOKEN}=${response.data.register.token}`;
               }
               await apolloClient.resetStore();
-              await router.push(HOME);
+              await router.push(PAGES.HOME);
             }}
           >
             {(formik) => <AuthForm formik={formik as AuthFormikProps} title="회원가입" buttonLabel="가입" />}
