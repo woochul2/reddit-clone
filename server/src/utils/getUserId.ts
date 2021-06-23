@@ -7,7 +7,7 @@ function getTokenPayload(token: string): { userId: string } {
 }
 
 export function getUserId(event: APIGatewayProxyEventV2 | MyReq): number | null {
-  const authHeader = event.headers.Authorization;
+  const authHeader = event.headers.Authorization || event.headers.authorization;
   if (!authHeader) return null;
 
   const token = authHeader.replace('Bearer ', '');

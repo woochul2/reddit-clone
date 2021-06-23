@@ -40,7 +40,7 @@ const main = async () => {
     context: ({ req }: MyContext) => {
       return {
         redis,
-        userId: req && req.headers.Authorization ? getUserId(req) : null,
+        userId: req ? getUserId(req) : null,
       };
     },
   });
