@@ -10,6 +10,11 @@ export const Container = styled.form<ContainerProps>`
   flex-direction: column;
   max-width: 27rem;
   margin: 1.375rem auto 0.25rem;
+
+  @media (max-width: ${BREAKPOINTS.SM}) {
+    padding: 0 0.25rem;
+  }
+
   ${({ styles }) => styles}
 `;
 

@@ -142,11 +142,6 @@ export const CreationInfo = styled.div`
   gap: 1rem;
   font-size: 0.875rem;
 
-  @media (max-width: ${BREAKPOINTS.SM}) {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
   .creation-info__left {
     display: flex;
     gap: 1rem;
@@ -215,11 +210,6 @@ export const Comments = styled.div`
     display: flex;
     gap: 0.75rem;
     margin-bottom: 0.375rem;
-
-    @media (max-width: ${BREAKPOINTS.SM}) {
-      flex-direction: column;
-      gap: 0.25rem;
-    }
   }
 
   .comment__top-left {
