@@ -136,7 +136,10 @@ function PostDetail() {
                     styles={css`
                       margin: 0;
                       &:focus-visible {
-                        box-shadow: 0 0 0 0.125rem var(--body-text-color);
+                        box-shadow: 0 0 0 0.125rem var(--post-top-panel-text-color);
+                      }
+                      &:hover {
+                        background-color: var(--post-top-panel-icon-hover-background-color);
                       }
                     `}
                   />
@@ -149,7 +152,10 @@ function PostDetail() {
                     styles={css`
                       margin: 0;
                       &:focus-visible {
-                        box-shadow: 0 0 0 0.125rem var(--body-text-color);
+                        box-shadow: 0 0 0 0.125rem var(--post-top-panel-text-color);
+                      }
+                      &:hover {
+                        background-color: var(--post-top-panel-icon-hover-background-color);
                       }
                     `}
                   />

@@ -51,7 +51,7 @@ export default function Icon({ id, voteStatus, variant = 'up', color, background
           styles={styles}
         >
           <ArrowUpOutlined className="original" />
-          <ArrowUpFilled className="hovered" />
+          <ArrowUpFilled className="clicked" />
         </Styled.Container>
       )}
     </>

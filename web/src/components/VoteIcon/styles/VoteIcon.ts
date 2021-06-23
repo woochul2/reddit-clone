@@ -40,8 +40,12 @@ export const Container = styled.button<ContainerProps>`
     visibility: visible;
   }
 
-  .hovered {
+  .clicked {
     visibility: hidden;
+  }
+
+  &:hover {
+    background-color: var(--vote-icon-hover-background-color);
   }
 
   ${({ hasClicked }) =>
@@ -51,21 +55,13 @@ export const Container = styled.button<ContainerProps>`
         visibility: hidden;
       }
 
-      .hovered {
+      .clicked {
         visibility: visible;
       }
     `}
 
   &:hover,
   &:focus-visible {
-    .original {
-      visibility: hidden;
-    }
-
-    .hovered {
-      visibility: visible;
-    }
-
     svg {
       background-color: ${({ backgroundColor }) => backgroundColor};
     }

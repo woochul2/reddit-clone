@@ -45,7 +45,7 @@ export const Content = styled.div`
   min-width: 0;
   word-break: break-all;
   padding: 1rem 1.25rem 0.875rem;
-  background-color: var(--post-background-color);
+  background-color: var(--post-thumbnail-background-color);
 
   @media (max-width: ${BREAKPOINTS.SM}) {
     padding: 0.75rem;

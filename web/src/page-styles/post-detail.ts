@@ -6,7 +6,7 @@ export const Container = styled.div<{ minHeight: string }>`
   min-height: ${({ minHeight }) => minHeight};
   margin: 0 auto;
   padding-bottom: 1.875rem;
-  background-color: var(--layout-background-color);
+  background-color: var(--post-background-color);
 
   .desktop {
     @media (max-width: ${BREAKPOINTS.SM}) {
@@ -72,7 +72,7 @@ export const CloseIcon = styled.button`
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--body-text-color);
+    box-shadow: 0 0 0 0.125rem var(--post-top-panel-text-color);
   }
 
   .tooltip {
@@ -94,7 +94,7 @@ export const MainPanel = styled.div`
   max-width: 49.5rem;
   margin: 1.875rem auto 0;
   border-radius: 0.25rem;
-  background-color: var(--post-background-color);
+  background-color: var(--post-content-background-color);
 `;
 
 export const LeftPanel = styled.div`

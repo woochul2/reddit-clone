@@ -26,7 +26,7 @@
   --body-text-color: var(--gray-800);
   --body-background-color: var(--white);
   --layout-background-color: var(--mint-200);
-  --modal-background-color: var(--gray-600);
+  --modal-background-color: var(--gray-800);
 
   --header-border-color: var(--gray-100);
   --search-box-background-color: var(--mint-100);
@@ -47,20 +47,24 @@
 
   --post-border-color: var(--gray-200);
   --post-focused-border-color: var(--gray-400);
-  --post-background-color: var(--white);
+  --post-thumbnail-background-color: var(--white);
+  --post-background-color: var(--mint-200);
+  --post-content-background-color: var(--white);
   --post-left-panel-background-color: var(--mint-50);
   --post-clicked-icon-color: var(--orange);
   --post-second-text-color: var(--gray-400);
-  --post-top-panel-background-color: var(--gray-800);
-  --post-top-panel-icon-hover-background-color: var(--gray-400);
-  --post-top-panel-text-color: var(--white);
+  --post-top-panel-background-color: var(--black);
+  --post-top-panel-icon-hover-background-color: var(--gray-600);
+  --post-top-panel-text-color: var(--gray-100);
+
+  --vote-icon-hover-background-color: var(--gray-100);
 }
 
 :root[data-color-mode='dark'] {
   --body-text-color: var(--gray-100);
   --body-background-color: var(--gray-900);
   --layout-background-color: var(--gray-900);
-  --modal-background-color: var(--gray-600);
+  --modal-background-color: var(--gray-850);
 
   --header-border-color: var(--gray-600);
   --search-box-background-color: var(--dark-mint-100);
@@ -74,18 +78,22 @@
   --input-label-color: var(--gray-300);
   --error-color: var(--red);
 
-  --button-background-color: var(--blue-400);
-  --button-active-background-color: var(--blue-500);
-  --button-disabled-background-color: var(--blue-300);
+  --button-background-color: var(--gray-600);
+  --button-active-background-color: var(--gray-800);
+  --button-disabled-background-color: var(--gray-400);
   --button-text-color: var(--white);
 
   --post-border-color: var(--gray-600);
   --post-focused-border-color: var(--gray-300);
-  --post-background-color: var(--gray-800);
+  --post-thumbnail-background-color: var(--gray-800);
+  --post-background-color: var(--black);
+  --post-content-background-color: var(--gray-850);
   --post-left-panel-background-color: var(--gray-850);
   --post-clicked-icon-color: var(--orange);
   --post-second-text-color: var(--gray-300);
   --post-top-panel-background-color: var(--black);
-  --post-top-panel-icon-hover-background-color: var(--gray-400);
+  --post-top-panel-icon-hover-background-color: var(--gray-600);
   --post-top-panel-text-color: var(--gray-100);
+
+  --vote-icon-hover-background-color: var(--gray-600);
 }
