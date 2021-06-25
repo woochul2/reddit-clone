@@ -3,6 +3,7 @@
 .serverless_nextjs
 
 .env
+.env.local
 
 node_modules
 next-env.d.ts
