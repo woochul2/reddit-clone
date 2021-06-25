@@ -113,7 +113,7 @@ function PostDetail() {
   return (
     <>
       {loadingPost && (
-        <Layout>
+        <Layout title={post?.title}>
           <ReactLoading
             className="layout__loading-icon"
             type="spinningBubbles"
@@ -124,7 +124,7 @@ function PostDetail() {
         </Layout>
       )}
       {!loadingPost && !loadingCurrentUser && post && (
-        <Layout variant="modal" onClickBackground={handleClickBackground}>
+        <Layout variant="modal" title={post?.title} onClickBackground={handleClickBackground}>
           <Styled.Container onClick={(event) => event.stopPropagation()} minHeight={getMinHeight()}>
             <Styled.TopPanel offset={`${topPanelOffset}px`}>
               <Styled.TopPanelInside>

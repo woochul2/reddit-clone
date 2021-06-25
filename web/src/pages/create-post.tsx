@@ -15,7 +15,7 @@ function CreatePost() {
   const router = useRouter();
 
   return (
-    <Layout variant="colored">
+    <Layout variant="colored" title="reddit clone 새 글 작성">
       {isLoggedIn && (
         <Formik
           initialValues={{ title: '', text: '' }}

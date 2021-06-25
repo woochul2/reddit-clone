@@ -18,7 +18,7 @@ function Register() {
   const apolloClient = useApolloClient();
 
   return (
-    <Layout searchBox="off">
+    <Layout searchBox="off" title="reddit clone 회원가입">
       {isLoggedOut && (
         <div>
           <Formik

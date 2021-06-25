@@ -14,7 +14,7 @@ function ForgotPassword() {
   const [isFinished, setIsFinished] = useState(false);
 
   return (
-    <Layout searchBox="off">
+    <Layout searchBox="off" title="reddit clone 비밀번호 찾기">
       <Styled.Container>
         <Formik
           initialValues={{ email: '' }}

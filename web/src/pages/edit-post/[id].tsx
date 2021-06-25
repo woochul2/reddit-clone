@@ -20,7 +20,7 @@ function EditPost() {
   const post = postData?.post;
 
   return (
-    <Layout variant="colored">
+    <Layout variant="colored" title={`글 수정: ${post?.title}`}>
       {isCreator && !loadingPost && post && (
         <Formik
           initialValues={{ title: post.title, text: post.text }}

@@ -20,7 +20,7 @@ function Login() {
   const apolloClient = useApolloClient();
 
   return (
-    <Layout searchBox="off">
+    <Layout searchBox="off" title="reddit clone 로그인">
       {isLoggedOut && (
         <div>
           <Formik

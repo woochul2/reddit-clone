@@ -21,7 +21,7 @@ function ChangePassword() {
   const [isFinished, setIsFinished] = useState(false);
 
   return (
-    <Layout searchBox="off">
+    <Layout searchBox="off" title="reddit clone 비밀번호 변경">
       <Styled.Container>
         {!loadingUserId && userIdData?.userId && (
           <Formik
