@@ -14,14 +14,12 @@ function EditPost() {
   const id = router.query.id as string;
   const isCreator = useIsCreator(id);
   const [updatePost] = useUpdatePostMutation();
-  const { data: postData, loading: loadingPost } = usePostQuery({
-    variables: { id: parseInt(id) },
-  });
+  const { data: postData } = usePostQuery({ variables: { id: parseInt(id) } });
   const post = postData?.post;
 
   return (
-    <Layout variant="colored" title={`글 수정: ${post?.title}`}>
-      {isCreator && !loadingPost && post && (
+    <Layout variant="colored" title={`글 수정${post ? `: ${post.title}` : ''}`}>
+      {isCreator && post && (
         <Formik
           initialValues={{ title: post.title, text: post.text }}
           onSubmit={async (values) => {
