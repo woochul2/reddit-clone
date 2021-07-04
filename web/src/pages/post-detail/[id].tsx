@@ -114,13 +114,9 @@ function PostDetail() {
     <>
       {loadingPost && (
         <Layout title={post?.title}>
-          <ReactLoading
-            className="layout__loading-icon"
-            type="spinningBubbles"
-            width="1.5em"
-            height="1.5em"
-            color="var(--body-text-color)"
-          />
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
+            <ReactLoading type="spinningBubbles" width="1.5em" height="1.5em" color="var(--body-text-color)" />
+          </div>
         </Layout>
       )}
       {!loadingPost && !loadingCurrentUser && post && (

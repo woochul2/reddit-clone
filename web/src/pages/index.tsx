@@ -12,13 +12,9 @@ function Home() {
     <Layout variant="colored">
       <>
         {loadingPosts && (
-          <ReactLoading
-            className="layout__loading-icon"
-            type="bubbles"
-            width="1.5em"
-            height="1.5em"
-            color="var(--body-text-color)"
-          />
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
+            <ReactLoading type="bubbles" width="1.5em" height="1.5em" color="var(--body-text-color)" />
+          </div>
         )}
         {!loadingPosts && postsData?.posts.map((post) => <Post key={post.id} post={post} />)}
       </>
