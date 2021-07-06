@@ -1,21 +1,35 @@
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import PostForm from '../../components/PostForm';
 import { PAGES } from '../../constants';
-import { usePostQuery, useUpdatePostMutation } from '../../generated/graphql';
-import { useIsCreator } from '../../hooks/useIsCreator';
+import { useCurrentUserQuery, usePostQuery, useUpdatePostMutation } from '../../generated/graphql';
 import { PostFormikProps } from '../../types';
 import withApollo from '../../utils/withApollo';
 
 function EditPost() {
   const router = useRouter();
-  const id = router.query.id as string;
-  const isCreator = useIsCreator(id);
+  const id = parseInt(router.query.id as string) || -1;
   const [updatePost] = useUpdatePostMutation();
-  const { data: postData } = usePostQuery({ variables: { id: parseInt(id) } });
+  const { data: postData, loading: loadingPost } = usePostQuery({ variables: { id } });
   const post = postData?.post;
+  const { data: currentUserData, loading: loadingCurrentUser } = useCurrentUserQuery();
+  const [isCreator, setIsCreator] = useState(false);
+
+  useEffect(() => {
+    (async function () {
+      if (id === -1) return;
+      if (loadingPost || loadingCurrentUser) return;
+
+      if (currentUserData?.currentUser?.id == postData?.post?.creatorId) {
+        setIsCreator(true);
+      } else {
+        setIsCreator(false);
+        await router.push(PAGES.HOME);
+      }
+    })();
+  }, [postData, currentUserData]);
 
   return (
     <Layout variant="colored" title={`글 수정${post ? `: ${post.title}` : ''}`}>
@@ -24,7 +38,7 @@ function EditPost() {
           initialValues={{ title: post.title, text: post.text }}
           onSubmit={async (values) => {
             const { errors } = await updatePost({
-              variables: { id: parseInt(id), input: values },
+              variables: { id, input: values },
               update: (cache) => {
                 cache.evict({ fieldName: 'posts' });
               },

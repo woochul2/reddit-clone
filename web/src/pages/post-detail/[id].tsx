@@ -24,9 +24,9 @@ import withApollo from '../../utils/withApollo';
 
 function PostDetail() {
   const router = useRouter();
-  const id = router.query.id as string;
+  const id = parseInt(router.query.id as string) || -1;
   const { data: postData, loading: loadingPost } = usePostQuery({
-    variables: { id: parseInt(id) },
+    variables: { id },
   });
   const post = postData?.post;
   const [topPanelOffset, setTopPanelOffest] = useState(0);

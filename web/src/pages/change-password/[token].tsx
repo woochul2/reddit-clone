@@ -12,7 +12,7 @@ import withApollo from '../../utils/withApollo';
 
 function ChangePassword() {
   const router = useRouter();
-  const token = router.query.token as string;
+  const token = (router.query.token as string) || '';
   const { data: userIdData, loading: loadingUserId } = useUserIdQuery({
     variables: { token },
   });
