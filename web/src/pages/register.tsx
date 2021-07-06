@@ -9,6 +9,7 @@ import { CurrentUserDocument, CurrentUserQuery, useRegisterMutation } from '../g
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
+import { setCookie } from '../utils/setCookie';
 import withApollo from '../utils/withApollo';
 
 function Register() {
@@ -44,7 +45,7 @@ function Register() {
               }
 
               if (response.data?.register.token) {
-                document.cookie = `${COOKIE_NAMES.AUTH_TOKEN}=${response.data.register.token}`;
+                setCookie(COOKIE_NAMES.AUTH_TOKEN, response.data.register.token);
               }
               await apolloClient.resetStore();
               await router.push(PAGES.HOME);

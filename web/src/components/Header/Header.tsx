@@ -13,6 +13,7 @@ import PencilFilled from '../../icons/PencilFilled';
 import PencilOutlined from '../../icons/PencilOutlined';
 import SunFilled from '../../icons/SunFilled';
 import SunOutlined from '../../icons/SunOutlined';
+import { deleteCookie } from '../../utils/deleteCookie';
 import { remToPx } from '../../utils/remToPx';
 import SearchBox from '../SearchBox';
 import Tooltip from '../Tooltip';
@@ -47,7 +48,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   const apolloClient = useApolloClient();
 
   const handleLogout = async () => {
-    document.cookie = `${COOKIE_NAMES.AUTH_TOKEN}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+    deleteCookie(COOKIE_NAMES.AUTH_TOKEN);
 
     closeMobileMenu();
     await apolloClient.resetStore();

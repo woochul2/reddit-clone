@@ -11,6 +11,7 @@ import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import * as Styled from '../page-styles/login';
 import { AuthFormikProps } from '../types';
 import { errorsToMap } from '../utils/errorsToMap';
+import { setCookie } from '../utils/setCookie';
 import withApollo from '../utils/withApollo';
 
 function Login() {
@@ -46,7 +47,7 @@ function Login() {
               }
 
               if (response.data?.login.token) {
-                document.cookie = `${COOKIE_NAMES.AUTH_TOKEN}=${response.data.login.token}`;
+                setCookie(COOKIE_NAMES.AUTH_TOKEN, response.data.login.token);
               }
               await apolloClient.resetStore();
               await router.push(PAGES.HOME);
