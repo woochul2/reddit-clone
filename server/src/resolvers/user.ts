@@ -1,15 +1,6 @@
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from 'type-graphql';
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import { v4 } from 'uuid';
 import validator from 'validator';
 import { FORGET_PASSWORD_PREFIX } from '../constants';
@@ -114,9 +105,7 @@ export class UserResolver {
     }
     if (input.username.length <= 2) {
       return {
-        errors: [
-          setError('username', '아이디 길이는 3글자 이상이어야 합니다.'),
-        ],
+        errors: [setError('username', '아이디 길이는 3글자 이상이어야 합니다.')],
       };
     }
     if (input.username.length > 12) {
@@ -152,12 +141,7 @@ export class UserResolver {
     }
     if (!user) {
       return {
-        errors: [
-          setError(
-            'usernameOrEmail',
-            '아이디 또는 이메일이 존재하지 않습니다.'
-          ),
-        ],
+        errors: [setError('usernameOrEmail', '아이디 또는 이메일이 존재하지 않습니다.')],
       };
     }
 
@@ -181,15 +165,16 @@ export class UserResolver {
     return true;
   }
 
-  @Mutation(() => Boolean)
-  async forgotPassword(
-    @Arg('email') email: string,
-    @Ctx() { redis }: MyContext
-  ) {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return true;
+  @Mutation(() => UserResponse)
+  async forgotPassword(@Arg('email') email: string, @Ctx() { redis }: MyContext): Promise<UserResponse> {
+    if (!validator.isEmail(email)) {
+      return {
+        errors: [setError('email', '올바른 이메일 주소를 입력해주세요.')],
+      };
     }
+
+    const user = await User.findOne({ email });
+    if (!user) return {};
 
     const token = v4();
     await redis.set(
@@ -199,11 +184,8 @@ export class UserResolver {
       60 * 60 * 24 // 1일
     );
 
-    await sendEmail(
-      email,
-      `<a href="${process.env.CORS_ORIGIN}/change-password/${token}">비밀번호 재설정</a>`
-    );
-    return true;
+    await sendEmail(email, `<a href="${process.env.CORS_ORIGIN}/change-password/${token}">비밀번호 재설정</a>`);
+    return {};
   }
 
   @Mutation(() => UserResponse)
