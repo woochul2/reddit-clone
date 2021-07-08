@@ -6,11 +6,11 @@ import React from 'react';
 import AuthForm from '../components/AuthForm';
 import Layout from '../components/Layout';
 import { COOKIE_NAMES, PAGES } from '../constants';
-import { CurrentUserDocument, CurrentUserQuery, useLoginMutation } from '../generated/graphql';
+import { useLoginMutation } from '../generated/graphql';
 import { useIsLoggedOut } from '../hooks/useIsLoggedOut';
 import * as Styled from '../page-styles/login';
 import { AuthFormikProps } from '../types';
-import { errorsToMap } from '../utils/errorsToMap';
+import { changeErrorsToMap } from '../utils/changeErrorsToMap';
 import { setCookie } from '../utils/setCookie';
 import withApollo from '../utils/withApollo';
 
@@ -27,27 +27,17 @@ function Login() {
           <Formik
             initialValues={{ usernameOrEmail: '', password: '' }}
             onSubmit={async (values, { setErrors }) => {
-              const response = await login({
-                variables: { input: values },
-                update: (cache, { data }) => {
-                  cache.writeQuery<CurrentUserQuery>({
-                    query: CurrentUserDocument,
-                    data: {
-                      __typename: 'Query',
-                      currentUser: data?.login.user,
-                    },
-                  });
-                  cache.evict({ fieldName: 'posts' });
-                },
-              });
-
-              if (response.data?.login.errors) {
-                setErrors(errorsToMap(response.data.login.errors));
+              const response = await login({ variables: { input: values } });
+              const errors = response.data?.login.errors;
+              if (errors) {
+                const errorMap = changeErrorsToMap(errors);
+                setErrors(errorMap);
                 return;
               }
 
-              if (response.data?.login.token) {
-                setCookie(COOKIE_NAMES.AUTH_TOKEN, response.data.login.token);
+              const token = response.data?.login.token;
+              if (token) {
+                setCookie(COOKIE_NAMES.AUTH_TOKEN, token);
               }
               await apolloClient.resetStore();
               await router.push(PAGES.HOME);

@@ -13,9 +13,9 @@ function EditPost() {
   const id = parseInt(router.query.id as string) || -1;
   const [updatePost] = useUpdatePostMutation();
   const { data: postData, loading: loadingPost } = usePostQuery({ variables: { id } });
-  const post = postData?.post;
   const { data: currentUserData, loading: loadingCurrentUser } = useCurrentUserQuery();
   const [isCreator, setIsCreator] = useState(false);
+  const post = postData?.post;
 
   useEffect(() => {
     (async function () {

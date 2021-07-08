@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { BREAKPOINTS } from '../constants';
 
 export const Link = styled.a`
   align-self: flex-end;
@@ -7,10 +6,6 @@ export const Link = styled.a`
   outline: 0;
   border-radius: 0.125em;
   color: var(--body-text-color);
-
-  @media (max-width: ${BREAKPOINTS.SM}) {
-    padding-right: 0.25rem;
-  }
 
   &:hover {
     text-decoration: underline;

@@ -13,8 +13,8 @@ import PencilFilled from '../../icons/PencilFilled';
 import PencilOutlined from '../../icons/PencilOutlined';
 import SunFilled from '../../icons/SunFilled';
 import SunOutlined from '../../icons/SunOutlined';
+import { changeRemToPx } from '../../utils/changeRemToPx';
 import { deleteCookie } from '../../utils/deleteCookie';
-import { remToPx } from '../../utils/remToPx';
 import SearchBox from '../SearchBox';
 import Tooltip from '../Tooltip';
 import * as Styled from './styles/Header';
@@ -91,7 +91,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
   };
 
   const resizeEvent = () => {
-    const smallBreakPoint = remToPx(BREAKPOINTS.SM);
+    const smallBreakPoint = changeRemToPx(BREAKPOINTS.SM);
     if (!smallBreakPoint) {
       return null;
     }
