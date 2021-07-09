@@ -68,7 +68,7 @@ export type Post = {
   updatedAt: Scalars['String'];
   title: Scalars['String'];
   text: Scalars['String'];
-  voteCounts: Scalars['Float'];
+  voteCount: Scalars['Float'];
   voteStatus?: Maybe<Scalars['Int']>;
   creatorId: Scalars['Float'];
   creator: User;
@@ -208,7 +208,7 @@ export type ErrorFragment = (
 
 export type PostFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'textSnippet' | 'voteCounts' | 'voteStatus' | 'creatorId'>
+  & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'text' | 'textSnippet' | 'voteCount' | 'voteStatus' | 'creatorId'>
 );
 
 export type UserFragment = (
@@ -466,7 +466,7 @@ export const PostFragmentDoc = gql`
   title
   text
   textSnippet
-  voteCounts
+  voteCount
   voteStatus
   creatorId
 }

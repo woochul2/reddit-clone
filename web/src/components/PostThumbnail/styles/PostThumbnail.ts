@@ -33,7 +33,7 @@ export const LeftPanel = styled.div`
   }
 `;
 
-export const VoteCounts = styled.p`
+export const VoteCount = styled.p`
   font-size: 0.875rem;
 `;
 

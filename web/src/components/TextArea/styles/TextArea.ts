@@ -1,11 +1,7 @@
-import TextareaAutosize from 'react-textarea-autosize';
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import TextAreaAutosize from 'react-textarea-autosize';
+import styled from 'styled-components';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled(TextareaAutosize)<ContainerProps>`
+export const Container = styled(TextAreaAutosize)`
   resize: none;
   word-break: break-all;
   font-family: 'Nanum Gothic', sans-serif;
@@ -24,6 +20,4 @@ export const Container = styled(TextareaAutosize)<ContainerProps>`
   &::placeholder {
     color: var(--input-label-color);
   }
-
-  ${({ styles }) => styles}
 `;

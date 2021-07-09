@@ -5,7 +5,7 @@ fragment Post on Post {
   title
   text
   textSnippet
-  voteCounts
+  voteCount
   voteStatus
   creatorId
 }

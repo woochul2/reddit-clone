@@ -1,4 +1,4 @@
-import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { BREAKPOINTS } from '../../../constants';
 
 interface ContainerProps {
@@ -24,8 +24,4 @@ export const Container = styled.form<ContainerProps>`
 
 export const Title = styled.h1`
   margin: 0 auto 1.25rem;
-`;
-
-export const textAreaStyles = css`
-  margin: 0 0 0.625rem;
 `;

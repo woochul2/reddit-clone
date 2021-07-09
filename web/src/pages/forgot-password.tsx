@@ -1,8 +1,8 @@
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import AuthForm from '../components/AuthForm';
-import Confirmation from '../components/Confirmation';
 import Layout from '../components/Layout';
+import OneLineNotice from '../components/OneLineNotice';
 import { useForgotPasswordMutation } from '../generated/graphql';
 import { AuthFormikProps } from '../types';
 import { changeErrorsToMap } from '../utils/changeErrorsToMap';
@@ -30,7 +30,7 @@ function ForgotPassword() {
         {(formik) => (
           <>
             {isFinished ? (
-              <Confirmation text="이메일로 비밀번호 재설정 링크를 보내드렸습니다." />
+              <OneLineNotice text="이메일로 비밀번호 재설정 링크를 보내드렸습니다." />
             ) : (
               <AuthForm
                 formik={formik as AuthFormikProps}

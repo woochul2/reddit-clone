@@ -5,6 +5,7 @@ import Header from '../Header';
 import * as Styled from './styles/Layout';
 
 interface Props {
+  headerRef?: React.RefObject<HTMLElement>;
   variant?: 'default' | 'colored' | 'modal';
   searchBox?: 'on' | 'off';
   title?: string;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function Layout({
+  headerRef,
   variant = 'default',
   searchBox = 'on',
   title,
@@ -26,7 +28,7 @@ export default function Layout({
       <Head>
         <title>{title ? title : 'reddit clone'}</title>
       </Head>
-      <Header searchBox={searchBox} onClick={(event) => event.stopPropagation()} />
+      <Header headerRef={headerRef} searchBox={searchBox} onClick={(event) => event.stopPropagation()} />
       {children}
     </Styled.Container>
   );

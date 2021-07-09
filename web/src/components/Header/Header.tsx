@@ -20,6 +20,7 @@ import Tooltip from '../Tooltip';
 import * as Styled from './styles/Header';
 
 interface Props {
+  headerRef?: React.RefObject<HTMLElement>;
   searchBox?: 'on' | 'off';
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   styles?: FlattenSimpleInterpolation;
@@ -37,7 +38,7 @@ function isDarkMode(): boolean {
   return true;
 }
 
-export default function Header({ searchBox, onClick, styles }: Props) {
+export default function Header({ headerRef, searchBox, onClick, styles }: Props) {
   const { data: currentUserData, loading: loadingCurrentuser } = useCurrentUserQuery();
   const [logout, { loading: loadingLogout }] = useLogoutMutation();
   const router = useRouter();
@@ -142,7 +143,7 @@ export default function Header({ searchBox, onClick, styles }: Props) {
 
   return (
     <>
-      <Styled.Container styles={styles} onClick={onClick}>
+      <Styled.Container ref={headerRef} styles={styles} onClick={onClick}>
         <Styled.Inside>
           <div className="inside__desktop">
             <NextLink href={PAGES.HOME} passHref>

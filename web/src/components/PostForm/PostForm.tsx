@@ -3,7 +3,7 @@ import ReactLoading from 'react-loading';
 import { FlattenSimpleInterpolation } from 'styled-components';
 import { PostFormikProps } from '../../types';
 import Button from '../Button';
-import Textarea from '../TextArea';
+import TextArea from '../TextArea';
 import * as Styled from './styles/PostForm';
 
 interface Props {
@@ -18,21 +18,21 @@ export default function PostForm({ formik, title, styles }: Props) {
   return (
     <Styled.Container onSubmit={handleSubmit} autoComplete="off" styles={styles}>
       <Styled.Title>{title}</Styled.Title>
-      <Textarea
+      <TextArea
         name="title"
         minRows={1}
         value={values.title}
         onChange={handleChange}
         placeholder="제목"
-        styles={Styled.textAreaStyles}
+        style={{ margin: '0 0 0.625rem' }}
       />
-      <Textarea
+      <TextArea
         name="text"
         minRows={10}
         value={values.text}
         onChange={handleChange}
         placeholder="내용"
-        styles={Styled.textAreaStyles}
+        style={{ margin: '0 0 0.625rem' }}
       />
       <Button type="submit" disabled={values.title === '' || values.text === '' || isSubmitting}>
         {isSubmitting ? <ReactLoading type={'spokes'} width={'1.125em'} height={'1.125em'} /> : <>제출</>}

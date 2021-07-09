@@ -1,12 +1,4 @@
-import {
-  Arg,
-  Ctx,
-  Int,
-  Mutation,
-  Query,
-  Resolver,
-  UseMiddleware,
-} from 'type-graphql';
+import { Arg, Ctx, Int, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql';
 import { Post } from '../entities/Post';
 import { Vote } from '../entities/Vote';
 import { isLoggedIn } from '../middleware/isLoggedIn';
@@ -22,10 +14,7 @@ export class VoteResolver {
 
   @Query(() => Vote, { nullable: true })
   @UseMiddleware(isLoggedIn)
-  async voting(
-    @Arg('postId', () => Int) postId: number,
-    @Ctx() { userId }: MyContext
-  ): Promise<Vote | undefined> {
+  async voting(@Arg('postId', () => Int) postId: number, @Ctx() { userId }: MyContext): Promise<Vote | undefined> {
     return await Vote.findOne({ userId, postId });
   }
 
@@ -45,12 +34,12 @@ export class VoteResolver {
     if (vote) {
       if (vote.value === value) {
         Vote.delete(vote);
-        post.voteCounts -= value;
+        post.voteCount -= value;
         post.voteStatus = null;
       } else {
         vote.value = value;
         await Vote.save(vote);
-        post.voteCounts += 2 * value;
+        post.voteCount += 2 * value;
         post.voteStatus = value;
       }
     } else {
@@ -59,7 +48,7 @@ export class VoteResolver {
         postId,
         value,
       });
-      post.voteCounts += value;
+      post.voteCount += value;
       post.voteStatus = value;
     }
 

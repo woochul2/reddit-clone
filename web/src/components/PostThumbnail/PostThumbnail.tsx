@@ -27,7 +27,7 @@ export default function PostThumbnail({ post, styles }: Props) {
       <Styled.Container styles={styles} onClick={handleClickContainer}>
         <Styled.LeftPanel>
           <VoteIcon id={post.id} voteStatus={post.voteStatus} />
-          <Styled.VoteCounts>{post.voteCounts}</Styled.VoteCounts>
+          <Styled.VoteCount>{post.voteCount}</Styled.VoteCount>
           <VoteIcon variant="down" id={post.id} voteStatus={post.voteStatus} />
         </Styled.LeftPanel>
         <Styled.Content>
@@ -45,7 +45,7 @@ export default function PostThumbnail({ post, styles }: Props) {
                     margin: 0;
                   `}
                 />
-                <Styled.VoteCounts>{post.voteCounts}</Styled.VoteCounts>
+                <Styled.VoteCount>{post.voteCount}</Styled.VoteCount>
                 <VoteIcon
                   variant="down"
                   id={post.id}

@@ -3,8 +3,6 @@ import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
 interface ContainerProps {
   variant?: 'up' | 'down';
   hasClicked?: boolean;
-  color?: string;
-  backgroundColor?: string;
   styles?: FlattenSimpleInterpolation;
 }
 
@@ -19,8 +17,6 @@ export const Container = styled.button<ContainerProps>`
   border-radius: 0.125em;
   background: 0;
   color: var(--body-text-color);
-  color: ${({ color }) => color};
-  color: ${({ hasClicked }) => hasClicked && 'var(--post-clicked-icon-color)'};
 
   svg {
     position: absolute;
@@ -59,13 +55,6 @@ export const Container = styled.button<ContainerProps>`
         visibility: visible;
       }
     `}
-
-  &:hover,
-  &:focus-visible {
-    svg {
-      background-color: ${({ backgroundColor }) => backgroundColor};
-    }
-  }
 
   &:focus-visible {
     box-shadow: 0 0 0 0.125rem var(--body-text-color);

@@ -10,7 +10,7 @@ interface Props {
 
 export default function Tooltip({ className, children, styles }: Props) {
   return (
-    <Styled.Container className={className} styles={styles}>
+    <Styled.Container className={className} onClick={(event) => event.stopPropagation()} styles={styles}>
       {children}
     </Styled.Container>
   );

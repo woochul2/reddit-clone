@@ -2,8 +2,8 @@ import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import AuthForm from '../../components/AuthForm';
-import Confirmation from '../../components/Confirmation';
 import Layout from '../../components/Layout';
+import OneLineNotice from '../../components/OneLineNotice';
 import { useChangePasswordMutation, useUserIdQuery } from '../../generated/graphql';
 import { AuthFormikProps } from '../../types';
 import { changeErrorsToMap } from '../../utils/changeErrorsToMap';
@@ -38,7 +38,7 @@ function ChangePassword() {
               {(formik) => (
                 <>
                   {isFinished ? (
-                    <Confirmation text="비밀번호를 성공적으로 변경했습니다." />
+                    <OneLineNotice text="비밀번호를 성공적으로 변경했습니다." />
                   ) : (
                     <AuthForm formik={formik as AuthFormikProps} title="비밀번호 재설정" buttonLabel="확인" />
                   )}
@@ -46,7 +46,7 @@ function ChangePassword() {
               )}
             </Formik>
           ) : (
-            <Confirmation text="유효 기간이 만료되었습니다." />
+            <OneLineNotice text="유효 기간이 만료되었습니다." />
           )}
         </>
       )}

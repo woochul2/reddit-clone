@@ -1,10 +1,6 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled from 'styled-components';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled.button<ContainerProps>`
+export const Container = styled.button`
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -28,6 +24,4 @@ export const Container = styled.button<ContainerProps>`
     cursor: default;
     background-color: var(--button-disabled-background-color);
   }
-
-  ${({ styles }) => styles}
 `;

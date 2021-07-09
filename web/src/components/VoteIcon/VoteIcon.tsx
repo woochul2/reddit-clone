@@ -8,15 +8,13 @@ import ArrowUpOutlined from '../../icons/ArrowUpOutlined';
 import * as Styled from './styles/VoteIcon';
 
 interface Props {
+  variant?: 'up' | 'down';
   id: number;
   voteStatus?: number | null;
-  variant?: 'up' | 'down';
-  color?: string;
-  backgroundColor?: string;
   styles?: FlattenSimpleInterpolation;
 }
 
-export default function Icon({ id, voteStatus, variant = 'up', color, backgroundColor, styles }: Props) {
+export default function Icon({ variant = 'up', id, voteStatus, styles }: Props) {
   const [vote, { loading: loadingVote }] = useVoteMutation();
   const { data: currentUserData, loading: loadingCurrentUser } = useCurrentUserQuery();
   const [value, setValue] = useState(0);
@@ -43,12 +41,11 @@ export default function Icon({ id, voteStatus, variant = 'up', color, background
       {!loadingCurrentUser && (
         <Styled.Container
           variant={variant}
-          color={color}
-          backgroundColor={backgroundColor}
           onClick={(event) => handleVote(event, value)}
           hasClicked={voteStatus === value}
           disabled={loadingVote}
           styles={styles}
+          style={voteStatus === value ? { color: 'var(--post-clicked-icon-color)' } : {}}
         >
           <ArrowUpOutlined className="original" />
           <ArrowUpFilled className="clicked" />
