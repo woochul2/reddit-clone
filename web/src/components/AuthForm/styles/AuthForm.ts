@@ -1,21 +1,17 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../constants';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
+export const Container = styled.form`
+  @media (max-width: ${BREAKPOINTS.SM}) {
+    padding: 0 0.25rem;
+  }
+`;
 
-export const Container = styled.form<ContainerProps>`
+export const Inside = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 27rem;
   margin: 1.375rem auto 0.25rem;
-
-  @media (max-width: ${BREAKPOINTS.SM}) {
-    padding: 0 0.25rem;
-  }
-
-  ${({ styles }) => styles}
 `;
 
 export const Title = styled.h1`
@@ -32,8 +28,4 @@ export const SubTitle = styled.p`
 export const Error = styled.p`
   color: var(--error-color);
   margin-bottom: 1em;
-
-  @media (max-width: ${BREAKPOINTS.SM}) {
-    padding: 0 0.25rem;
-  }
 `;

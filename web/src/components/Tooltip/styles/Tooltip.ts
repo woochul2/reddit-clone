@@ -1,10 +1,6 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled from 'styled-components';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div`
   position: absolute;
   top: 2rem;
   left: 50%;
@@ -24,9 +20,6 @@ export const Container = styled.div<ContainerProps>`
     transform: translateX(-50%);
     border-width: 0.25rem;
     border-style: solid;
-    border-color: transparent transparent var(--tooltip-background-color)
-      transparent;
+    border-color: transparent transparent var(--tooltip-background-color) transparent;
   }
-
-  ${({ styles }) => styles}
 `;

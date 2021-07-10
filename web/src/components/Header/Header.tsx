@@ -2,7 +2,6 @@ import { useApolloClient } from '@apollo/client';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { FlattenSimpleInterpolation } from 'styled-components';
 import { BREAKPOINTS, COOKIE_NAMES, PAGES } from '../../constants';
 import { useCurrentUserQuery, useLogoutMutation } from '../../generated/graphql';
 import Close from '../../icons/Close';
@@ -21,64 +20,55 @@ import * as Styled from './styles/Header';
 
 interface Props {
   headerRef?: React.RefObject<HTMLElement>;
-  searchBox?: 'on' | 'off';
-  onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  styles?: FlattenSimpleInterpolation;
+  showSearchBox?: Boolean;
 }
 
-function isDarkMode(): boolean {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-
-  if (document.documentElement.getAttribute('data-color-mode') === 'light') {
-    return false;
-  }
-
-  return true;
-}
-
-export default function Header({ headerRef, searchBox, onClick, styles }: Props) {
-  const { data: currentUserData, loading: loadingCurrentuser } = useCurrentUserQuery();
-  const [logout, { loading: loadingLogout }] = useLogoutMutation();
+export default function Header({ headerRef, showSearchBox }: Props) {
   const router = useRouter();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mobileMenuOffset, setMobileMenuOffset] = useState(0);
-  const [mobileMenuHeight, setMobileMenuHeight] = useState(0);
-  const [, setColorMode] = useState('light');
   const apolloClient = useApolloClient();
 
-  const handleLogout = async () => {
-    deleteCookie(COOKIE_NAMES.AUTH_TOKEN);
+  const { data: currentUserData, loading: loadingCurrentuser } = useCurrentUserQuery();
+  const [logout, { loading: loadingLogout }] = useLogoutMutation();
 
-    closeMobileMenu();
-    await apolloClient.resetStore();
-    await logout();
-  };
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const body = document.querySelector('body');
-    if (!body) {
+    const currentColorMode = localStorage.getItem('color-mode');
+    if (!currentColorMode) {
+      localStorage.setItem('color-mode', 'light');
       return;
     }
 
-    if (isMobileMenuOpen) {
-      body.style.overflowY = 'hidden';
-      setMobileMenuOffset(window.scrollY);
-      setMobileMenuHeight(window.innerHeight);
+    if (currentColorMode === 'dark') {
+      document.documentElement.setAttribute('data-color-mode', 'dark');
+      setIsDarkMode(true);
     }
+  }, []);
 
-    if (!isMobileMenuOpen) {
-      body.style.overflowY = 'visible';
+  const toggleDarkMode = () => {
+    const currentMode = localStorage.getItem('color-mode');
+
+    if (currentMode === 'dark') {
+      document.documentElement.setAttribute('data-color-mode', 'light');
+      localStorage.setItem('color-mode', 'light');
+      setIsDarkMode(false);
+    } else if (currentMode === 'light') {
+      document.documentElement.setAttribute('data-color-mode', 'dark');
+      localStorage.setItem('color-mode', 'dark');
+      setIsDarkMode(true);
     }
-  }, [isMobileMenuOpen]);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    deleteCookie(COOKIE_NAMES.AUTH_TOKEN);
+    closeMobileMenu();
+    await apolloClient.resetStore();
+    await logout();
   };
 
   const handleLogin = async () => {
@@ -91,13 +81,19 @@ export default function Header({ headerRef, searchBox, onClick, styles }: Props)
     closeMobileMenu();
   };
 
-  const resizeEvent = () => {
-    const smallBreakPoint = changeRemToPx(BREAKPOINTS.SM);
-    if (!smallBreakPoint) {
-      return null;
-    }
+  useEffect(() => {
+    const body = document.querySelector('body');
+    if (!body) return;
 
-    if (window.innerWidth >= smallBreakPoint) {
+    if (isMobileMenuOpen) {
+      body.style.overflowY = 'hidden';
+    } else {
+      body.style.overflowY = 'visible';
+    }
+  }, [isMobileMenuOpen]);
+
+  const resizeEvent = () => {
+    if (window.innerWidth >= changeRemToPx(BREAKPOINTS.SM)) {
       closeMobileMenu();
     }
   };
@@ -110,153 +106,120 @@ export default function Header({ headerRef, searchBox, onClick, styles }: Props)
     };
   }, []);
 
-  useEffect(() => {
-    const currentColorMode = localStorage.getItem('color-mode');
-    if (!currentColorMode) {
-      localStorage.setItem('color-mode', 'light');
-      return;
-    }
-    setColorMode(currentColorMode);
-
-    if (currentColorMode === 'dark') {
-      document.documentElement.setAttribute('data-color-mode', 'dark');
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    const currentMode = localStorage.getItem('color-mode');
-
-    if (currentMode === 'dark') {
-      document.documentElement.setAttribute('data-color-mode', 'light');
-      localStorage.setItem('color-mode', 'light');
-      setColorMode('light');
-      return;
-    }
-
-    if (currentMode === 'light') {
-      document.documentElement.setAttribute('data-color-mode', 'dark');
-      localStorage.setItem('color-mode', 'dark');
-      setColorMode('dark');
-      return;
-    }
-  };
-
   return (
     <>
-      <Styled.Container ref={headerRef} styles={styles} onClick={onClick}>
-        <Styled.Inside>
-          <div className="inside__desktop">
-            <NextLink href={PAGES.HOME} passHref>
-              <Styled.Logo>
-                reddit<span>.clone</span>
-              </Styled.Logo>
-            </NextLink>
-            {searchBox === 'on' ? <SearchBox /> : <div style={{ flexGrow: 1 }}></div>}
-            <Styled.RightPanel>
-              <Styled.IconButton onClick={toggleDarkMode}>
-                {!isDarkMode() && (
-                  <>
-                    <MoonOutlined className="original" />
-                    <MoonFilled className="hovered" />
-                    <Tooltip className="tooltip">다크 모드</Tooltip>
-                  </>
-                )}
-                {isDarkMode() && (
-                  <>
-                    <SunOutlined className="original" />
-                    <SunFilled className="hovered" />
-                    <Tooltip className="tooltip">라이트 모드</Tooltip>
-                  </>
-                )}
-              </Styled.IconButton>
-              {!loadingCurrentuser && currentUserData?.currentUser && (
+      <Styled.Container ref={headerRef} onClick={(event) => event.stopPropagation()}>
+        <Styled.DesktopInside>
+          <NextLink href={PAGES.HOME} passHref>
+            <Styled.Logo>
+              reddit<span>.clone</span>
+            </Styled.Logo>
+          </NextLink>
+          {showSearchBox ? <SearchBox /> : <div style={{ flexGrow: 1 }}></div>}
+          <Styled.RightPanel>
+            <Styled.IconButton onClick={toggleDarkMode}>
+              {isDarkMode ? (
                 <>
-                  <NextLink href={PAGES.CREATE_POST} passHref>
-                    <Styled.IconLink>
-                      <PencilOutlined className="original" />
-                      <PencilFilled className="hovered" />
-                      <Tooltip className="tooltip">글 작성</Tooltip>
-                    </Styled.IconLink>
-                  </NextLink>
-                  <span>{currentUserData.currentUser.username}</span>
-                  <Styled.LogoutButton onClick={handleLogout} disabled={loadingLogout}>
-                    로그아웃
-                  </Styled.LogoutButton>
+                  <SunOutlined className="original" />
+                  <SunFilled className="hovered" />
+                  <Tooltip className="tooltip">라이트 모드</Tooltip>
+                </>
+              ) : (
+                <>
+                  <MoonOutlined className="original" />
+                  <MoonFilled className="hovered" />
+                  <Tooltip className="tooltip">다크 모드</Tooltip>
                 </>
               )}
-              {!loadingCurrentuser && !currentUserData?.currentUser && (
-                <>
-                  <NextLink href={PAGES.LOGIN} passHref>
-                    <Styled.Link>로그인</Styled.Link>
-                  </NextLink>
-                  <NextLink href={PAGES.REGISTER} passHref>
-                    <Styled.Link>회원가입</Styled.Link>
-                  </NextLink>
-                </>
-              )}
-            </Styled.RightPanel>
-          </div>
-          <div className="inside__mobile">
-            <Styled.MenuButton onClick={toggleMobileMenu}>
-              {isMobileMenuOpen ? <Close className="close-icon" /> : <Menu />}
-            </Styled.MenuButton>
-            <NextLink href={PAGES.HOME} passHref>
-              <Styled.Logo onClick={closeMobileMenu}>
-                reddit<span>.clone</span>
-              </Styled.Logo>
-            </NextLink>
-            {!loadingCurrentuser && currentUserData?.currentUser && (
-              <NextLink href={PAGES.CREATE_POST} passHref>
-                <Styled.IconLink onClick={closeMobileMenu}>
-                  <PencilOutlined className="original" />
-                  <PencilFilled className="hovered" />
-                </Styled.IconLink>
-              </NextLink>
+            </Styled.IconButton>
+            {!loadingCurrentuser && (
+              <>
+                {currentUserData?.currentUser ? (
+                  <>
+                    <NextLink href={PAGES.CREATE_POST} passHref>
+                      <Styled.IconLink>
+                        <PencilOutlined className="original" />
+                        <PencilFilled className="hovered" />
+                        <Tooltip className="tooltip">글 작성</Tooltip>
+                      </Styled.IconLink>
+                    </NextLink>
+                    <span>{currentUserData.currentUser.username}</span>
+                    <Styled.LogoutButton onClick={handleLogout} disabled={loadingLogout}>
+                      로그아웃
+                    </Styled.LogoutButton>
+                  </>
+                ) : (
+                  <>
+                    <NextLink href={PAGES.LOGIN} passHref>
+                      <Styled.AuthLink>로그인</Styled.AuthLink>
+                    </NextLink>
+                    <NextLink href={PAGES.REGISTER} passHref>
+                      <Styled.AuthLink>회원가입</Styled.AuthLink>
+                    </NextLink>
+                  </>
+                )}
+              </>
             )}
-          </div>
-        </Styled.Inside>
+          </Styled.RightPanel>
+        </Styled.DesktopInside>
+        <Styled.MobileInside>
+          <Styled.MenuButton onClick={() => setIsMobileMenuOpen((prev) => !prev)}>
+            {isMobileMenuOpen ? <Close className="close-icon" /> : <Menu />}
+          </Styled.MenuButton>
+          <NextLink href={PAGES.HOME} passHref>
+            <Styled.Logo onClick={closeMobileMenu}>
+              reddit<span>.clone</span>
+            </Styled.Logo>
+          </NextLink>
+          {!loadingCurrentuser && currentUserData?.currentUser && (
+            <NextLink href={PAGES.CREATE_POST} passHref>
+              <Styled.IconLink onClick={closeMobileMenu}>
+                <PencilOutlined className="original" />
+                <PencilFilled className="hovered" />
+              </Styled.IconLink>
+            </NextLink>
+          )}
+        </Styled.MobileInside>
       </Styled.Container>
       {isMobileMenuOpen && (
-        <Styled.MobileMenu
-          offset={`${mobileMenuOffset}px`}
-          height={`${mobileMenuHeight}px`}
-          onClick={(event) => event.stopPropagation()}
-        >
-          <div className="mobile-menu__inside">
+        <Styled.MobileMenu onClick={(event) => event.stopPropagation()} style={{ top: `${window.scrollY}px` }}>
+          <Styled.MobileMenuInside height={`${window.innerHeight}px`}>
             <div>
               <SearchBox />
             </div>
             <Styled.MobileMenuBottom>
               <Styled.IconButton onClick={toggleDarkMode}>
-                {!isDarkMode() && (
+                {isDarkMode ? (
+                  <>
+                    <SunOutlined className="original" />
+                    <SunFilled className="hovered" />
+                  </>
+                ) : (
                   <>
                     <MoonOutlined className="original" />
                     <MoonFilled className="hovered" />
                   </>
                 )}
-                {isDarkMode() && (
-                  <>
-                    <SunOutlined className="original" />
-                    <SunFilled className="hovered" />
-                  </>
-                )}
               </Styled.IconButton>
-              {!loadingCurrentuser && currentUserData?.currentUser && (
+              {!loadingCurrentuser && (
                 <>
-                  <p>{currentUserData.currentUser.username}</p>
-                  <button onClick={handleLogout} disabled={loadingLogout}>
-                    로그아웃
-                  </button>
-                </>
-              )}
-              {!loadingCurrentuser && !currentUserData?.currentUser && (
-                <>
-                  <button onClick={handleLogin}>로그인</button>
-                  <button onClick={handleRegister}>회원가입</button>
+                  {currentUserData?.currentUser ? (
+                    <>
+                      <p>{currentUserData.currentUser.username}</p>
+                      <button onClick={handleLogout} disabled={loadingLogout}>
+                        로그아웃
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={handleLogin}>로그인</button>
+                      <button onClick={handleRegister}>회원가입</button>
+                    </>
+                  )}
                 </>
               )}
             </Styled.MobileMenuBottom>
-          </div>
+          </Styled.MobileMenuInside>
         </Styled.MobileMenu>
       )}
     </>

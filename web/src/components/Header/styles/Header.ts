@@ -1,68 +1,38 @@
-import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { BREAKPOINTS } from '../../../constants';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled.header<ContainerProps>`
+export const Container = styled.header`
   z-index: 3;
   position: sticky;
   top: 0;
   padding: 0.375rem 0;
   border-bottom: 0.065rem solid var(--header-border-color);
   background-color: var(--body-background-color);
-  ${({ styles }) => styles}
 `;
 
-export const Inside = styled.div`
-  .inside__desktop {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    max-width: 75rem;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-
-    @media (max-width: ${BREAKPOINTS.MD}) {
-      display: none;
-    }
-  }
-
-  .inside__mobile {
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    height: 2.375rem;
-    padding: 0 1.5rem;
-
-    @media (max-width: ${BREAKPOINTS.MD}) {
-      display: flex;
-    }
-  }
-`;
-
-export const MenuButton = styled.button`
-  background: 0;
-  outline: 0;
-  border: 0;
-  border-radius: 0.25rem;
-  color: var(--body-text-color);
-
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--body-text-color);
-  }
-
-  .close-icon {
-    width: 1rem;
-    height: 1rem;
-  }
-`;
-
-export const RightPanel = styled.div`
+export const DesktopInside = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+
+  @media (max-width: ${BREAKPOINTS.MD}) {
+    display: none;
+  }
+`;
+
+export const MobileInside = styled.div`
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 2.375rem;
+  padding: 0 1.5rem;
+
+  @media (max-width: ${BREAKPOINTS.MD}) {
+    display: flex;
+  }
 `;
 
 export const Logo = styled.a`
@@ -88,40 +58,13 @@ export const Logo = styled.a`
   }
 `;
 
-export const LogoutButton = styled.button`
-  cursor: pointer;
-  outline: 0;
-  border: none;
-  border-radius: 0.125em;
-  background: none;
-  color: var(--body-text-color);
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--body-text-color);
-  }
+export const RightPanel = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 `;
 
-export const Link = styled.a`
-  position: relative;
-  text-decoration: none;
-  outline: 0;
-  border-radius: 0.125em;
-  color: var(--body-text-color);
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--body-text-color);
-  }
-`;
-
-export const iconStyles = css`
+const iconStyles = css`
   position: relative;
   outline: 0;
   border-radius: 0.125em;
@@ -184,23 +127,66 @@ export const IconLink = styled.a`
   height: 1.25rem;
 `;
 
-export const MobileMenu = styled.div<{ offset: string; height: string }>`
+const AuthButtonStyles = css`
+  outline: 0;
+  border-radius: 0.125em;
+  color: var(--body-text-color);
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
+  }
+`;
+
+export const LogoutButton = styled.button`
+  ${AuthButtonStyles}
+  cursor: pointer;
+  border: none;
+  background: none;
+`;
+
+export const AuthLink = styled.a`
+  ${AuthButtonStyles}
+  position: relative;
+  text-decoration: none;
+`;
+
+export const MenuButton = styled.button`
+  background: 0;
+  outline: 0;
+  border: 0;
+  border-radius: 0.25rem;
+  color: var(--body-text-color);
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.125rem var(--body-text-color);
+  }
+
+  .close-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+`;
+
+export const MobileMenu = styled.div`
   z-index: 2;
   position: absolute;
-  top: ${({ offset }) => offset};
   left: 0;
   width: 100%;
   height: 100vh;
   background-color: var(--body-background-color);
+`;
 
-  .mobile-menu__inside {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height: ${({ height }) => height};
-    padding: 4rem 0.25rem 2rem;
-  }
+export const MobileMenuInside = styled.div<{ height: string }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: ${({ height }) => height};
+  padding: 4rem 0.25rem 2rem;
 `;
 
 export const MobileMenuBottom = styled.div`

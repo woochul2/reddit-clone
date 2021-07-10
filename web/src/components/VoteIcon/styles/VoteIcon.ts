@@ -1,17 +1,10 @@
-import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
+import styled, { css } from 'styled-components';
 
-interface ContainerProps {
-  variant?: 'up' | 'down';
-  hasClicked?: boolean;
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled.button<ContainerProps>`
+export const Container = styled.button<{ variant: 'default' | 'topPanel' }>`
   cursor: pointer;
   position: relative;
   width: 1.5rem;
   height: 1.5rem;
-  margin: 0 0.25rem;
   outline: 0;
   border: 0;
   border-radius: 0.125em;
@@ -21,44 +14,33 @@ export const Container = styled.button<ContainerProps>`
   svg {
     position: absolute;
     top: 50%;
-    left: 0;
+    left: 50%;
     display: block;
-    transform: translateY(-50%);
-
-    ${({ variant }) =>
-      variant === 'down' &&
-      css`
-        transform: translateY(-50%) rotate(180deg);
-      `}
+    transform: translate(-50%, -50%);
   }
 
-  .original {
-    visibility: visible;
-  }
-
-  .clicked {
-    visibility: hidden;
-  }
-
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: var(--vote-icon-hover-background-color);
   }
-
-  ${({ hasClicked }) =>
-    hasClicked &&
-    css`
-      .original {
-        visibility: hidden;
-      }
-
-      .clicked {
-        visibility: visible;
-      }
-    `}
 
   &:focus-visible {
     box-shadow: 0 0 0 0.125rem var(--body-text-color);
   }
 
-  ${({ styles }) => styles}
+  ${({ variant }) =>
+    variant === 'topPanel' &&
+    css` 
+      margin: 0;
+      color: var(--top-panel-text-color);
+
+      &:hover,
+      &:focus-visible {
+        background-color: var(--post-top-panel-icon-hover-background-color);
+      }
+
+      &:focus-visible {
+        box-shadow: 0 0 0 0.125rem var(--post-top-panel-text-color);
+      }}
+  `}
 `;

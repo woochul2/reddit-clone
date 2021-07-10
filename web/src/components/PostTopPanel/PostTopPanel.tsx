@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { css } from 'styled-components';
 import { PAGES } from '../../constants';
 import { Post } from '../../generated/graphql';
 import Close from '../../icons/Close';
@@ -24,9 +23,9 @@ export default function PostTopPanel({ post, topPanelOffset }: Props) {
     <Styled.Container style={{ top: `${topPanelOffset}px` }}>
       <Styled.Inside>
         <Styled.VotePanel>
-          <VoteIcon id={post.id} voteStatus={post.voteStatus} styles={voteIconStyles} />
+          <VoteIcon variant="topPanel" id={post.id} voteStatus={post.voteStatus} />
           <Styled.VoteCount>{post.voteCount}</Styled.VoteCount>
-          <VoteIcon variant="down" id={post.id} voteStatus={post.voteStatus} styles={voteIconStyles} />
+          <VoteIcon variant="topPanel" direction="down" id={post.id} voteStatus={post.voteStatus} />
         </Styled.VotePanel>
         <Styled.Title>{post.title}</Styled.Title>
         <Styled.CloseIcon onClick={handleClose}>
@@ -37,16 +36,3 @@ export default function PostTopPanel({ post, topPanelOffset }: Props) {
     </Styled.Container>
   );
 }
-
-const voteIconStyles = css`
-  margin: 0;
-  color: var(--top-panel-text-color);
-
-  &:focus-visible {
-    box-shadow: 0 0 0 0.125rem var(--post-top-panel-text-color);
-  }
-
-  &:hover {
-    background-color: var(--post-top-panel-icon-hover-background-color);
-  }
-`;

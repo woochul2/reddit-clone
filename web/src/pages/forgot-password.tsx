@@ -13,7 +13,7 @@ function ForgotPassword() {
   const [isFinished, setIsFinished] = useState(false);
 
   return (
-    <Layout searchBox="off" title="reddit clone 비밀번호 찾기">
+    <Layout showSearchBox={false} title="reddit clone 비밀번호 찾기">
       <Formik
         initialValues={{ email: '' }}
         onSubmit={async (values, { setErrors }) => {

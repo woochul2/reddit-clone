@@ -1,19 +1,13 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled from 'styled-components';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+`;
 
-  .confirmation__text {
-    font-size: 1.5em;
-    margin: 1.5rem 0 1rem;
-  }
-
-  ${({ styles }) => styles}
+export const Text = styled.div`
+  font-size: 1.5em;
+  margin: 1.5rem 0 1rem;
 `;

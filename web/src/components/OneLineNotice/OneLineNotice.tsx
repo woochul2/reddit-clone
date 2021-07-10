@@ -1,18 +1,16 @@
 import React from 'react';
-import { FlattenSimpleInterpolation } from 'styled-components';
 import { PAGES } from '../../constants';
 import ButtonLink from '../ButtonLink';
 import * as Styled from './styles/OneLineNotice';
 
 interface Props {
   text: string;
-  styles?: FlattenSimpleInterpolation;
 }
 
-export default function OneLineNotice({ text, styles }: Props) {
+export default function OneLineNotice({ text }: Props) {
   return (
-    <Styled.Container styles={styles}>
-      <p className="confirmation__text">{text}</p>
+    <Styled.Container>
+      <Styled.Text>{text}</Styled.Text>
       <ButtonLink href={PAGES.HOME}>홈 화면으로</ButtonLink>
     </Styled.Container>
   );

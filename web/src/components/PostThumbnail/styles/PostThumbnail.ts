@@ -1,11 +1,7 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../constants';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div`
   cursor: pointer;
   display: flex;
   max-width: 36.75rem;
@@ -16,8 +12,6 @@ export const Container = styled.div<ContainerProps>`
   &:hover {
     border: 0.125rem solid var(--post-focused-border-color);
   }
-
-  ${({ styles }) => styles}
 `;
 
 export const LeftPanel = styled.div`
@@ -79,29 +73,29 @@ export const Info = styled.div`
   font-size: 0.875rem;
   margin: 0 0.125rem;
 
-  .info__vote {
-    display: none;
-    align-items: center;
-    gap: 0.375rem;
-
-    @media (max-width: ${BREAKPOINTS.SM}) {
-      display: flex;
-    }
-  }
-
-  .info__left {
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  .info__right {
-    display: flex;
-    flex-grow: 1;
-    gap: 0.75rem;
-  }
-
   @media (max-width: ${BREAKPOINTS.SM}) {
     flex-direction: column;
+  }
+`;
+
+export const InfoLeft = styled.div`
+  display: flex;
+  gap: 0.75rem;
+`;
+
+export const InfoRight = styled.div`
+  display: flex;
+  flex-grow: 1;
+  gap: 0.75rem;
+`;
+
+export const Vote = styled.div`
+  display: none;
+  align-items: center;
+  gap: 0.375rem;
+
+  @media (max-width: ${BREAKPOINTS.SM}) {
+    display: flex;
   }
 `;
 

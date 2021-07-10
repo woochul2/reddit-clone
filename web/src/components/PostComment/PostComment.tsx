@@ -69,7 +69,6 @@ export default function PostComment({ comment, postId, currentUserId, editedComm
           </Styled.ButtonContainer>
         )}
       </Styled.TopPanel>
-      {Text}
       {editedCommentId === comment.id ? (
         <Styled.EditedCommentForm onSubmit={(event) => handleUpdateComment(event, comment.id)}>
           <TextArea

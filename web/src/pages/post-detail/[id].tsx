@@ -96,7 +96,7 @@ function PostDetail() {
             <Styled.LeftPanel>
               <VoteIcon id={post.id} voteStatus={post.voteStatus} />
               <Styled.VoteCount>{post.voteCount}</Styled.VoteCount>
-              <VoteIcon variant="down" id={post.id} voteStatus={post.voteStatus} />
+              <VoteIcon direction="down" id={post.id} voteStatus={post.voteStatus} />
             </Styled.LeftPanel>
             <Styled.RightPanel>
               <PostContent post={post} currentUserId={currentUserId} />

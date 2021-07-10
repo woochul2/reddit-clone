@@ -1,10 +1,6 @@
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import styled from 'styled-components';
 
-interface ContainerProps {
-  styles?: FlattenSimpleInterpolation;
-}
-
-export const Container = styled.a<ContainerProps>`
+export const Container = styled.a`
   text-decoration: none;
   padding: 0.75em 1.5em;
   margin: 0.5em 0;
@@ -20,6 +16,4 @@ export const Container = styled.a<ContainerProps>`
   &:active {
     background-color: var(--button-active-background-color);
   }
-
-  ${({ styles }) => styles}
 `;
