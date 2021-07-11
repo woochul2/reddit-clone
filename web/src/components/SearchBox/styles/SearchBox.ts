@@ -21,7 +21,7 @@ export const Container = styled.div`
   }
 `;
 
-export const SearchResult = styled.div`
+export const SearchResults = styled.div`
   position: absolute;
   top: 100%;
   left: 0;

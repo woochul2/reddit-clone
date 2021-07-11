@@ -2,15 +2,18 @@ import styled from 'styled-components';
 import { BREAKPOINTS } from '../../../constants';
 
 export const Container = styled.div`
-  cursor: pointer;
   display: flex;
   max-width: 36.75rem;
   margin: 1rem auto 0;
   border: 0.125rem solid var(--post-border-color);
   border-radius: 0.25rem;
 
-  &:hover {
-    border: 0.125rem solid var(--post-focused-border-color);
+  @media (hover: hover) and (pointer: fine) {
+    cursor: pointer;
+
+    &:hover {
+      border: 0.125rem solid var(--post-focused-border-color);
+    }
   }
 `;
 

@@ -1,6 +1,5 @@
 import Fuse from 'fuse.js';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { PAGES } from '../../constants';
 import { Post, usePostsQuery } from '../../generated/graphql';
@@ -10,7 +9,6 @@ import Input from '../Input';
 import * as Styled from './styles/SearchBox';
 
 export default function SearchBox() {
-  const router = useRouter();
   const { data: postsData, loading: loadingPosts } = usePostsQuery();
   const [searchValue, setSearchValue] = useState('');
   const [isSearchIconClicked, setIsSearchIconClicked] = useState(false);
@@ -20,9 +18,7 @@ export default function SearchBox() {
     const posts = postsData?.posts;
     if (!posts) return;
 
-    const fuse = new Fuse(posts, {
-      keys: ['title'],
-    });
+    const fuse = new Fuse(posts, { keys: ['title'] });
     const items = fuse.search(searchValue).slice(0, 5);
     setSearchedItems(items);
   }, [searchValue]);
@@ -49,13 +45,13 @@ export default function SearchBox() {
             style={searchValue ? { display: 'block' } : { display: 'none' }}
           />
           {searchedItems.length !== 0 && (
-            <Styled.SearchResult>
+            <Styled.SearchResults>
               {searchedItems.map(({ item }) => (
                 <NextLink key={item.id} href={`${PAGES.POST_DETAIL}/${item.id}`} passHref>
                   <Styled.Link onClick={() => setSearchValue('')}>{item.title}</Styled.Link>
                 </NextLink>
               ))}
-            </Styled.SearchResult>
+            </Styled.SearchResults>
           )}
         </>
       )}

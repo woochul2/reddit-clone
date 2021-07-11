@@ -26,7 +26,7 @@ export default function Icon({ variant = 'default', direction = 'up', id, voteSt
     }
   }, []);
 
-  const handleVote = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: number) => {
+  const handleVote = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
 
     if (!currentUserData?.currentUser) {
@@ -63,12 +63,7 @@ export default function Icon({ variant = 'default', direction = 'up', id, voteSt
   return (
     <>
       {!loadingCurrentUser && (
-        <Styled.Container
-          variant={variant}
-          onClick={(event) => handleVote(event, value)}
-          disabled={loadingVote}
-          style={getVoteIconStyles()}
-        >
+        <Styled.Container variant={variant} onClick={handleVote} disabled={loadingVote} style={getVoteIconStyles()}>
           <ArrowUpOutlined style={getIconStyles('default')} />
           <ArrowUpFilled style={getIconStyles('clicked')} />
         </Styled.Container>

@@ -187,7 +187,7 @@ export default function Header({ headerRef, showSearchBox }: Props) {
             <div>
               <SearchBox />
             </div>
-            <Styled.MobileMenuBottom>
+            <Styled.MobileMenuBottons>
               <Styled.IconButton onClick={toggleDarkMode}>
                 {isDarkMode ? (
                   <>
@@ -218,7 +218,7 @@ export default function Header({ headerRef, showSearchBox }: Props) {
                   )}
                 </>
               )}
-            </Styled.MobileMenuBottom>
+            </Styled.MobileMenuBottons>
           </Styled.MobileMenuInside>
         </Styled.MobileMenu>
       )}

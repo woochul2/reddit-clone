@@ -19,9 +19,14 @@ export const Container = styled.button<{ variant: 'default' | 'topPanel' }>`
     transform: translate(-50%, -50%);
   }
 
-  &:hover,
   &:focus-visible {
     background-color: var(--vote-icon-hover-background-color);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--vote-icon-hover-background-color);
+    }
   }
 
   &:focus-visible {
@@ -34,9 +39,14 @@ export const Container = styled.button<{ variant: 'default' | 'topPanel' }>`
       margin: 0;
       color: var(--top-panel-text-color);
 
-      &:hover,
       &:focus-visible {
         background-color: var(--post-top-panel-icon-hover-background-color);
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: var(--post-top-panel-icon-hover-background-color);
+        }
       }
 
       &:focus-visible {

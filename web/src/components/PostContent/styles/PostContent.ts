@@ -34,8 +34,10 @@ export const ButtonContainer = styled.div`
     background: 0;
     color: var(--post-second-text-color);
 
-    &:hover {
-      text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &:focus-visible {

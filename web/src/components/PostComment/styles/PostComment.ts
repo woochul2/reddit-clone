@@ -31,8 +31,10 @@ export const ButtonContainer = styled.div`
     background: 0;
     color: var(--post-second-text-color);
 
-    &:hover {
-      text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &:focus-visible {
@@ -57,8 +59,10 @@ export const EditedCommentForm = styled.form`
     background: 0;
     color: var(--body-text-color);
 
-    &:hover {
-      text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &:focus-visible {

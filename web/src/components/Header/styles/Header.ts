@@ -189,7 +189,7 @@ export const MobileMenuInside = styled.div<{ height: string }>`
   padding: 4rem 0.25rem 2rem;
 `;
 
-export const MobileMenuBottom = styled.div`
+export const MobileMenuBottons = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
