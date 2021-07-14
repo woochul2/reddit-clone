@@ -37,6 +37,7 @@ Figma에서 프로토타이핑한 아이콘은 [SVG to JSX](https://www.figma.co
 - AWS
   - S3
   - Lambda
+  - API Gateway
   - RDS
 
 ## 프론트엔드 기술 스택
